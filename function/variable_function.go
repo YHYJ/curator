@@ -9,7 +9,10 @@ Description: 执行变量操作的函数
 
 package function
 
-import "os"
+import (
+	"os"
+	"runtime"
+)
 
 var platformChart = map[string]map[string]string{
 	"linux": {
@@ -29,8 +32,9 @@ var platformChart = map[string]map[string]string{
 	},
 }
 
-var platform = os.Getenv("GOOS")
+var platform = runtime.GOOS
 
-func getVariable(key string) string {
-	return platformChart[platform][key]
+func GetVariable(key string) string {
+	varKey := platformChart[platform][key]
+	return os.Getenv(varKey)
 }
