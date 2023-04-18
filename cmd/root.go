@@ -13,15 +13,16 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/yhyj/clone-repos/function"
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "clone-repos",
 	Short: "用于克隆用户指定仓库",
 	Long:  `Clone-repos用于克隆指定用户的指定仓库`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		function.RollingCLoneRepos(cfgFile)
+	},
 }
 
 func Execute() {
@@ -31,8 +32,11 @@ func Execute() {
 	}
 }
 
+var varHome = function.GetVariable("HOME")
+var cfgFile = varHome+"/.config/clone-repos/config.toml"
+
 func init() {
 	rootCmd.Flags().BoolP("help", "h", false, "Help for Rolling")
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.main.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "config file")
 }
