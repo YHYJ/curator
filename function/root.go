@@ -58,7 +58,7 @@ func RollingCLoneRepos(confile string) {
 				Progress:          os.Stdout,
 			})
 			if err != nil {
-				fmt.Printf("\x1b[36;1m%s %s\x1b[0m\n", "Clone "+repo.(string)+" faild: ", err)
+				fmt.Printf("\x1b[36;1m%s %s\x1b[0m\n", "Clone "+repo.(string)+" faild:", err)
 			} else {
 				fmt.Printf("\x1b[36;1m%s\x1b[0m\n", "Clone "+repo.(string)+" success")
 			}
