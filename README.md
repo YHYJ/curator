@@ -11,6 +11,8 @@
 
 <!-- vim-markdown-toc GFM -->
 
+* [示例配置](#示例配置)
+
 <!-- vim-markdown-toc -->
 
 ---
@@ -20,3 +22,17 @@
 ---
 
 用于克隆指定用户的指定仓库
+
+## 示例配置
+
+```toml
+[ssh]
+private_key_file = "/home/yj/.ssh/id_rsa"
+
+[storage]
+path = "/home/yj/Documents/Repos"
+
+[git]
+url = "git@github.com:YHYJ"
+repos = ["Repo_1", "Repo_2"]
+```
