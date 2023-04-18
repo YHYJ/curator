@@ -18,7 +18,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "clone-repos",
 	Short: "用于克隆用户指定仓库",
-	Long:  `clone-repos用于克隆指定用户的指定仓库`,
+	Long:  `Clone-repos用于克隆指定用户的指定仓库`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
