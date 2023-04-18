@@ -50,6 +50,7 @@ func RollingCLoneRepos(confile string) {
 		repos := conf.Get("git.repos").([]interface{})
 		auth := getSshKeyAuth(private_key_file.(string))
 		// 开始克隆
+		fmt.Printf("Storage path: \x1b[32;1m%s\x1b[0m\n\n", path)
 		for _, repo := range repos {
 			_, err := git.PlainClone(path+"/"+repo.(string), false, &git.CloneOptions{
 				URL:               url + "/" + repo.(string) + ".git",
@@ -58,9 +59,9 @@ func RollingCLoneRepos(confile string) {
 				Progress:          os.Stdout,
 			})
 			if err != nil {
-				fmt.Printf("\x1b[36;1m%s %s\x1b[0m\n", "Clone "+repo.(string)+" faild:", err)
+				fmt.Printf("%s\x1b[36;1m%s\x1b[0m%s%s\n", "Clone ", repo.(string), ": ", err)
 			} else {
-				fmt.Printf("\x1b[36;1m%s\x1b[0m\n", "Clone "+repo.(string)+" success")
+				fmt.Printf("%s\x1b[36;1m%s\x1b[0m%s\n", "Clone ", repo.(string), " success")
 			}
 		}
 	}
