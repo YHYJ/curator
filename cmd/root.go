@@ -36,7 +36,7 @@ var varHome = function.GetVariable("HOME")
 var cfgFile = varHome+"/.config/clone-repos/config.toml"
 
 func init() {
-	rootCmd.Flags().BoolP("help", "h", false, "Help for Rolling")
+	rootCmd.Flags().BoolP("help", "h", false, "Help for Clone-repos")
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "config file")
 }
