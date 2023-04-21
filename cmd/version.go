@@ -20,7 +20,7 @@ import (
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print program version",
-	Long:  `Print program version and exit`,
+	Long:  `Print program version and exit.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		programInfo := function.ProgramInfo()
 		fmt.Printf(programInfo)
@@ -28,6 +28,6 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-	versionCmd.Flags().BoolP("help", "h", false, "Help for version")
+	versionCmd.Flags().BoolP("help", "h", false, "help for version")
 	rootCmd.AddCommand(versionCmd)
 }

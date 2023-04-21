@@ -19,7 +19,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "clone-repos",
 	Short: "Used to clone user-specified repositories",
-	Long:  `Clone-repos is used to clone the specified repository`,
+	Long:  `Clone-repos is used to clone the specified repository.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
