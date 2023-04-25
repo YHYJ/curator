@@ -62,6 +62,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 				"Modules",
 				"checker",
 				"clone-repos",
+				"eniac",
 				"rolling",
 				"scleaner",
 				"MyBlogs",
