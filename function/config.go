@@ -73,7 +73,6 @@ func WriteTomlConfig(filePath string) (int64, error) {
 				"MyWiki",
 				"DataCollector",
 				"DataWizard",
-				"SystemMonitor",
 				"Sniffer",
 				"OPC2Socket",
 				"Devicer",
