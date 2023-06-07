@@ -62,6 +62,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 				"eniac",
 				"LearningCenter",
 				"LogWrapper",
+				"manager",
 				"Modules",
 				"MyBlogs",
 				"MyDocker",
