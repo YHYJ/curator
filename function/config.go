@@ -45,10 +45,10 @@ func WriteTomlConfig(filePath string) (int64, error) {
 	// 定义一个map[string]interface{}类型的变量并赋值
 	varHome := GetVariable("HOME")
 	exampleConf := map[string]interface{}{
-		"ssh": map[string]string{
+		"ssh": map[string]interface{}{
 			"private_key_file": varHome + "/.ssh/id_rsa",
 		},
-		"storage": map[string]string{
+		"storage": map[string]interface{}{
 			"path": varHome + "/Documents/Repos",
 		},
 		"git": map[string]interface{}{
