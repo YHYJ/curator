@@ -32,8 +32,8 @@ func CreateFile(filePath string) error {
 		return nil
 	}
 	// 截取filePath的父目录
-	dirPath := filePath[:strings.LastIndex(filePath, "/")]
-	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+	parentPath := filePath[:strings.LastIndex(filePath, "/")]
+	if err := os.MkdirAll(parentPath, os.ModePerm); err != nil {
 		return err
 	}
 	_, err := os.Create(filePath)
