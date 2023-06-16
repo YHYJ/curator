@@ -11,7 +11,9 @@ package function
 
 import (
 	"os"
+	"os/user"
 	"runtime"
+	"strconv"
 )
 
 var platformChart = map[string]map[string]string{
@@ -34,7 +36,17 @@ var platformChart = map[string]map[string]string{
 
 var platform = runtime.GOOS
 
+// 获取环境变量
 func GetVariable(key string) string {
 	varKey := platformChart[platform][key]
 	return os.Getenv(varKey)
+}
+
+// 根据ID获取用户信息
+func GetUserInfo(uid int) (*user.User, error) {
+	userInfo, err := user.LookupId(strconv.Itoa(uid))
+	if err != nil {
+		return nil, err
+	}
+	return userInfo, nil
 }
