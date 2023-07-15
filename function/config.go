@@ -64,6 +64,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 				"DataWizard",
 				"Devicer",
 				"eniac",
+				"kbdstage",
 				"LearningCenter",
 				"LogWrapper",
 				"manager",
