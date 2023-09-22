@@ -11,8 +11,8 @@ package function
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
-	"os"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport"
@@ -56,12 +56,12 @@ func RollingCLoneRepos(confile string) {
 				URL:               url + "/" + repo.(string) + ".git",
 				Auth:              auth,
 				RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-				Progress:          os.Stdout,
+				Progress:          io.Discard, // os.Stdout会将Clone的详细过程输出到控制台，io.Discard会直接丢弃
 			})
 			if err != nil {
-				fmt.Printf("%s\x1b[36;1m%s\x1b[0m%s%s\n", "Clone ", repo.(string), ": ", err)
+				fmt.Printf("Clone \x1b[36;1m%s\x1b[0m: %s\n", repo.(string), err)
 			} else {
-				fmt.Printf("%s\x1b[36;1m%s\x1b[0m%s\n", "Clone ", repo.(string), " success")
+				fmt.Printf("\x1b[32;1m==>\x1b[0m Clone \x1b[36;1m%s \x1b[0msuccess\n", repo.(string))
 			}
 		}
 	}
