@@ -41,7 +41,7 @@ func RollingCLoneRepos(confile string) {
 	// 加载配置文件
 	conf, err := getTomlConfig(confile)
 	if err != nil {
-		fmt.Printf("\x1b[36;1m%s\x1b[0m\n", err)
+		fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 	} else {
 		// 获取配置项
 		private_key_file := conf.Get("ssh.private_key_file")

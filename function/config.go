@@ -28,10 +28,10 @@ func isTomlFile(filePath string) bool {
 // 读取toml配置文件
 func GetTomlConfig(filePath string) (*toml.Tree, error) {
 	if !FileExist(filePath) {
-		return nil, fmt.Errorf("open %s: no such file or directory", filePath)
+		return nil, fmt.Errorf("Open %s: no such file or directory", filePath)
 	}
 	if !isTomlFile(filePath) {
-		return nil, fmt.Errorf("open %s: is not a toml file", filePath)
+		return nil, fmt.Errorf("Open %s: is not a toml file", filePath)
 	}
 	tree, err := toml.LoadFile(filePath)
 	if err != nil {
@@ -84,10 +84,10 @@ func WriteTomlConfig(filePath string) (int64, error) {
 		},
 	}
 	if !FileExist(filePath) {
-		return 0, fmt.Errorf("open %s: no such file or directory", filePath)
+		return 0, fmt.Errorf("Open %s: no such file or directory", filePath)
 	}
 	if !isTomlFile(filePath) {
-		return 0, fmt.Errorf("open %s: is not a toml file", filePath)
+		return 0, fmt.Errorf("Open %s: is not a toml file", filePath)
 	}
 	// 把exampleConf转换为*toml.Tree
 	tree, err := toml.TreeFromMap(exampleConf)

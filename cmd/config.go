@@ -38,22 +38,22 @@ var configCmd = &cobra.Command{
 					function.DeleteFile(cfgFile)
 					function.CreateFile(cfgFile)
 					function.WriteTomlConfig(cfgFile)
-					fmt.Printf("\x1b[34;1m%s\x1b[0m\n", "create "+cfgFile+": file overwritten")
+					fmt.Printf("Create \x1b[33;1m%s\x1b[0m: file overwritten\n", cfgFile)
 				} else {
-					fmt.Printf("\x1b[36;1m%s\x1b[0m\n", "create "+cfgFile+": file exists (use --force to overwrite)")
+					fmt.Printf("Create \x1b[33m%s\x1b[0m: file exists (use --force to overwrite)\n", cfgFile)
 				}
 			} else {
 				err := function.CreateFile(cfgFile)
 				if err != nil {
-					fmt.Printf("\x1b[36;1m%s\x1b[0m\n", err)
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					return
 				}
 				_, err = function.WriteTomlConfig(cfgFile)
 				if err != nil {
-					fmt.Printf("\x1b[36;1m%s\x1b[0m\n", err)
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					return
 				}
-				fmt.Printf("\x1b[32;1m%s\x1b[0m\n", "create "+cfgFile+": file created")
+				fmt.Printf("Create \x1b[33;1m%s\x1b[0m: file created\n", cfgFile)
 			}
 		}
 
@@ -61,12 +61,12 @@ var configCmd = &cobra.Command{
 			if cfgFileExist {
 				configTree, err := function.GetTomlConfig(cfgFile)
 				if err != nil {
-					fmt.Printf("\x1b[36;1m%s\x1b[0m\n", err)
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				} else {
 					fmt.Println(configTree)
 				}
 			} else {
-				fmt.Printf("\x1b[36;1m%s\x1b[0m\n", "configuration file not found (use --create to create a configuration file)")
+				fmt.Printf("\x1b[31m%s\x1b[0m\n", "Configuration file not found (use --create to create a configuration file)")
 			}
 		}
 	},
