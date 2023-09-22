@@ -12,7 +12,7 @@ package function
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
+	"os"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport"
@@ -31,7 +31,7 @@ func getTomlConfig(filename string) (*toml.Tree, error) {
 
 func getSshKeyAuth(privateSshKeyFile string) transport.AuthMethod {
 	var auth transport.AuthMethod
-	sshKey, _ := ioutil.ReadFile(privateSshKeyFile)
+	sshKey, _ := os.ReadFile(privateSshKeyFile)
 	signer, _ := ssh.ParsePrivateKey([]byte(sshKey))
 	auth = &gssh.PublicKeys{User: "git", Signer: signer}
 	return auth
