@@ -77,6 +77,6 @@ func init() {
 	configCmd.Flags().BoolP("force", "", false, "Overwrite existing configuration files")
 	configCmd.Flags().BoolP("print", "", false, "Print configuration file content")
 
-	configCmd.Flags().BoolP("help", "h", false, "help for config")
+	configCmd.Flags().BoolP("help", "h", false, "help for config command")
 	rootCmd.AddCommand(configCmd)
 }
