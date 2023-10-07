@@ -19,7 +19,7 @@ tidy:
 
 build:
 	@go build -trimpath -ldflags "-s -w" -o $(TARGET)
-	@echo -e "\x1b[32m[✔]\x1b[0m Successfully generated \x1b[32m$(TARGET)\x1b[0m"
+	@echo -e "\x1b[32m[✔]\x1b[0m Successfully generated \x1b[32;1m$(TARGET)\x1b[0m"
 
 install:
 	@install --mode=755 --owner=$(ATTRIBUTION) --group=$(ATTRIBUTION) $(TARGET) $(INSTALL_PATH)/$(TARGET)
