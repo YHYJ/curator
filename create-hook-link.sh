@@ -15,5 +15,5 @@ Depends:
 -
 !
 
-mkdir .git/hooks
+mkdir -p .git/hooks
 ln -sf ../../hooks/post-commit .git/hooks/post-commit
