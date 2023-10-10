@@ -10,54 +10,48 @@ Description: 执行系统命令的函数
 package function
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 )
 
-var (
-	_      string
-	err    error
-	result string
-	flag   bool
-)
-
 // 运行指定命令并获取命令输出
-func RunCommandGetResult(command string, args []string) (string, error) {
+func RunCommandGetResult(command string, args []string) (result string, err error) {
 	_, err = exec.LookPath(command)
-	if err == nil {
-		// 定义命令
-		cmd := exec.Command(command, args...)
-		// 执行命令并获取命令输出
-		output, err := cmd.Output()
-		if err != nil {
-			return "", err
-		}
-		// 类型转换
-		result = strings.TrimRight(string(output), "\n")
-		return result, nil
-	} else {
-		return "", fmt.Errorf("Command not found: %s", command)
+	if err != nil {
+		return "", err
 	}
+
+	// 定义命令
+	cmd := exec.Command(command, args...)
+	// 执行命令并获取命令输出
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	// 类型转换
+	result = strings.TrimRight(string(output), "\n")
+	return result, nil
 }
 
-// 运行指定命令并获取标志位
-func RunCommandGetFlag(command string, args []string) bool {
+// 运行指定命令（命令无输出）
+func RunCommandGetFlag(command string, args []string) (err error) {
 	_, err = exec.LookPath(command)
-	if err == nil {
-		// 定义命令
-		cmd := exec.Command(command, args...)
-		// 定义标准输入/输出/错误
-		cmd.Stdin = os.Stdin
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		// 执行命令
-		cmd.Run()
-		flag = true
-	} else {
-		fmt.Printf("%v: %v\n", "Command not found", command)
-		flag = false
+	if err != nil {
+		return err
 	}
-	return flag
+
+	// 定义命令
+	cmd := exec.Command(command, args...)
+	// 定义标准输入/输出/错误
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	// 执行命令
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
