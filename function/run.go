@@ -46,14 +46,15 @@ func RollingCLoneRepos(confile string) {
 		// 获取配置项
 		private_key_file := conf.Get("ssh.private_key_file")
 		path := conf.Get("storage.path").(string)
-		url := conf.Get("git.url").(string)
+		githubUrl := conf.Get("git.github_url").(string)
+		githubUsername := conf.Get("git.github_username").(string)
 		repos := conf.Get("git.repos").([]interface{})
 		auth := getSshKeyAuth(private_key_file.(string))
 		// 开始克隆
 		fmt.Printf("Storage path: \x1b[32;1m%s\x1b[0m\n\n", path)
 		for _, repo := range repos {
 			_, err := git.PlainClone(path+"/"+repo.(string), false, &git.CloneOptions{
-				URL:               url + "/" + repo.(string) + ".git",
+				URL:               "git" + "@" + githubUrl + ":" + githubUsername + "/" + repo.(string) + ".git",
 				Auth:              auth,
 				RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 				Progress:          io.Discard, // os.Stdout会将Clone的详细过程输出到控制台，io.Discard会直接丢弃

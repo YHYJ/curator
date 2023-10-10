@@ -56,7 +56,10 @@ func WriteTomlConfig(filePath string) (int64, error) {
 			"path": userInfo.HomeDir + "/Documents/Repos",
 		},
 		"git": map[string]interface{}{
-			"url": "git@github.com:YHYJ",
+			"github_url": "github.com",
+			"github_username": "YHYJ",
+			"gitea_url": "git.yj1516.top",
+			"gitea_username": "YJ",
 			"repos": []string{
 				"checker",
 				"clone-repos",
