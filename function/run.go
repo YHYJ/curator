@@ -103,6 +103,25 @@ func updateGitConfig(filePath, githubLink, giteaLink string) (err error) {
 	return nil
 }
 
+// 运行脚本
+func runScript(filePath, scriptName string) (err error) {
+	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
+	if FileExist(filePath + "/" + scriptName) {
+		// 进到指定目录
+		err = os.Chdir(filePath)
+		if err != nil {
+			return err
+		}
+		// 运行脚本
+		bashArgs := []string{scriptName}
+		err = RunCommand("bash", bashArgs)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func RollingCLoneRepos(confile string) {
 	// 加载配置文件
 	conf, err := getTomlConfig(confile)
@@ -117,6 +136,7 @@ func RollingCLoneRepos(confile string) {
 		giteaUrl := conf.Get("git.gitea_url").(string)
 		giteaUsername := conf.Get("git.gitea_username").(string)
 		repos := conf.Get("git.repos").([]interface{})
+		scriptNameList := conf.Get("script.name_list").([]interface{})
 		auth := getSshKeyAuth(private_key_file.(string))
 		// 开始克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", path)
@@ -137,11 +157,19 @@ func RollingCLoneRepos(confile string) {
 				}
 			} else {
 				fmt.Printf("\x1b[32m%s\x1b[0m\n", "cloning completed")
+				// Clone成功后更新.git/config
 				githubLink := githubUrl + ":" + githubUsername
 				giteaLink := giteaUrl + ":" + giteaUsername
 				err := updateGitConfig(storagePath, githubLink, giteaLink)
 				if err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+				}
+				// Clone成功后执行脚本
+				for _, scriptName := range scriptNameList {
+					err := runScript(storagePath, scriptName.(string))
+					if err != nil {
+						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					}
 				}
 			}
 			// 添加一个0.01秒的延时，使输出更加顺畅
