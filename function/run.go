@@ -118,7 +118,7 @@ func RollingCLoneRepos(confile string) {
 		repos := conf.Get("git.repos").([]interface{})
 		auth := getSshKeyAuth(private_key_file.(string))
 		// 开始克隆
-		fmt.Printf("Storage path: \x1b[32;1m%s\x1b[0m\n\n", path)
+		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", path)
 		for _, repo := range repos {
 			storagePath := path + "/" + repo.(string)
 			_, err := git.PlainClone(storagePath, false, &git.CloneOptions{
