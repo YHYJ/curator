@@ -16,6 +16,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport"
@@ -120,6 +121,7 @@ func RollingCLoneRepos(confile string) {
 		// 开始克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", path)
 		for _, repo := range repos {
+			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
 			storagePath := path + "/" + repo.(string)
 			_, err := git.PlainClone(storagePath, false, &git.CloneOptions{
 				URL:               "git" + "@" + githubUrl + ":" + githubUsername + "/" + repo.(string) + ".git",
@@ -129,12 +131,12 @@ func RollingCLoneRepos(confile string) {
 			})
 			if err != nil {
 				if err == git.ErrRepositoryAlreadyExists {
-					fmt.Printf("Clone \x1b[36;1m%s\x1b[0m: %s\n", repo.(string), err)
+					fmt.Printf("%s\n", err)
 				} else {
-					fmt.Printf("Clone \x1b[36;1m%s\x1b[0m: \x1b[31m%s\x1b[0m\n", repo.(string), err)
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
 			} else {
-				fmt.Printf("\x1b[32;1m==>\x1b[0m Clone \x1b[36;1m%s \x1b[0msuccess\n", repo.(string))
+				fmt.Printf("\x1b[32m%s\x1b[0m\n", "cloning completed")
 				githubLink := githubUrl + ":" + githubUsername
 				giteaLink := giteaUrl + ":" + giteaUsername
 				err := updateGitConfig(storagePath, githubLink, giteaLink)
@@ -142,6 +144,8 @@ func RollingCLoneRepos(confile string) {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
 			}
+			// 添加一个0.01秒的延时，使输出更加顺畅
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 }
