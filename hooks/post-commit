@@ -22,4 +22,4 @@ commit_hash=$(git rev-parse --short HEAD)
 echo -n "$commit_hash" | xsel --clipboard --input
 
 # 输出提示信息
-echo -e "\033[35m-----\033[0m\033[36m最新commit哈希值已复制\033[0m\033[35m-----\033[0m"
+echo -e "\x1b[35m-----\x1b[0m\x1b[36m最新commit哈希值已复制\x1b[0m\x1b[35m-----\x1b[0m"
