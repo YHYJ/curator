@@ -35,7 +35,7 @@ func RunCommandGetResult(command string, args []string) (result string, err erro
 }
 
 // 运行指定命令（命令无输出）
-func RunCommandGetFlag(command string, args []string) (err error) {
+func RunCommand(command string, args []string) (err error) {
 	_, err = exec.LookPath(command)
 	if err != nil {
 		return err
