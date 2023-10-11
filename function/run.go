@@ -95,26 +95,26 @@ func RollingCLoneRepos(confile string) {
 		fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 	} else {
 		// 获取配置项
-		private_key_file := conf.Get("ssh.private_key_file")
-		path := conf.Get("storage.path").(string)
+		pemfile := conf.Get("ssh.rsa_file")
+		storagePath := conf.Get("storage.path").(string)
 		githubUrl := conf.Get("git.github_url").(string)
 		githubUsername := conf.Get("git.github_username").(string)
 		giteaUrl := conf.Get("git.gitea_url").(string)
 		giteaUsername := conf.Get("git.gitea_username").(string)
 		repos := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
-		auth, err := GetPublicKeysByGit(private_key_file.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
+		publicKeys, err := GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
 		if err != nil {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 		}
 		// 开始克隆
-		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", path)
+		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
 		for _, repo := range repos {
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
-			storagePath := path + "/" + repo.(string)
-			_, err := git.PlainClone(storagePath, false, &git.CloneOptions{
+			repoPath := storagePath + "/" + repo.(string)
+			_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
 				URL:               "git" + "@" + githubUrl + ":" + githubUsername + "/" + repo.(string) + ".git",
-				Auth:              auth,
+				Auth:              publicKeys,
 				RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 				Progress:          io.Discard, // os.Stdout会将Clone的详细过程输出到控制台，io.Discard会直接丢弃
 			})
@@ -129,13 +129,13 @@ func RollingCLoneRepos(confile string) {
 				// Clone成功后更新.git/config
 				githubLink := githubUrl + ":" + githubUsername
 				giteaLink := giteaUrl + ":" + giteaUsername
-				err := updateGitConfig(storagePath, githubLink, giteaLink)
+				err := updateGitConfig(repoPath, githubLink, giteaLink)
 				if err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
 				// Clone成功后执行脚本
 				for _, scriptName := range scriptNameList {
-					err := runScript(storagePath, scriptName.(string))
+					err := runScript(repoPath, scriptName.(string))
 					if err != nil {
 						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					}
