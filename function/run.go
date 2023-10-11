@@ -19,27 +19,7 @@ import (
 	"time"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing/transport"
-	gssh "github.com/go-git/go-git/v5/plumbing/transport/ssh"
-	"github.com/pelletier/go-toml"
-	"golang.org/x/crypto/ssh"
 )
-
-func getTomlConfig(filename string) (*toml.Tree, error) {
-	tree, err := toml.LoadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	return tree, nil
-}
-
-func getSshKeyAuth(privateSshKeyFile string) transport.AuthMethod {
-	var auth transport.AuthMethod
-	sshKey, _ := os.ReadFile(privateSshKeyFile)
-	signer, _ := ssh.ParsePrivateKey([]byte(sshKey))
-	auth = &gssh.PublicKeys{User: "git", Signer: signer}
-	return auth
-}
 
 // 更新.git/config文件
 func updateGitConfig(filePath, githubLink, giteaLink string) (err error) {
@@ -110,7 +90,7 @@ func runScript(filePath, scriptName string) (err error) {
 
 func RollingCLoneRepos(confile string) {
 	// 加载配置文件
-	conf, err := getTomlConfig(confile)
+	conf, err := GetTomlConfig(confile)
 	if err != nil {
 		fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 	} else {
@@ -123,7 +103,10 @@ func RollingCLoneRepos(confile string) {
 		giteaUsername := conf.Get("git.gitea_username").(string)
 		repos := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
-		auth := getSshKeyAuth(private_key_file.(string))
+		auth, err := GetPublicKeysByGit(private_key_file.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
+		if err != nil {
+			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+		}
 		// 开始克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", path)
 		for _, repo := range repos {
