@@ -56,7 +56,7 @@ func updateGitConfig(filePath, githubLink, giteaLink string) (err error) {
 	regexPattern := `.*url\s*=\s*.*github\.com.*` // 正则表达式用于模糊匹配行的内容
 	regex := regexp.MustCompile(regexPattern)     // 创建正则表达式
 
-	needInsert := false // 是否需要插入新行
+	matched := false // 是否匹配到，用于限制只匹配一次
 
 	pushUrl1 := "" // 第一行pushurl
 	pushUrl2 := "" // 第二行pushurl
@@ -64,31 +64,17 @@ func updateGitConfig(filePath, githubLink, giteaLink string) (err error) {
 	// 逐行读取文件内容
 	for scanner.Scan() {
 		line := scanner.Text()
+		lines = append(lines, line) // 将读取到的行存入lines
 
-		// 检索模糊匹配的行
-		if regex.MatchString(line) {
-			lines = append(lines, line)
-			pushUrl1 = strings.ReplaceAll(line, "url", "pushurl")
-			pushUrl2 = strings.ReplaceAll(pushUrl1, githubLink, giteaLink)
-			needInsert = true
-			continue
+		if !matched {
+			if regex.MatchString(line) { // 检索模糊匹配的行
+				pushUrl1 = strings.ReplaceAll(line, "url", "pushurl")
+				pushUrl2 = strings.ReplaceAll(pushUrl1, githubLink, giteaLink)
+				lines = append(lines, pushUrl1)
+				lines = append(lines, pushUrl2)
+				matched = true
+			}
 		}
-
-		// 在模糊匹配的行后插入新行
-		if needInsert {
-			lines = append(lines, pushUrl1)
-			lines = append(lines, pushUrl2)
-			needInsert = false
-		}
-
-		// 插入下一行
-		lines = append(lines, line)
-	}
-
-	// 如果模糊匹配到最后一行，添加新行
-	if needInsert {
-		lines = append(lines, pushUrl1)
-		lines = append(lines, pushUrl2)
 	}
 
 	// 将修改后的内容写回文件
