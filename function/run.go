@@ -22,38 +22,49 @@ import (
 )
 
 // 更新.git/config文件
-func updateGitConfig(filePath, githubLink, giteaLink string) (err error) {
-	fileName := ".git/config"                                               // 文件名
-	file, err := os.OpenFile(filePath+"/"+fileName, os.O_RDWR, os.ModePerm) // 打开文件以读写模式
+func updateGitConfig(filePath, fileName, githubLink, giteaLink string) (err error) {
+	// 以读写模式打开文件
+	file, err := os.OpenFile(filePath+"/"+fileName, os.O_RDWR, os.ModePerm)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
+	// 读取文件
 	scanner := bufio.NewScanner(file) // 创建一个扫描器来读取文件内容
 	var lines []string                // 存储读取到的行
 
-	regexPattern := `.*url\s*=\s*.*github\.com.*` // 正则表达式用于模糊匹配行的内容
-	regex := regexp.MustCompile(regexPattern)     // 创建正则表达式
+	// 正则匹配（主仓库和子模块的匹配规则一样）
+	regexPattern := `.*url\s*=\s*.*[:\/].*\.git` // 定义正则匹配规则
+	regex := regexp.MustCompile(regexPattern)    // 创建正则表达式
+	matched := false                             // 是否匹配到，用于限制只匹配一次
 
-	matched := false // 是否匹配到，用于限制只匹配一次
-
+	// 需要新增的行
 	pushUrl1 := "" // 第一行pushurl
 	pushUrl2 := "" // 第二行pushurl
 
 	// 逐行读取文件内容
 	for scanner.Scan() {
 		line := scanner.Text()
-		lines = append(lines, line) // 将读取到的行存入lines
 
-		if !matched {
-			if regex.MatchString(line) { // 检索模糊匹配的行
-				pushUrl1 = strings.ReplaceAll(line, "url", "pushurl")
-				pushUrl2 = strings.ReplaceAll(pushUrl1, githubLink, giteaLink)
-				lines = append(lines, pushUrl1)
-				lines = append(lines, pushUrl2)
-				matched = true
+		// 检索一次模糊匹配的行
+		if !matched && regex.MatchString(line) {
+			// 第一次匹配：将可能存在的"ssh://"删除，并在"/"多于1个时将第1个替换为":"
+			// 该次匹配是专对子模块的.git/config的处理
+			line = strings.Replace(line, "ssh://", "", 1)
+			if strings.Count(line, "/") >= 2 {
+				line = strings.Replace(line, "/", ":", 1)
 			}
+			lines = append(lines, line)
+			// 第二次匹配：创建2行"pushurl"
+			// 该次匹配是对于.git/config的通用处理
+			pushUrl1 = strings.ReplaceAll(line, "url", "pushurl")
+			pushUrl2 = strings.ReplaceAll(pushUrl1, githubLink, giteaLink)
+			lines = append(lines, pushUrl1)
+			lines = append(lines, pushUrl2)
+			matched = true
+		} else {
+			lines = append(lines, line)
 		}
 	}
 
@@ -129,10 +140,12 @@ func RollingCLoneRepos(confile string) {
 				// Clone成功后更新.git/config
 				githubLink := githubUrl + ":" + githubUsername
 				giteaLink := giteaUrl + ":" + giteaUsername
-				err := updateGitConfig(repoPath, githubLink, giteaLink)
+				fileName := ".git/config" // 处理主仓库的.git/config
+				err := updateGitConfig(repoPath, fileName, githubLink, giteaLink)
 				if err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
+				// TODO: 处理子模块的.git/config <11-10-23, YJ> //
 				// Clone成功后执行脚本
 				for _, scriptName := range scriptNameList {
 					err := runScript(repoPath, scriptName.(string))
