@@ -1,13 +1,13 @@
-package function
-
 /*
 File: auth_operation.go
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-10-11 14:30:32
 
-Description: 认证操作
+Description: 身份认证
 */
+
+package function
 
 import (
 	"os"
