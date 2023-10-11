@@ -18,7 +18,7 @@
 
 ---
 
-<!-- Object info -->
+[go-git官方示例程序](https://github.com/go-git/go-git/blob/master/_examples)
 
 ---
 
