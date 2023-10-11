@@ -22,9 +22,9 @@ import (
 )
 
 // 更新.git/config文件
-func updateGitConfig(filePath, fileName, githubLink, giteaLink string) (err error) {
+func updateGitConfig(configFile, githubLink, giteaLink string) (err error) {
 	// 以读写模式打开文件
-	file, err := os.OpenFile(filePath+"/"+fileName, os.O_RDWR, os.ModePerm)
+	file, err := os.OpenFile(configFile, os.O_RDWR, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -117,6 +117,7 @@ func RollingCLoneRepos(confile string) {
 		publicKeys, err := GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
 		if err != nil {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+			return
 		}
 		// 开始克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
@@ -129,10 +130,10 @@ func RollingCLoneRepos(confile string) {
 				RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 				Progress:          io.Discard, // os.Stdout会将Clone的详细过程输出到控制台，io.Discard会直接丢弃
 			})
-			if err != nil {
-				if err == git.ErrRepositoryAlreadyExists {
+			if err != nil { // Clone失败
+				if err == git.ErrRepositoryAlreadyExists { // 错误原因是本地git仓库已存在
 					fmt.Printf("%s\n", err)
-				} else {
+				} else { // 其他错误
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
 			} else {
@@ -140,12 +141,26 @@ func RollingCLoneRepos(confile string) {
 				// Clone成功后更新.git/config
 				githubLink := githubUrl + ":" + githubUsername
 				giteaLink := giteaUrl + ":" + giteaUsername
-				fileName := ".git/config" // 处理主仓库的.git/config
-				err := updateGitConfig(repoPath, fileName, githubLink, giteaLink)
+				// 处理主仓库的.git/config
+				configFile := repoPath + "/" + ".git/config"
+				err := updateGitConfig(configFile, githubLink, giteaLink)
 				if err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
-				// TODO: 处理子模块的.git/config <11-10-23, YJ> //
+				// 处理子模块的.git/config
+				submodules, err := GetSubModuleNames(repoPath)
+				if err != nil {
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					continue
+				}
+				for _, submodule := range submodules {
+					configFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
+					err := updateGitConfig(configFile, githubLink, giteaLink)
+					if err != nil {
+						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+						continue
+					}
+				}
 				// Clone成功后执行脚本
 				for _, scriptName := range scriptNameList {
 					err := runScript(repoPath, scriptName.(string))
