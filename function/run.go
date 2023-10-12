@@ -99,7 +99,7 @@ func runScript(filePath, scriptName string) (err error) {
 	return nil
 }
 
-func RollingCLoneRepos(confile string) {
+func RollingCloneRepos(confile string) {
 	// 加载配置文件
 	conf, err := GetTomlConfig(confile)
 	if err != nil {

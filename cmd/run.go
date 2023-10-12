@@ -20,7 +20,7 @@ var runCmd = &cobra.Command{
 	Short: "Start Cloning",
 	Long:  `Start cloning.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		function.RollingCLoneRepos(cfgFile)
+		function.RollingCloneRepos(cfgFile)
 	},
 }
 
