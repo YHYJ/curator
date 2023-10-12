@@ -14,7 +14,7 @@ import "fmt"
 // 程序信息
 var (
 	name    string = "Clone-repos"
-	version string = "v0.5.0"
+	version string = "v0.5.1"
 )
 
 func ProgramInfo(only bool) string {
