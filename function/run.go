@@ -123,12 +123,24 @@ func RollingCloneRepos(confile string) {
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
 			repoPath := storagePath + "/" + repo.(string)
 			if FileExist(repoPath) {
-				// TODO: 检测是否是本地仓库 <12-10-23, YJ> //
-				isRepo, repo := IsLocalRepo(repoPath)
-				if isRepo { // 是本地仓库，输出本地仓库已存在的信息
+				isRepo, _ := IsLocalRepo(repoPath)
+				if isRepo { // 是本地仓库，输出本地仓库已存在的信息并跳出本次循环
 					fmt.Println("Local repo is exists")
-				} else { // 不是本地仓库，检测是不是空文件夹，是的话删除，不是的话输出文件夹非空的信息
-					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					// 添加一个0.01秒的延时，使输出更加顺畅
+					time.Sleep(100 * time.Millisecond)
+					continue
+				} else { // 不是本地仓库
+					if FolderEmpty(repoPath) { // 是空文件夹，删除
+						err := DeleteFile(repoPath)
+						if err != nil {
+							fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+						}
+					} else { // 不是的话输出文件夹非空的信息并跳出本次循环
+						fmt.Println("Folder is not a local repo and is not empty")
+						// 添加一个0.01秒的延时，使输出更加顺畅
+						time.Sleep(100 * time.Millisecond)
+						continue
+					}
 				}
 			}
 			_, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
