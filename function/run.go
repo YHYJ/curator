@@ -121,8 +121,16 @@ func RollingCloneRepos(confile string) {
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
 		for _, repo := range repos {
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
-			// TODO: 检测仓库同名文件夹是否已存在 <12-10-23, YJ> //
 			repoPath := storagePath + "/" + repo.(string)
+			if FileExist(repoPath) {
+				// TODO: 检测是否是本地仓库 <12-10-23, YJ> //
+				isRepo, repo := IsLocalRepo(repoPath)
+				if isRepo { // 是本地仓库，输出本地仓库已存在的信息
+					fmt.Println("Local repo is exists")
+				} else { // 不是本地仓库，检测是不是空文件夹，是的话删除，不是的话输出文件夹非空的信息
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+				}
+			}
 			_, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
