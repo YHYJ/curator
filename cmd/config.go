@@ -35,9 +35,18 @@ var configCmd = &cobra.Command{
 		if createFlag {
 			if cfgFileExist {
 				if forceFlag {
-					function.DeleteFile(cfgFile)
-					function.CreateFile(cfgFile)
-					function.WriteTomlConfig(cfgFile)
+					err := function.DeleteFile(cfgFile)
+					if err != nil {
+						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					}
+					err = function.CreateFile(cfgFile)
+					if err != nil {
+						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					}
+					_, err = function.WriteTomlConfig(cfgFile)
+					if err != nil {
+						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					}
 					fmt.Printf("Create \x1b[33;1m%s\x1b[0m: file overwritten\n", cfgFile)
 				} else {
 					fmt.Printf("Create \x1b[33m%s\x1b[0m: file exists (use --force to overwrite)\n", cfgFile)
