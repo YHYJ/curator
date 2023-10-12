@@ -11,6 +11,7 @@ package function
 
 import (
 	"io"
+	"io/fs"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
@@ -48,4 +49,36 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 	})
 
 	return repo, err
+}
+
+// 检测是不是本地仓库
+func IsLocalRepo(path string) (bool, *git.Repository) {
+	// 能打开就是本地仓库
+	repo, err := git.PlainOpen(path)
+	if err != nil {
+		return false, nil
+	}
+	return true, repo
+}
+
+// 输出本地仓库子模块信息
+func GetLocalRepoSubmoduleInfo(worktree *git.Worktree) (git.Submodules, error) {
+	// 获取子模块信息
+	submodules, err := worktree.Submodules()
+	if err != nil {
+		return nil, err
+	}
+
+	return submodules, nil
+}
+
+// 输出本地仓库分支信息
+func GetLocalRepoBranchInfo(worktree *git.Worktree) ([]fs.FileInfo, error) {
+	// 获取子模块信息
+	branchs, err := worktree.Filesystem.ReadDir(".git/refs/heads")
+	if err != nil {
+		return nil, err
+	}
+
+	return branchs, nil
 }
