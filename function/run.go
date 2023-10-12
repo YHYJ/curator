@@ -108,7 +108,9 @@ func RollingCloneRepos(confile string) {
 		githubUrl := conf.Get("git.github_url").(string)
 		githubUsername := conf.Get("git.github_username").(string)
 		giteaUrl := conf.Get("git.gitea_url").(string)
+		githubLink := githubUrl + ":" + githubUsername
 		giteaUsername := conf.Get("git.gitea_username").(string)
+		giteaLink := giteaUrl + ":" + giteaUsername
 		repos := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
 		// 定义变量
@@ -127,7 +129,7 @@ func RollingCloneRepos(confile string) {
 			if FileExist(repoPath) {
 				isRepo, _ := IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
-					fmt.Printf("\x1b[34m%s\x1b[0m\n", "Local repo already exists")
+					fmt.Printf("\x1b[32m[✔]\x1b[0m \x1b[34m%s\x1b[0m\n", "Local repo already exists")
 					// 添加一个延时，使输出更加顺畅
 					time.Sleep(interval)
 					continue
@@ -145,40 +147,61 @@ func RollingCloneRepos(confile string) {
 					}
 				}
 			}
-			_, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
+			repo, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
-			} else {
-				fmt.Printf("\x1b[32m[✔]\x1b[0m\n")
-				// Clone成功后更新.git/config
-				githubLink := githubUrl + ":" + githubUsername
-				giteaLink := giteaUrl + ":" + giteaUsername
-				// 处理主仓库的.git/config
-				configFile := repoPath + "/" + ".git/config"
-				err := updateGitConfig(configFile, githubLink, giteaLink)
-				if err != nil {
-					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
-				}
-				// 处理子模块的.git/config
-				submodules, err := GetSubModuleNames(repoPath)
-				if err != nil {
-					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
-					continue
-				}
-				for _, submodule := range submodules {
-					configFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
-					err := updateGitConfig(configFile, githubLink, giteaLink)
-					if err != nil {
-						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
-						continue
-					}
-				}
-				// Clone成功后执行脚本
+			} else { // Clone成功
+				fmt.Printf("\x1b[32m[✔]\x1b[0m ")
+				var errList []string //使用一个Slice存储所有错误信息，作用是美化输出
+				// 执行脚本
 				for _, scriptName := range scriptNameList {
 					err := runScript(repoPath, scriptName.(string))
 					if err != nil {
-						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+						errList = append(errList, "Run Script "+scriptName.(string)+": "+err.Error())
 					}
+				}
+				// 处理主仓库的.git/config
+				configFile := repoPath + "/" + ".git/config"
+				err = updateGitConfig(configFile, githubLink, giteaLink)
+				if err != nil {
+					errList = append(errList, "Update Git Config (main): "+err.Error())
+				}
+				// 获取本地仓库的worktree
+				worktree, err := repo.Worktree()
+				if err != nil {
+					errList = append(errList, "Get Local Repo Worktree: "+err.Error())
+				}
+				// 获取分支信息
+				branchs, err := GetLocalRepoBranchInfo(worktree)
+				var branchStr string // 分支信息
+				for _, branch := range branchs {
+					branchStr = branchStr + branch.Name() + ", "
+				}
+				// 处理子模块的.git/config
+				submodules, err := GetLocalRepoSubmoduleInfo(worktree)
+				var submoduleStr string // 子模块信息
+				if err != nil {
+					errList = append(errList, "Get Local Repo Submodules: "+err.Error())
+				}
+				for _, submodule := range submodules {
+					submoduleStr = submoduleStr + submodule.Config().Name + ", "
+					configFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
+					err := updateGitConfig(configFile, githubLink, giteaLink)
+					if err != nil {
+						errList = append(errList, "Update Git Config (submodule): "+err.Error())
+					}
+				}
+				// 处理并输出分支和子模块信息
+				branchStr = strings.TrimRight(branchStr, ", ")
+				submoduleStr = strings.TrimRight(submoduleStr, ", ")
+				if len(submoduleStr) == 0 { // 分支常有而子模块不常有
+					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m\n", branchStr)
+				} else {
+					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m Submodule: \x1b[35m%s\x1b[0m\n", branchStr, submoduleStr)
+				}
+				// 输出克隆完成后其他操作产生的错误信息
+				for _, err := range errList {
+					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				}
 			}
 			// 添加一个延时，使输出更加顺畅
