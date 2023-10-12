@@ -13,17 +13,17 @@ import (
 	"os"
 
 	"github.com/go-git/go-git/v5/plumbing/transport"
-	gssh "github.com/go-git/go-git/v5/plumbing/transport/ssh"
-	"golang.org/x/crypto/ssh"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
+	cssh "golang.org/x/crypto/ssh"
 )
 
 // 使用go-git自带的方法获取公钥
-func GetPublicKeysByGit(pemFile, password string) (*gssh.PublicKeys, error) {
+func GetPublicKeysByGit(pemFile, password string) (*ssh.PublicKeys, error) {
 	_, err := os.Stat(pemFile)
 	if err != nil {
 		return nil, err
 	}
-	publicKeys, err := gssh.NewPublicKeysFromFile("git", pemFile, password)
+	publicKeys, err := ssh.NewPublicKeysFromFile("git", pemFile, password)
 	if err != nil {
 		return nil, err
 	}
@@ -37,11 +37,11 @@ func GetPublicKeysBySSH(pemFile string) (transport.AuthMethod, error) {
 	if err != nil {
 		return nil, err
 	}
-	signer, err := ssh.ParsePrivateKey([]byte(sshKey))
+	signer, err := cssh.ParsePrivateKey([]byte(sshKey))
 	if err != nil {
 		return nil, err
 	}
-	auth = &gssh.PublicKeys{User: "git", Signer: signer}
+	auth = &ssh.PublicKeys{User: "git", Signer: signer}
 
 	return auth, nil
 }

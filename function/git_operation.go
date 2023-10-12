@@ -10,7 +10,10 @@ Description: git操作
 package function
 
 import (
+	"io"
+
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
 // 获取git仓库的所有子模块名称
@@ -32,4 +35,17 @@ func GetSubModuleNames(repoPath string) (git.Submodules, error) {
 	}
 
 	return submodules, nil
+}
+
+// 使用SSH协议将远端仓库克隆到本地
+func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.PublicKeys) (*git.Repository, error) {
+	repoUrl := "git" + "@" + URL + ":" + username + "/" + repoName + ".git"
+	repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{
+		URL:               repoUrl,
+		Auth:              publicKeys,
+		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+		Progress:          io.Discard, // os.Stdout会将Clone的详细过程输出到控制台，io.Discard会直接丢弃
+	})
+
+	return repo, err
 }

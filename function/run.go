@@ -12,13 +12,10 @@ package function
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"os"
 	"regexp"
 	"strings"
 	"time"
-
-	"github.com/go-git/go-git/v5"
 )
 
 // 更新.git/config文件
@@ -114,6 +111,7 @@ func RollingCloneRepos(confile string) {
 		giteaUsername := conf.Get("git.gitea_username").(string)
 		repos := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
+		// 获取公钥
 		publicKeys, err := GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
 		if err != nil {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
@@ -123,19 +121,11 @@ func RollingCloneRepos(confile string) {
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
 		for _, repo := range repos {
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
+			// TODO: 检测仓库同名文件夹是否已存在 <12-10-23, YJ> //
 			repoPath := storagePath + "/" + repo.(string)
-			_, err := git.PlainClone(repoPath, false, &git.CloneOptions{
-				URL:               "git" + "@" + githubUrl + ":" + githubUsername + "/" + repo.(string) + ".git",
-				Auth:              publicKeys,
-				RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-				Progress:          io.Discard, // os.Stdout会将Clone的详细过程输出到控制台，io.Discard会直接丢弃
-			})
+			_, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
 			if err != nil { // Clone失败
-				if err == git.ErrRepositoryAlreadyExists { // 错误原因是本地git仓库已存在
-					fmt.Printf("%s\n", err)
-				} else { // 其他错误
-					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
-				}
+				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			} else {
 				fmt.Printf("\x1b[32m%s\x1b[0m\n", "cloning completed")
 				// Clone成功后更新.git/config
