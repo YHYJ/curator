@@ -10,6 +10,7 @@ Description: 操作文件
 package function
 
 import (
+	"io"
 	"os"
 	"strings"
 )
@@ -24,6 +25,21 @@ func FileExist(filePath string) bool {
 		return false
 	}
 	return true
+}
+
+// 判断文件夹是否为空，包括隐藏文件
+func FolderEmpty(filePath string) bool {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return true
+	}
+	defer file.Close()
+
+	_, err = file.Readdir(1)
+	if err == io.EOF {
+		return true
+	}
+	return false
 }
 
 // 创建文件，如果其父目录不存在则创建父目录
