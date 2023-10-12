@@ -127,7 +127,7 @@ func RollingCloneRepos(confile string) {
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			} else {
-				fmt.Printf("\x1b[32m%s\x1b[0m\n", "cloning completed")
+				fmt.Printf("\x1b[32m[✔]\x1b[0m\n")
 				// Clone成功后更新.git/config
 				githubLink := githubUrl + ":" + githubUsername
 				giteaLink := giteaUrl + ":" + giteaUsername
