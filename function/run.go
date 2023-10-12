@@ -111,6 +111,8 @@ func RollingCloneRepos(confile string) {
 		giteaUsername := conf.Get("git.gitea_username").(string)
 		repos := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
+		// 定义变量
+		var interval = 100 * time.Millisecond
 		// 获取公钥
 		publicKeys, err := GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
 		if err != nil {
@@ -124,21 +126,21 @@ func RollingCloneRepos(confile string) {
 			repoPath := storagePath + "/" + repo.(string)
 			if FileExist(repoPath) {
 				isRepo, _ := IsLocalRepo(repoPath)
-				if isRepo { // 是本地仓库，输出本地仓库已存在的信息并跳出本次循环
-					fmt.Println("Local repo is exists")
-					// 添加一个0.01秒的延时，使输出更加顺畅
-					time.Sleep(100 * time.Millisecond)
+				if isRepo { // 是本地仓库
+					fmt.Printf("\x1b[34m%s\x1b[0m\n", "Local repo already exists")
+					// 添加一个延时，使输出更加顺畅
+					time.Sleep(interval)
 					continue
 				} else { // 不是本地仓库
-					if FolderEmpty(repoPath) { // 是空文件夹，删除
+					if FolderEmpty(repoPath) { // 空文件夹则删除
 						err := DeleteFile(repoPath)
 						if err != nil {
 							fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 						}
-					} else { // 不是的话输出文件夹非空的信息并跳出本次循环
+					} else { // 文件夹非空
 						fmt.Println("Folder is not a local repo and is not empty")
-						// 添加一个0.01秒的延时，使输出更加顺畅
-						time.Sleep(100 * time.Millisecond)
+						// 添加一个延时，使输出更加顺畅
+						time.Sleep(interval)
 						continue
 					}
 				}
@@ -179,8 +181,8 @@ func RollingCloneRepos(confile string) {
 					}
 				}
 			}
-			// 添加一个0.01秒的延时，使输出更加顺畅
-			time.Sleep(100 * time.Millisecond)
+			// 添加一个延时，使输出更加顺畅
+			time.Sleep(interval)
 		}
 	}
 }
