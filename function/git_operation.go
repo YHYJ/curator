@@ -17,27 +17,6 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
-// 获取git仓库的所有子模块名称
-func GetSubModuleNames(repoPath string) (git.Submodules, error) {
-	// 打开本地存储库
-	repo, err := git.PlainOpen(repoPath)
-	if err != nil {
-		return nil, err
-	}
-
-	worktree, err := repo.Worktree()
-	if err != nil {
-		return nil, err
-	}
-
-	submodules, err := worktree.Submodules()
-	if err != nil {
-		return nil, err
-	}
-
-	return submodules, nil
-}
-
 // 使用SSH协议将远端仓库克隆到本地
 func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.PublicKeys) (*git.Repository, error) {
 	repoUrl := "git" + "@" + URL + ":" + username + "/" + repoName + ".git"
@@ -51,7 +30,7 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 	return repo, err
 }
 
-// 检测是不是本地仓库
+// 检测是不是本地仓库，是的话返回*git.Repository对象
 func IsLocalRepo(path string) (bool, *git.Repository) {
 	// 能打开就是本地仓库
 	repo, err := git.PlainOpen(path)
