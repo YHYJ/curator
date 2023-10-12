@@ -58,8 +58,5 @@ func CreateFile(filePath string) error {
 
 // 删除文件
 func DeleteFile(filePath string) error {
-	if !FileExist(filePath) {
-		return nil
-	}
 	return os.Remove(filePath)
 }
