@@ -164,7 +164,7 @@ func RollingCloneRepos(confile string) {
 						errList = append(errList, "Run Script "+scriptName.(string)+": "+err.Error())
 					}
 				}
-				// 处理主仓库的.git/config
+				// 处理主仓库的仓库配置文件.git/config
 				configFile := repoPath + "/" + ".git/config"
 				err = updateGitConfig(configFile, githubLink, giteaLink)
 				if err != nil {
@@ -181,7 +181,7 @@ func RollingCloneRepos(confile string) {
 				for _, branch := range branchs {
 					branchStr = branchStr + branch.Name() + ", "
 				}
-				// 处理子模块的.git/config
+				// 获取子模块信息，处理子模块的仓库配置文件.git/modules/<submodule>/config
 				submodules, err := GetLocalRepoSubmoduleInfo(worktree)
 				var submoduleStr string // 子模块信息
 				if err != nil {
