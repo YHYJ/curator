@@ -172,7 +172,7 @@ func RollingCloneRepos(confile string) {
 					errList = append(errList, "Get Local Repo Worktree: "+err.Error())
 				}
 				// 获取分支信息
-				branchs, err := GetLocalRepoBranchInfo(worktree)
+				branchs, err := GetRepoBranchInfo(worktree, "local")
 				var branchStr string // 分支信息
 				for _, branch := range branchs {
 					branchStr = branchStr + branch.Name() + ", "

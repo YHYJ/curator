@@ -10,6 +10,7 @@ Description: git操作
 package function
 
 import (
+	"fmt"
 	"io"
 	"io/fs"
 
@@ -40,24 +41,31 @@ func IsLocalRepo(path string) (bool, *git.Repository) {
 	return true, repo
 }
 
+// 输出本地仓库[本地|远程]分支信息
+func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, error) {
+	var branchDir string
+	switch which {
+	case "local":
+		branchDir = ".git/refs/heads"
+	case "remote":
+		branchDir = ".git/refs/remotes/origin"
+	default:
+		return nil, fmt.Errorf("Parameter error: %s", "optional value of which is 'local' or 'remote'")
+	}
+	branchs, err := worktree.Filesystem.ReadDir(branchDir)
+	if err != nil {
+		return nil, err
+	}
+
+	return branchs, nil
+}
+
 // 输出本地仓库子模块信息
 func GetLocalRepoSubmoduleInfo(worktree *git.Worktree) (git.Submodules, error) {
-	// 获取子模块信息
 	submodules, err := worktree.Submodules()
 	if err != nil {
 		return nil, err
 	}
 
 	return submodules, nil
-}
-
-// 输出本地仓库分支信息
-func GetLocalRepoBranchInfo(worktree *git.Worktree) ([]fs.FileInfo, error) {
-	// 获取子模块信息
-	branchs, err := worktree.Filesystem.ReadDir(".git/refs/heads")
-	if err != nil {
-		return nil, err
-	}
-
-	return branchs, nil
 }
