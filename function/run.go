@@ -121,11 +121,13 @@ func RollingCloneRepos(confile string) {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			return
 		}
-		// 开始克隆
+
+		// 克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
 		for _, repo := range repos {
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
 			repoPath := storagePath + "/" + repo.(string)
+			// 克隆前检测
 			if FileExist(repoPath) {
 				isRepo, _ := IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
@@ -147,12 +149,14 @@ func RollingCloneRepos(confile string) {
 					}
 				}
 			}
-			repo, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
+
+			repo, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys) // 开始克隆
+
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			} else { // Clone成功
 				fmt.Printf("\x1b[32m[✔]\x1b[0m ")
-				var errList []string //使用一个Slice存储所有错误信息，作用是美化输出
+				var errList []string //使用一个Slice存储所有错误信息以美化输出
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
 					err := runScript(repoPath, scriptName.(string))
