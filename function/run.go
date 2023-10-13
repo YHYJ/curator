@@ -150,67 +150,67 @@ func RollingCloneRepos(confile string) {
 			}
 
 			// 开始克隆
-			mainRepo, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
+			repo, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			} else { // Clone成功
 				fmt.Printf("\x1b[32m[✔]\x1b[0m ")
-				var errList []string //使用一个Slice存储所有错误信息以美化输出
+				var errList []string // 使用一个Slice存储所有错误信息以美化输出
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
 					if err := runScript(repoPath, scriptName.(string)); err != nil {
 						errList = append(errList, "Run Script "+scriptName.(string)+": "+err.Error())
 					}
 				}
-				// 处理本地仓库主仓库的配置文件.git/config
-				mainRepoConfigFile := repoPath + "/" + ".git/config"
-				if err = updateGitConfig(mainRepoConfigFile, githubLink, giteaLink); err != nil {
+				// 处理主仓库的配置文件.git/config
+				configFile := repoPath + "/" + ".git/config"
+				if err = updateGitConfig(configFile, githubLink, giteaLink); err != nil {
 					errList = append(errList, "Update Git Config (main): "+err.Error())
 				}
-				// 获取本地仓库主仓库的Worktree
-				mainRepoWorktree, err := mainRepo.Worktree()
+				// 获取主仓库的worktree
+				worktree, err := repo.Worktree()
 				if err != nil {
 					errList = append(errList, "Get Local Repo Worktree: "+err.Error())
 				}
-				// 获取本地仓库主仓库的远程分支信息
-				mainRepoRemoteBranchs, err := GetRepoBranchInfo(mainRepoWorktree, "remote")
+				// 获取主仓库的远程分支信息
+				remoteBranchs, err := GetRepoBranchInfo(worktree, "remote")
 				if err != nil {
 					errList = append(errList, "Get Local Repo Branch (remote): "+err.Error())
 				}
-				// 本地仓库主仓库根据远程分支创建本地分支refs/heads/<localBranchName>
-				mainRepoOtherErrList := CreateLocalBranch(mainRepo, mainRepoRemoteBranchs)
-				errList = append(errList, mainRepoOtherErrList...)
-				// 获取本地仓库主仓库的本地分支信息
-				mainRepoLocalBranchs, err := GetRepoBranchInfo(mainRepoWorktree, "local")
+				// 根据远程分支refs/remotes/origin/<remoteBranchName>创建本地分支refs/heads/<localBranchName>
+				otherErrList := CreateLocalBranch(repo, remoteBranchs)
+				errList = append(errList, otherErrList...)
+				// 获取主仓库的本地分支信息
+				localBranchs, err := GetRepoBranchInfo(worktree, "local")
 				if err != nil {
 					errList = append(errList, "Get Local Repo Branch (local): "+err.Error())
 				}
-				var MainRepoLocalBranchStr string // 本地仓库主仓库的所有本地分支信息
-				for _, mainRepoLocalBranch := range mainRepoLocalBranchs {
-					MainRepoLocalBranchStr = MainRepoLocalBranchStr + mainRepoLocalBranch.Name() + ", "
+				var localBranchStr string
+				for _, localBranch := range localBranchs {
+					localBranchStr = localBranchStr + localBranch.Name() + ", "
 				}
-				// 获取本地仓库主仓库的子模块信息
-				submodules, err := GetLocalRepoSubmoduleInfo(mainRepoWorktree)
-				var submoduleStr string // 本地仓库主仓库的所有子模块信息
+				// 获取子模块信息
+				submodules, err := GetLocalRepoSubmoduleInfo(worktree)
+				var submoduleStr string
 				if err != nil {
 					errList = append(errList, "Get Local Repo Submodules: "+err.Error())
 				}
 				for _, submodule := range submodules {
 					submoduleStr = submoduleStr + submodule.Config().Name + ", "
-					// 处理本地仓库子模块的配置文件.git/modules/<submodule>/config
-					submoduleConfigFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
-					if err := updateGitConfig(submoduleConfigFile, githubLink, giteaLink); err != nil {
+					// 处理子模块的配置文件.git/modules/<submodule>/config
+					configFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
+					if err := updateGitConfig(configFile, githubLink, giteaLink); err != nil {
 						errList = append(errList, "Update Git Config (submodule): "+err.Error())
 					}
 				}
-				// 处理并输出本地仓库本地分支和子模块及其分支信息
-				// TODO: 需要添加子模块的分支信息 <13-10-23, YJ> //
-				MainRepoLocalBranchStr = strings.TrimRight(MainRepoLocalBranchStr, ", ")
+				// 处理并输出本地分支和子模块信息
+				// TODO: 需要添加子模块的分支信息，但获取困难 <13-10-23, YJ> //
+				localBranchStr = strings.TrimRight(localBranchStr, ", ")
 				submoduleStr = strings.TrimRight(submoduleStr, ", ")
 				if len(submoduleStr) == 0 { // 分支常有而子模块不常有
-					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m\n", MainRepoLocalBranchStr)
+					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m\n", localBranchStr)
 				} else {
-					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m Submodule: \x1b[35m%s\x1b[0m\n", MainRepoLocalBranchStr, submoduleStr)
+					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m Submodule: \x1b[35m%s\x1b[0m\n", localBranchStr, submoduleStr)
 				}
 				// 输出克隆完成后其他操作产生的错误信息
 				for _, err := range errList {
