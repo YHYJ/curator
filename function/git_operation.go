@@ -63,19 +63,16 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 }
 
 // 本地仓库根据远程分支refs/remotes/origin/<remoteBranchName>创建本地分支refs/heads/<localBranchName>
-func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) {
+func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
+	var errList []string //使用一个Slice存储所有错误信息以美化输出
 	for _, branch := range branchs {
-		fmt.Println(branch.Name(), "---->")
 		// 修改.git/config，增加新的分支配置
 		branchReferenceName := plumbing.NewBranchReferenceName(branch.Name()) // 构建本地分支Reference名，格式：refs/heads/<localBranchName>
-		err := repo.CreateBranch(&config.Branch{                              // 分支配置写入.git/config
+		repo.CreateBranch(&config.Branch{                                     // 分支配置写入.git/config
 			Name:   branch.Name(),
 			Remote: "origin",
 			Merge:  branchReferenceName,
 		})
-		if err != nil {
-			fmt.Printf("\x1b[31m%s\x1b[0m\n", "Branch configuration already exists in .git/config")
-		}
 
 		// 创建一个新的Reference
 		remote := "origin"                                                             // 远程名称
@@ -83,15 +80,16 @@ func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) {
 		remoteReferenceName := plumbing.NewRemoteReferenceName(remote, branch.Name())  // 构建远程分支Reference名，格式：refs/remotes/origin/<remoteBranchName>
 		remoteReferenceData, err := repo.Reference(remoteReferenceName, true)          // 根据远程分支Reference名获取其Hash值，格式：1a8f900411d35a620407ce07902aecadfc782ded refs/remotes/origin/test
 		if err != nil {
-			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+			errList = append(errList, err.Error())
 			continue
 		}
 		newReference := plumbing.NewHashReference(newBranchReferenceName, remoteReferenceData.Hash()) // 基于Hash创建新的Reference
 		if err = repo.Storer.SetReference(newReference); err != nil {                                 // 写入新Reference
-			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+			errList = append(errList, err.Error())
 			continue
 		}
 	}
+	return errList
 }
 
 // 获取本地仓库子模块信息
