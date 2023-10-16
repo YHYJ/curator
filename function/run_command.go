@@ -16,8 +16,8 @@ import (
 )
 
 // 运行指定命令并获取命令输出
-func RunCommandGetResult(command string, args []string) (result string, err error) {
-	_, err = exec.LookPath(command)
+func RunCommandGetResult(command string, args []string) (string, error) {
+	_, err := exec.LookPath(command)
 	if err != nil {
 		return "", err
 	}
@@ -30,13 +30,13 @@ func RunCommandGetResult(command string, args []string) (result string, err erro
 		return "", err
 	}
 	// 类型转换
-	result = strings.TrimRight(string(output), "\n")
+	result := strings.TrimRight(string(output), "\n")
 	return result, nil
 }
 
 // 运行指定命令（命令无输出）
-func RunCommand(command string, args []string) (err error) {
-	_, err = exec.LookPath(command)
+func RunCommand(command string, args []string) error {
+	_, err := exec.LookPath(command)
 	if err != nil {
 		return err
 	}
@@ -48,8 +48,7 @@ func RunCommand(command string, args []string) (err error) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	// 执行命令
-	err = cmd.Run()
-	if err != nil {
+	if err = cmd.Run(); err != nil {
 		return err
 	}
 

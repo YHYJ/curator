@@ -19,7 +19,7 @@ import (
 )
 
 // 更新.git/config文件
-func updateGitConfig(configFile, githubLink, giteaLink string) (err error) {
+func updateGitConfig(configFile, githubLink, giteaLink string) error {
 	// 以读写模式打开文件
 	file, err := os.OpenFile(configFile, os.O_RDWR, os.ModePerm)
 	if err != nil {
@@ -78,18 +78,16 @@ func updateGitConfig(configFile, githubLink, giteaLink string) (err error) {
 }
 
 // 运行脚本
-func runScript(filePath, scriptName string) (err error) {
+func runScript(filePath, scriptName string) error {
 	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
 	if FileExist(filePath + "/" + scriptName) {
 		// 进到指定目录
-		err = os.Chdir(filePath)
-		if err != nil {
+		if err := os.Chdir(filePath); err != nil {
 			return err
 		}
 		// 运行脚本
 		bashArgs := []string{scriptName}
-		err = RunCommand("bash", bashArgs)
-		if err != nil {
+		if err := RunCommand("bash", bashArgs); err != nil {
 			return err
 		}
 	}
