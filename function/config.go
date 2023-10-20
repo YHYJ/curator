@@ -43,7 +43,13 @@ func GetTomlConfig(filePath string) (*toml.Tree, error) {
 // 写入toml配置文件
 func WriteTomlConfig(filePath string) (int64, error) {
 	// 获取指定用户信息
-	userInfo, err := GetUserInfo(1000)
+	userName := func() string {
+		if GetVariable("SUDO_USER") != "" {
+			return GetVariable("SUDO_USER")
+		}
+		return GetVariable("USER")
+	}()
+	userInfo, err := GetUserInfoByName(userName)
 	if err != nil {
 		return 0, err
 	}
