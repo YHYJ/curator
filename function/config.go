@@ -42,24 +42,13 @@ func GetTomlConfig(filePath string) (*toml.Tree, error) {
 
 // 写入toml配置文件
 func WriteTomlConfig(filePath string) (int64, error) {
-	// 获取指定用户信息
-	userName := func() string {
-		if GetVariable("SUDO_USER") != "" {
-			return GetVariable("SUDO_USER")
-		}
-		return GetVariable("USER")
-	}()
-	userInfo, err := GetUserInfoByName(userName)
-	if err != nil {
-		return 0, err
-	}
 	// 定义一个map[string]interface{}类型的变量并赋值
 	exampleConf := map[string]interface{}{
 		"ssh": map[string]interface{}{
-			"rsa_file": userInfo.HomeDir + "/.ssh/id_rsa",
+			"rsa_file": UserInfo.HomeDir + "/.ssh/id_rsa",
 		},
 		"storage": map[string]interface{}{
-			"path": userInfo.HomeDir + "/Documents/Repos",
+			"path": UserInfo.HomeDir + "/Documents/Repos",
 		},
 		"script": map[string]interface{}{
 			"name_list": []string{
