@@ -19,7 +19,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "clone-repos",
 	Short: "Used to clone user-specified repositories",
-	Long:  `Clone-repos is used to clone the specified repository.`,
+	Long:  `clone-repos is used to clone the specified repository.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -35,7 +35,7 @@ func Execute() {
 var cfgFile = function.UserInfo.HomeDir + "/.config" + "/clone-repos/config.toml"
 
 func init() {
-	rootCmd.Flags().BoolP("help", "h", false, "help for Clone-repos")
+	rootCmd.Flags().BoolP("help", "h", false, "help for clone-repos")
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "Config file")
 }

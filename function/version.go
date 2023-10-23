@@ -13,7 +13,7 @@ import "fmt"
 
 // 程序信息
 var (
-	name    string = "Clone-repos"
+	name    string = "clone-repos"
 	version string = "v0.6.0"
 )
 
