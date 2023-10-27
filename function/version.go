@@ -15,7 +15,7 @@ import "fmt"
 const (
 	Name    = "Clone-repos"
 	Version = "v0.6.2"
-	Path    = "github.com/yhyj/Clone-repos"
+	Path    = "github.com/yhyj/clone-repos"
 )
 
 func ProgramInfo(only bool) string {
