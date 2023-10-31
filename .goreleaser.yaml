@@ -5,6 +5,13 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    gcflags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/yhyj/{{ .ProjectName }}/function.gitCommitHash={{.Commit}}
+      - -X github.com/yhyj/{{ .ProjectName }}/function.buildTime={{.Timestamp}}
+      - -X github.com/yhyj/{{ .ProjectName }}/function.buildBy=goreleaser
     goos:
       - linux
       - darwin
