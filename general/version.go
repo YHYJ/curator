@@ -13,22 +13,22 @@ import "fmt"
 
 // 程序信息
 const (
-	name    = "Clone-repos"
-	version = "v0.7.2"
-	project = "github.com/yhyj/clone-repos"
+	Name    string = "Clone-repos"
+	Version string = "v0.7.2"
+	Project string = "github.com/yhyj/clone-repos"
 )
 
 // 编译信息
 var (
-	gitCommitHash string = "unknown"
-	buildTime     string = "unknown"
-	buildBy       string = "unknown"
+	GitCommitHash string = "unknown"
+	BuildTime     string = "unknown"
+	BuildBy       string = "unknown"
 )
 
 func ProgramInfo(only bool) string {
-	programInfo := fmt.Sprintf("%s\n", version)
+	programInfo := fmt.Sprintf("%s\n", Version)
 	if !only {
-		programInfo = fmt.Sprintf("%s version: %s\nGit commit hash: %s\nBuilt on: %s\nBuilt by: %s\n", name, version, gitCommitHash, buildTime, buildBy)
+		programInfo = fmt.Sprintf("%s version: %s\nGit commit hash: %s\nBuilt on: %s\nBuilt by: %s\n", Name, Version, GitCommitHash, BuildTime, BuildBy)
 	}
 	return programInfo
 }
