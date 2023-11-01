@@ -9,9 +9,9 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-      - -X github.com/yhyj/{{ .ProjectName }}/general.gitCommitHash={{.Commit}}
-      - -X github.com/yhyj/{{ .ProjectName }}/general.buildTime={{.Timestamp}}
-      - -X github.com/yhyj/{{ .ProjectName }}/general.buildBy=goreleaser
+      - -X github.com/yhyj/{{ .ProjectName }}/general.GitCommitHash={{.Commit}}
+      - -X github.com/yhyj/{{ .ProjectName }}/general.BuildTime={{.Timestamp}}
+      - -X github.com/yhyj/{{ .ProjectName }}/general.BuildBy=goreleaser
     goos:
       - linux
       - darwin
