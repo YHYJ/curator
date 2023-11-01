@@ -13,7 +13,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/function"
+	"github.com/yhyj/clone-repos/cli"
+	"github.com/yhyj/clone-repos/general"
 )
 
 var configCmd = &cobra.Command{
@@ -29,19 +30,19 @@ var configCmd = &cobra.Command{
 		printFlag, _ := cmd.Flags().GetBool("print")
 
 		// 检查配置文件是否存在
-		cfgFileExist := function.FileExist(cfgFile)
+		cfgFileExist := general.FileExist(cfgFile)
 
 		// 执行配置文件操作
 		if createFlag {
 			if cfgFileExist {
 				if forceFlag {
-					if err := function.DeleteFile(cfgFile); err != nil {
+					if err := general.DeleteFile(cfgFile); err != nil {
 						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					}
-					if err := function.CreateFile(cfgFile); err != nil {
+					if err := general.CreateFile(cfgFile); err != nil {
 						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					}
-					_, err := function.WriteTomlConfig(cfgFile)
+					_, err := cli.WriteTomlConfig(cfgFile)
 					if err != nil {
 						fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					}
@@ -50,11 +51,11 @@ var configCmd = &cobra.Command{
 					fmt.Printf("Create \x1b[33m%s\x1b[0m: file exists (use --force to overwrite)\n", cfgFile)
 				}
 			} else {
-				if err := function.CreateFile(cfgFile); err != nil {
+				if err := general.CreateFile(cfgFile); err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					return
 				}
-				_, err := function.WriteTomlConfig(cfgFile)
+				_, err := cli.WriteTomlConfig(cfgFile)
 				if err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 					return
@@ -65,7 +66,7 @@ var configCmd = &cobra.Command{
 
 		if printFlag {
 			if cfgFileExist {
-				configTree, err := function.GetTomlConfig(cfgFile)
+				configTree, err := cli.GetTomlConfig(cfgFile)
 				if err != nil {
 					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 				} else {

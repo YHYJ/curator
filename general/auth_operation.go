@@ -7,7 +7,7 @@ Created Time: 2023-10-11 14:30:32
 Description: 身份认证
 */
 
-package function
+package general
 
 import (
 	"os"

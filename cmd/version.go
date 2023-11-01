@@ -13,7 +13,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/function"
+	"github.com/yhyj/clone-repos/general"
 )
 
 // versionCmd represents the version command
@@ -25,7 +25,7 @@ var versionCmd = &cobra.Command{
 		// 解析参数
 		onlyFlag, _ := cmd.Flags().GetBool("only")
 
-		programInfo := function.ProgramInfo(onlyFlag)
+		programInfo := general.ProgramInfo(onlyFlag)
 		fmt.Printf(programInfo)
 	},
 }

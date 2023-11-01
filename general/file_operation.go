@@ -7,7 +7,7 @@ Created Time: 2023-04-24 16:41:17
 Description: 操作文件
 */
 
-package function
+package general
 
 import (
 	"io"

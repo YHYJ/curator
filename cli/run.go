@@ -7,7 +7,7 @@ Created Time: 2023-04-18 15:16:00
 Description:
 */
 
-package function
+package cli
 
 import (
 	"bufio"
@@ -16,6 +16,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/yhyj/clone-repos/general"
 )
 
 // 更新.git/config文件
@@ -80,14 +82,14 @@ func updateGitConfig(configFile, githubLink, giteaLink string) error {
 // 运行脚本
 func runScript(filePath, scriptName string) error {
 	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
-	if FileExist(filePath + "/" + scriptName) {
+	if general.FileExist(filePath + "/" + scriptName) {
 		// 进到指定目录
 		if err := os.Chdir(filePath); err != nil {
 			return err
 		}
 		// 运行脚本
 		bashArgs := []string{scriptName}
-		if err := RunCommand("bash", bashArgs); err != nil {
+		if err := general.RunCommand("bash", bashArgs); err != nil {
 			return err
 		}
 	}
@@ -114,7 +116,7 @@ func RollingCloneRepos(confile string) {
 		// 定义变量
 		var interval = 100 * time.Millisecond
 		// 获取公钥
-		publicKeys, err := GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
+		publicKeys, err := general.GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
 		if err != nil {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			return
@@ -126,16 +128,16 @@ func RollingCloneRepos(confile string) {
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
 			repoPath := storagePath + "/" + repo.(string)
 			// 克隆前检测
-			if FileExist(repoPath) {
-				isRepo, _ := IsLocalRepo(repoPath)
+			if general.FileExist(repoPath) {
+				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
 					fmt.Printf("\x1b[32m[✔]\x1b[0m \x1b[34m%s\x1b[0m\n", "Local repo already exists")
 					// 添加一个延时，使输出更加顺畅
 					time.Sleep(interval)
 					continue
 				} else { // 不是本地仓库
-					if FolderEmpty(repoPath) { // 空文件夹则删除
-						if err := DeleteFile(repoPath); err != nil {
+					if general.FolderEmpty(repoPath) { // 空文件夹则删除
+						if err := general.DeleteFile(repoPath); err != nil {
 							fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 						}
 					} else { // 文件夹非空
@@ -148,7 +150,7 @@ func RollingCloneRepos(confile string) {
 			}
 
 			// 开始克隆
-			repo, err := CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
+			repo, err := general.CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			} else { // Clone成功
@@ -171,15 +173,15 @@ func RollingCloneRepos(confile string) {
 					errList = append(errList, "Get Local Repo Worktree: "+err.Error())
 				}
 				// 获取主仓库的远程分支信息
-				remoteBranchs, err := GetRepoBranchInfo(worktree, "remote")
+				remoteBranchs, err := general.GetRepoBranchInfo(worktree, "remote")
 				if err != nil {
 					errList = append(errList, "Get Local Repo Branch (remote): "+err.Error())
 				}
 				// 根据远程分支refs/remotes/origin/<remoteBranchName>创建本地分支refs/heads/<localBranchName>
-				otherErrList := CreateLocalBranch(repo, remoteBranchs)
+				otherErrList := general.CreateLocalBranch(repo, remoteBranchs)
 				errList = append(errList, otherErrList...)
 				// 获取主仓库的本地分支信息
-				localBranchs, err := GetRepoBranchInfo(worktree, "local")
+				localBranchs, err := general.GetRepoBranchInfo(worktree, "local")
 				if err != nil {
 					errList = append(errList, "Get Local Repo Branch (local): "+err.Error())
 				}
@@ -188,7 +190,7 @@ func RollingCloneRepos(confile string) {
 					localBranchStr = localBranchStr + localBranch.Name() + ", "
 				}
 				// 获取子模块信息
-				submodules, err := GetLocalRepoSubmoduleInfo(worktree)
+				submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 				var submoduleStr string
 				if err != nil {
 					errList = append(errList, "Get Local Repo Submodules: "+err.Error())

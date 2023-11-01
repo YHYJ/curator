@@ -7,7 +7,7 @@ Created Time: 2023-10-11 14:44:19
 Description: git操作
 */
 
-package function
+package general
 
 import (
 	"fmt"

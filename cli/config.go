@@ -7,7 +7,7 @@ Created Time: 2023-04-24 16:41:33
 Description: 子命令`config`的实现
 */
 
-package function
+package cli
 
 import (
 	"fmt"
@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml"
+	"github.com/yhyj/clone-repos/general"
 )
 
 // 判断文件是不是toml文件
@@ -27,7 +28,7 @@ func isTomlFile(filePath string) bool {
 
 // 读取toml配置文件
 func GetTomlConfig(filePath string) (*toml.Tree, error) {
-	if !FileExist(filePath) {
+	if !general.FileExist(filePath) {
 		return nil, fmt.Errorf("Open %s: no such file or directory", filePath)
 	}
 	if !isTomlFile(filePath) {
@@ -45,10 +46,10 @@ func WriteTomlConfig(filePath string) (int64, error) {
 	// 定义一个map[string]interface{}类型的变量并赋值
 	exampleConf := map[string]interface{}{
 		"ssh": map[string]interface{}{
-			"rsa_file": UserInfo.HomeDir + "/.ssh/id_rsa",
+			"rsa_file": general.UserInfo.HomeDir + "/.ssh/id_rsa",
 		},
 		"storage": map[string]interface{}{
-			"path": UserInfo.HomeDir + "/Documents/Repos",
+			"path": general.UserInfo.HomeDir + "/Documents/Repos",
 		},
 		"script": map[string]interface{}{
 			"name_list": []string{
@@ -86,7 +87,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 			},
 		},
 	}
-	if !FileExist(filePath) {
+	if !general.FileExist(filePath) {
 		return 0, fmt.Errorf("Open %s: no such file or directory", filePath)
 	}
 	if !isTomlFile(filePath) {

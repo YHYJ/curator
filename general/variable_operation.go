@@ -7,7 +7,7 @@ Created Time: 2023-04-18 13:46:00
 Description: 操作变量
 */
 
-package function
+package general
 
 import (
 	"os"

@@ -13,7 +13,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/function"
+	"github.com/yhyj/clone-repos/general"
 )
 
 var rootCmd = &cobra.Command{
@@ -32,7 +32,7 @@ func Execute() {
 	}
 }
 
-var cfgFile = function.UserInfo.HomeDir + "/.config" + "/clone-repos/config.toml"
+var cfgFile = general.UserInfo.HomeDir + "/.config" + "/clone-repos/config.toml"
 
 func init() {
 	rootCmd.Flags().BoolP("help", "h", false, "help for clone-repos")

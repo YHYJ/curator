@@ -11,7 +11,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/function"
+	"github.com/yhyj/clone-repos/cli"
 )
 
 // runCmd represents the run command
@@ -20,7 +20,7 @@ var runCmd = &cobra.Command{
 	Short: "Start Cloning",
 	Long:  `Start cloning.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		function.RollingCloneRepos(cfgFile)
+		cli.RollingCloneRepos(cfgFile)
 	},
 }
 

@@ -7,7 +7,7 @@ Created Time: 2023-10-20 14:11:25
 Description: 定义项目变量
 */
 
-package function
+package general
 
 // 用户名，当程序提权运行时，使用SUDO_USER变量获取提权前的用户名
 var UserName = func() string {

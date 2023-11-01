@@ -7,7 +7,7 @@ Created Time: 2023-06-09 15:01:47
 Description: 执行系统命令的函数
 */
 
-package function
+package general
 
 import (
 	"os"
