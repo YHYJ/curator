@@ -1,10 +1,10 @@
 /*
-File: auth_operation.go
+File: define_authentication.go
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-10-11 14:30:32
 
-Description: 身份认证
+Description: 身份认证函数
 */
 
 package general
