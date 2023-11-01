@@ -14,7 +14,7 @@ import "fmt"
 // 程序信息
 const (
 	Name    string = "Clone-repos"
-	Version string = "v0.7.2"
+	Version string = "v0.7.3"
 	Project string = "github.com/yhyj/clone-repos"
 )
 
