@@ -21,7 +21,7 @@ import (
 )
 
 // 更新.git/config文件
-func updateGitConfig(configFile, githubLink, giteaLink string) error {
+func updateGitConfig(configFile, originalLink, newLink string) error {
 	// 以读写模式打开文件
 	file, err := os.OpenFile(configFile, os.O_RDWR, os.ModePerm)
 	if err != nil {
@@ -58,7 +58,7 @@ func updateGitConfig(configFile, githubLink, giteaLink string) error {
 			// 第二次匹配：创建2行"pushurl"
 			// 该次匹配是对于.git/config的通用处理
 			pushUrl1 = strings.ReplaceAll(line, "url", "pushurl")
-			pushUrl2 = strings.ReplaceAll(pushUrl1, githubLink, giteaLink)
+			pushUrl2 = strings.ReplaceAll(pushUrl1, originalLink, newLink)
 			lines = append(lines, pushUrl1)
 			lines = append(lines, pushUrl2)
 			matched = true
@@ -96,7 +96,7 @@ func runScript(filePath, scriptName string) error {
 	return nil
 }
 
-func RollingCloneRepos(confile string) {
+func RollingCloneRepos(confile, source string) {
 	// 加载配置文件
 	conf, err := GetTomlConfig(confile)
 	if err != nil {
@@ -121,6 +121,33 @@ func RollingCloneRepos(confile string) {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			return
 		}
+
+		// 确定仓库源
+		repoSource := func() map[string]string {
+			switch source {
+			case "github":
+				return map[string]string{
+					"repoSourceUrl":      githubUrl,
+					"repoSourceUsername": githubUsername,
+					"originalLink":       githubLink,
+					"newLink":            giteaLink,
+				}
+			case "gitea":
+				return map[string]string{
+					"repoSourceUrl":      giteaUrl,
+					"repoSourceUsername": giteaUsername,
+					"originalLink":       giteaLink,
+					"newLink":            githubLink,
+				}
+			default:
+				return map[string]string{
+					"repoSourceUrl":      githubUrl,
+					"repoSourceUsername": githubUsername,
+					"originalLink":       githubLink,
+					"newLink":            giteaLink,
+				}
+			}
+		}()
 
 		// 克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
@@ -150,7 +177,7 @@ func RollingCloneRepos(confile string) {
 				}
 			}
 			// 开始克隆
-			repo, err := general.CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
+			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repo.(string), publicKeys)
 			if err != nil { // Clone失败
 				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			} else { // Clone成功
@@ -164,7 +191,7 @@ func RollingCloneRepos(confile string) {
 				}
 				// 处理主仓库的配置文件.git/config
 				configFile := repoPath + "/" + ".git/config"
-				if err = updateGitConfig(configFile, githubLink, giteaLink); err != nil {
+				if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
 					errList = append(errList, "Update Git Config (main): "+err.Error())
 				}
 				// 获取主仓库的worktree
@@ -199,7 +226,7 @@ func RollingCloneRepos(confile string) {
 					submoduleStr = submoduleStr + submodule.Config().Name + ", "
 					// 处理子模块的配置文件.git/modules/<submodule>/config
 					configFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
-					if err := updateGitConfig(configFile, githubLink, giteaLink); err != nil {
+					if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
 						errList = append(errList, "Update Git Config (submodule): "+err.Error())
 					}
 				}

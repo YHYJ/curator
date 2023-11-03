@@ -20,11 +20,17 @@ var runCmd = &cobra.Command{
 	Short: "Start Cloning",
 	Long:  `Start cloning.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.RollingCloneRepos(cfgFile)
+		// 解析参数
+		sourceFlag, _ := cmd.Flags().GetString("source")
+
+		cli.RollingCloneRepos(cfgFile, sourceFlag)
 	},
 }
 
 func init() {
+	var source string
+	runCmd.Flags().StringVarP(&source, "source", "s", "github", "Specify the data source (github or gitea)")
+
 	runCmd.Flags().BoolP("help", "h", false, "help for run command")
 	rootCmd.AddCommand(runCmd)
 }
