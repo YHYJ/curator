@@ -7,6 +7,7 @@ require (
 	github.com/pelletier/go-toml v1.9.5
 	github.com/spf13/cobra v1.7.0
 	golang.org/x/crypto v0.13.0
+	golang.org/x/term v0.12.0
 )
 
 require (

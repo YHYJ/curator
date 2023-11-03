@@ -116,7 +116,7 @@ func RollingCloneRepos(confile string) {
 		// 定义变量
 		var interval = 100 * time.Millisecond
 		// 获取公钥
-		publicKeys, err := general.GetPublicKeysByGit(pemfile.(string), "") // TODO: 需要处理有password的情况 <11-10-23, YJ> //
+		publicKeys, err := general.GetPublicKeysByGit(pemfile.(string))
 		if err != nil {
 			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
 			return
@@ -125,9 +125,10 @@ func RollingCloneRepos(confile string) {
 		// 克隆
 		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
 		for _, repo := range repos {
+			// 提示信息
 			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
 			repoPath := storagePath + "/" + repo.(string)
-			// 克隆前检测
+			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
@@ -148,7 +149,6 @@ func RollingCloneRepos(confile string) {
 					}
 				}
 			}
-
 			// 开始克隆
 			repo, err := general.CloneRepoViaSSH(repoPath, githubUrl, githubUsername, repo.(string), publicKeys)
 			if err != nil { // Clone失败
