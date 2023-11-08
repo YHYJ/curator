@@ -76,7 +76,7 @@ func GetUserInfoByName(userName string) (*user.User, error) {
 	return userInfo, nil
 }
 
-// GetUserInfoById 根据ID获取用户信息
+// GetUserInfoById 根据 ID 获取用户信息
 func GetUserInfoById(userId int) (*user.User, error) {
 	userInfo, err := user.LookupId(strconv.Itoa(userId))
 	if err != nil {
