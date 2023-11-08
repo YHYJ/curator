@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-// 运行指定命令并获取命令输出
+// RunCommandGetResult 运行指定命令并获取命令输出
 func RunCommandGetResult(command string, args []string) (string, error) {
 	_, err := exec.LookPath(command)
 	if err != nil {
@@ -34,7 +34,7 @@ func RunCommandGetResult(command string, args []string) (string, error) {
 	return result, nil
 }
 
-// 运行指定命令（命令无输出）
+// RunCommand 运行指定命令（命令无输出）
 func RunCommand(command string, args []string) error {
 	_, err := exec.LookPath(command)
 	if err != nil {

@@ -20,7 +20,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
 
-// 使用SSH协议将远端仓库克隆到本地
+// CloneRepoViaSSH 使用 SSH 协议将远端仓库克隆到本地
 func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.PublicKeys) (*git.Repository, error) {
 	repoUrl := "git" + "@" + URL + ":" + username + "/" + repoName + ".git"
 	repo, err := git.PlainClone(repoPath, false, &git.CloneOptions{
@@ -33,7 +33,7 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 	return repo, err
 }
 
-// 检测是不是本地仓库，是的话返回*git.Repository对象
+// IsLocalRepo 检测是不是本地仓库，是的话返回 *git.Repository 对象
 func IsLocalRepo(path string) (bool, *git.Repository) {
 	// 能打开就是本地仓库
 	repo, err := git.PlainOpen(path)
@@ -43,7 +43,7 @@ func IsLocalRepo(path string) (bool, *git.Repository) {
 	return true, repo
 }
 
-// 获取本地仓库[本地|远程]分支信息
+// GetRepoBranchInfo 获取本地仓库的[本地|远程]分支信息
 func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, error) {
 	var branchDir string
 	switch which {
@@ -62,7 +62,7 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 	return branchs, nil
 }
 
-// 本地仓库根据远程分支refs/remotes/origin/<remoteBranchName>创建本地分支refs/heads/<localBranchName>
+// CreateLocalBranch 本地仓库根据远程分支 refs/remotes/origin/<remoteBranchName> 创建本地分支 refs/heads/<localBranchName>
 func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
 	var errList []string //使用一个Slice存储所有错误信息以美化输出
 	for _, branch := range branchs {
@@ -92,7 +92,7 @@ func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
 	return errList
 }
 
-// 获取本地仓库子模块信息
+// GetLocalRepoSubmoduleInfo 获取本地仓库子模块信息
 func GetLocalRepoSubmoduleInfo(worktree *git.Worktree) (git.Submodules, error) {
 	submodules, err := worktree.Submodules()
 	if err != nil {

@@ -25,6 +25,7 @@ var (
 	BuildBy       string = "unknown"
 )
 
+// ProgramInfo 返回程序信息
 func ProgramInfo(only bool) string {
 	programInfo := fmt.Sprintf("%s\n", Version)
 	if !only {

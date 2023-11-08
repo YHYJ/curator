@@ -18,7 +18,7 @@ import (
 	"github.com/yhyj/clone-repos/general"
 )
 
-// 判断文件是不是toml文件
+// isTomlFile 判断文件是不是 toml 文件
 func isTomlFile(filePath string) bool {
 	if strings.HasSuffix(filePath, ".toml") {
 		return true
@@ -26,7 +26,7 @@ func isTomlFile(filePath string) bool {
 	return false
 }
 
-// 读取toml配置文件
+// GetTomlConfig 读取 toml 配置文件
 func GetTomlConfig(filePath string) (*toml.Tree, error) {
 	if !general.FileExist(filePath) {
 		return nil, fmt.Errorf("Open %s: no such file or directory", filePath)
@@ -41,7 +41,7 @@ func GetTomlConfig(filePath string) (*toml.Tree, error) {
 	return tree, nil
 }
 
-// 写入toml配置文件
+// WriteTomlConfig 写入 toml 配置文件
 func WriteTomlConfig(filePath string) (int64, error) {
 	// 定义一个map[string]interface{}类型的变量并赋值
 	exampleConf := map[string]interface{}{

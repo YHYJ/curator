@@ -20,7 +20,7 @@ import (
 	"github.com/yhyj/clone-repos/general"
 )
 
-// 更新.git/config文件
+// updateGitConfig 更新 .git/config 文件
 func updateGitConfig(configFile, originalLink, newLink string) error {
 	// 以读写模式打开文件
 	file, err := os.OpenFile(configFile, os.O_RDWR, os.ModePerm)
@@ -79,7 +79,7 @@ func updateGitConfig(configFile, originalLink, newLink string) error {
 	return nil
 }
 
-// 运行脚本
+// runScript 运行 shell 脚本
 func runScript(filePath, scriptName string) error {
 	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
 	if general.FileExist(filePath + "/" + scriptName) {
@@ -96,6 +96,7 @@ func runScript(filePath, scriptName string) error {
 	return nil
 }
 
+// RollingCloneRepos 克隆仓库
 func RollingCloneRepos(confile, source string) {
 	// 加载配置文件
 	conf, err := GetTomlConfig(confile)

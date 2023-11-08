@@ -22,7 +22,7 @@ import (
 	"golang.org/x/term"
 )
 
-// 使用go-git自带的方法获取公钥
+// GetPublicKeysByGit 使用 go-git 自带的方法获取公钥
 func GetPublicKeysByGit(pemFile string) (*ssh.PublicKeys, error) {
 	_, err := os.Stat(pemFile)
 	if err != nil {
@@ -57,7 +57,7 @@ func GetPublicKeysByGit(pemFile string) (*ssh.PublicKeys, error) {
 	return publicKeys, err
 }
 
-// 使用crypto/ssh模块获取公钥
+// GetPublicKeysBySSH 使用 crypto/ssh 模块获取公钥
 func GetPublicKeysBySSH(pemFile string) (transport.AuthMethod, error) {
 	var auth transport.AuthMethod
 	sshKey, err := os.ReadFile(pemFile)
@@ -73,7 +73,7 @@ func GetPublicKeysBySSH(pemFile string) (transport.AuthMethod, error) {
 	return auth, nil
 }
 
-// 清除内存中的密码，以增加安全性
+// clearPassword 清除内存中的密码，以增加安全性
 func clearPassword(password []byte) {
 	for i := range password {
 		password[i] = 0
