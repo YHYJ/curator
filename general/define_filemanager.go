@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-24 16:41:17
 
-Description: 文件操作
+Description: 文件管理
 */
 
 package general
@@ -15,6 +15,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 )
@@ -89,14 +90,21 @@ func ReadFileCount(file, key string) int {
 
 // FileExist 判断文件是否存在
 func FileExist(filePath string) bool {
-	_, err := os.Stat(filePath)
-	if err != nil {
-		if os.IsExist(err) {
-			return true
-		}
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return false
 	}
 	return true
+}
+
+// GetAbsPath 获取指定文件的绝对路径
+func GetAbsPath(filePath string) string {
+	// 获取绝对路径
+	absPath, err := filepath.Abs(filePath)
+	if err != nil {
+		return ""
+	} else {
+		return absPath
+	}
 }
 
 // FileEmpty 判断文件是否为空（无法判断文件夹）
