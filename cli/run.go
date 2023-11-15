@@ -101,7 +101,7 @@ func RollingCloneRepos(confile, source string) {
 	// 加载配置文件
 	conf, err := GetTomlConfig(confile)
 	if err != nil {
-		fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+		fmt.Printf(general.ErrorBaseFormat, err)
 	} else {
 		// 获取配置项
 		pemfile := conf.Get("ssh.rsa_file")
@@ -119,7 +119,7 @@ func RollingCloneRepos(confile, source string) {
 		// 获取公钥
 		publicKeys, err := general.GetPublicKeysByGit(pemfile.(string))
 		if err != nil {
-			fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+			fmt.Printf(general.ErrorBaseFormat, err)
 			return
 		}
 
@@ -151,23 +151,24 @@ func RollingCloneRepos(confile, source string) {
 		}()
 
 		// 克隆
-		fmt.Printf("Clone to: \x1b[32;1m%s\x1b[0m\n\n", storagePath)
+		fmt.Printf(general.TipsPrefixFormat, "Clone to", ": ", storagePath)
+		fmt.Println()
 		for _, repo := range repos {
 			// 提示信息
-			fmt.Printf("\x1b[32;1m==>\x1b[0m Cloning \x1b[36;1m%s\x1b[0m: ", repo.(string))
+			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, "==>", " Cloning ", repo.(string), ":", " ")
 			repoPath := storagePath + "/" + repo.(string)
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
-					fmt.Printf("\x1b[32m[✔]\x1b[0m \x1b[34m%s\x1b[0m\n", "Local repo already exists")
+					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repo already exists")
 					// 添加一个延时，使输出更加顺畅
 					time.Sleep(interval)
 					continue
 				} else { // 不是本地仓库
 					if general.FolderEmpty(repoPath) { // 空文件夹则删除
 						if err := general.DeleteFile(repoPath); err != nil {
-							fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+							fmt.Printf(general.ErrorBaseFormat, err)
 						}
 					} else { // 文件夹非空
 						fmt.Println("Folder is not a local repo and is not empty")
@@ -180,9 +181,9 @@ func RollingCloneRepos(confile, source string) {
 			// 开始克隆
 			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repo.(string), publicKeys)
 			if err != nil { // Clone失败
-				fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+				fmt.Printf(general.ErrorBaseFormat, err)
 			} else { // Clone成功
-				fmt.Printf("\x1b[32m[✔]\x1b[0m ")
+				fmt.Printf(general.SuccessSuffixNoNewLineFormat, "[✔]", "", " ")
 				var errList []string // 使用一个Slice存储所有错误信息以美化输出
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
@@ -236,13 +237,13 @@ func RollingCloneRepos(confile, source string) {
 				localBranchStr = strings.TrimRight(localBranchStr, ", ")
 				submoduleStr = strings.TrimRight(submoduleStr, ", ")
 				if len(submoduleStr) == 0 { // 分支常有而子模块不常有
-					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m\n", localBranchStr)
+					fmt.Printf(general.InfoPrefixFormat, "Branch", ": ", localBranchStr)
 				} else {
-					fmt.Printf("Branch: \x1b[33;1m%s\x1b[0m Submodule: \x1b[35m%s\x1b[0m\n", localBranchStr, submoduleStr)
+					fmt.Printf(general.Info2PPrefixFormat, "Branch", ": ", localBranchStr, " Submodule: ", submoduleStr)
 				}
 				// 输出克隆完成后其他操作产生的错误信息
 				for _, err := range errList {
-					fmt.Printf("\x1b[31m%s\x1b[0m\n", err)
+					fmt.Printf(general.ErrorBaseFormat, err)
 				}
 			}
 			// 添加一个延时，使输出更加顺畅
