@@ -87,18 +87,20 @@ func WriteTomlConfig(filePath string) (int64, error) {
 			},
 		},
 	}
+	// 检测配置文件是否存在
 	if !general.FileExist(filePath) {
 		return 0, fmt.Errorf("Open %s: no such file or directory", filePath)
 	}
+	// 检测配置文件是否是 toml 文件
 	if !isTomlFile(filePath) {
 		return 0, fmt.Errorf("Open %s: is not a toml file", filePath)
 	}
-	// 把exampleConf转换为*toml.Tree
+	// 把 exampleConf 转换为 *toml.Tree 类型
 	tree, err := toml.TreeFromMap(exampleConf)
 	if err != nil {
 		return 0, err
 	}
-	// 打开一个文件并获取io.Writer接口
+	// 打开一个文件并获取 io.Writer 接口
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		return 0, err
