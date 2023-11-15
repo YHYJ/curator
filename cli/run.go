@@ -13,6 +13,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -82,7 +83,7 @@ func updateGitConfig(configFile, originalLink, newLink string) error {
 // runScript 运行 shell 脚本
 func runScript(filePath, scriptName string) error {
 	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
-	if general.FileExist(filePath + "/" + scriptName) {
+	if general.FileExist(filepath.Join(filePath, scriptName)) {
 		// 进到指定目录
 		if err := os.Chdir(filePath); err != nil {
 			return err
@@ -156,7 +157,7 @@ func RollingCloneRepos(confile, source string) {
 		for _, repo := range repos {
 			// 提示信息
 			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, "==>", " Cloning ", repo.(string), ":", " ")
-			repoPath := storagePath + "/" + repo.(string)
+			repoPath := filepath.Join(storagePath, repo.(string))
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
@@ -192,7 +193,7 @@ func RollingCloneRepos(confile, source string) {
 					}
 				}
 				// 处理主仓库的配置文件.git/config
-				configFile := repoPath + "/" + ".git/config"
+				configFile := filepath.Join(repoPath, ".git", "config")
 				if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
 					errList = append(errList, "Update Git Config (main): "+err.Error())
 				}
@@ -227,7 +228,7 @@ func RollingCloneRepos(confile, source string) {
 				for _, submodule := range submodules {
 					submoduleStr = submoduleStr + submodule.Config().Name + ", "
 					// 处理子模块的配置文件.git/modules/<submodule>/config
-					configFile := fmt.Sprintf("%s/%s/%s/%s", repoPath, ".git/modules", submodule.Config().Name, "config")
+					configFile := filepath.Join(repoPath, ".git", "modules", submodule.Config().Name, "config")
 					if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
 						errList = append(errList, "Update Git Config (submodule): "+err.Error())
 					}

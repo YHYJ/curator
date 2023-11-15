@@ -12,6 +12,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/pelletier/go-toml"
@@ -46,10 +47,10 @@ func WriteTomlConfig(filePath string) (int64, error) {
 	// 定义一个map[string]interface{}类型的变量并赋值
 	exampleConf := map[string]interface{}{
 		"ssh": map[string]interface{}{
-			"rsa_file": general.UserInfo.HomeDir + "/.ssh/id_rsa",
+			"rsa_file": filepath.Join(general.UserInfo.HomeDir, ".ssh", "id_rsa"),
 		},
 		"storage": map[string]interface{}{
-			"path": general.UserInfo.HomeDir + "/Documents/Repos",
+			"path": filepath.Join(general.UserInfo.HomeDir, "Documents", "Repos"),
 		},
 		"script": map[string]interface{}{
 			"name_list": []string{

@@ -11,6 +11,7 @@ package cmd
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/yhyj/clone-repos/general"
@@ -32,10 +33,10 @@ func Execute() {
 	}
 }
 
-var cfgFile = general.UserInfo.HomeDir + "/.config" + "/clone-repos/config.toml"
+var cfgFile = filepath.Join(general.UserInfo.HomeDir, ".config", "clone-repos", "config.toml")
 
 func init() {
 	rootCmd.Flags().BoolP("help", "h", false, "help for clone-repos")
 
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "Config file")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "Specify configuration file")
 }
