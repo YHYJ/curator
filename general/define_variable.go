@@ -78,7 +78,7 @@ var (
 // ---------- 环境变量
 
 // 操作系统
-var platform = runtime.GOOS
+var Platform = runtime.GOOS
 
 // 用户名，当程序提权运行时，使用SUDO_USER变量获取提权前的用户名
 var UserName = func() string {
@@ -104,9 +104,9 @@ var platformChart = map[string]map[string]string{
 
 // GetVariable 获取环境变量
 func GetVariable(key string) string {
-	if innerMap, exists := platformChart[platform]; exists {
+	if innerMap, exists := platformChart[Platform]; exists {
 		if _, variableExists := innerMap[key]; variableExists {
-			key = platformChart[platform][key]
+			key = platformChart[Platform][key]
 		}
 	}
 	variable := os.Getenv(key)

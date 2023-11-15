@@ -17,10 +17,11 @@ import (
 	"github.com/yhyj/clone-repos/general"
 )
 
+// configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Operate configuration file",
-	Long:  `Operate configuration file.`,
+	Long:  `Manipulate the program's configuration files, including generating and printing.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 获取配置文件路径
 		cfgFile, _ := cmd.Flags().GetString("config")
@@ -42,13 +43,16 @@ var configCmd = &cobra.Command{
 				if forceFlag {
 					if err := general.DeleteFile(cfgFile); err != nil {
 						fmt.Printf(general.ErrorBaseFormat, err)
+						return
 					}
 					if err := general.CreateFile(cfgFile); err != nil {
 						fmt.Printf(general.ErrorBaseFormat, err)
+						return
 					}
 					_, err := cli.WriteTomlConfig(cfgFile)
 					if err != nil {
 						fmt.Printf(general.ErrorBaseFormat, err)
+						return
 					}
 					fmt.Printf(general.InfoPrefixSuffixFormat, "Create", " ", cfgFile, ": ", "file overwritten")
 				} else {

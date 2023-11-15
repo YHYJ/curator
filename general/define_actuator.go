@@ -48,7 +48,7 @@ func RunCommand(command string, args []string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	// 执行命令
-	if err = cmd.Run(); err != nil {
+	if err := cmd.Run(); err != nil {
 		return err
 	}
 
