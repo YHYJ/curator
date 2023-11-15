@@ -20,9 +20,9 @@ import (
 
 // 输出格式变量
 var (
-	// 常规输出格式 1部分: <输出内容>
-	Regelar1PFormat = "%s\n"
-	// 常规输出格式 2部分: <输出内容1><输出内容2>
+	// 常规输出格式 常规输出: <输出内容>
+	RegelarFormat = "%s\n"
+	// 常规输出格式 常规输出·2部分: <输出内容1><输出内容2>
 	Regelar2PFormat = "%s%s\n"
 
 	// 标题输出格式 H1级别标题: <标题文字>
@@ -33,6 +33,10 @@ var (
 	// 分隔线输出格式 显性分隔线: <分隔线>
 	LineShownFormat = "\x1b[30;1m%s\x1b[0m\n"
 
+	// Slice输出格式 切片遍历: <切片内容>
+	SliceTraverseFormat = "\x1b[32;1m%s\x1b[0m\n"
+	// Slice输出格式 带后缀的切片遍历: <切片内容><分隔符><后缀>
+	SliceTraverseSuffixFormat = "\x1b[32;1m%s\x1b[0m%s%s\n"
 	// Slice输出格式 切片遍历·2部分: <切片内容1><分隔符><切片内容2>
 	SliceTraverse2PFormat = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m\n"
 	// Slice输出格式 带后缀的切片遍历·2部分: <切片内容1><分隔符><切片内容2><分隔符><后缀>
@@ -44,8 +48,13 @@ var (
 	// Slice输出格式 带后缀的切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4><分隔符><后缀>
 	SliceTraverse4PSuffixFormat = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35;1m%s\x1b[0m%s%s\n"
 
+	// 问询信息输出格式 问询信息: <问询信息>
+	AskFormat = "\x1b[34;1m%s\x1b[0m"
+
 	// 成功信息输出格式 成功信息: <成功信息>
 	SuccessFormat = "\x1b[32;1m%s\x1b[0m\n"
+	// 成功信息输出格式 暗色成功信息: <成功信息>
+	SuccessDarkFormat = "\x1b[36;1m%s\x1b[0m\n"
 	// 成功信息输出格式 成功信息·不换行: <成功信息>
 	SuccessNoNewLineFormat = "\x1b[32;1m%s\x1b[0m"
 	// 成功信息输出格式 带后缀的成功信息: <成功信息><分隔符><后缀>
@@ -73,6 +82,8 @@ var (
 
 	// 错误信息输出格式 基础错误: <错误信息>
 	ErrorBaseFormat = "\x1b[31m%s\x1b[0m\n"
+	// 错误信息输出格式 带前缀的错误: <前缀><分隔符><错误信息>
+	ErrorPrefixFormat = "%s%s\x1b[31m%s\x1b[0m\n"
 	// 错误信息输出格式 带后缀的错误: <错误信息><分隔符><后缀>
 	ErrorSuffixFormat = "\x1b[31m%s\x1b[0m%s%s\n"
 )
