@@ -15,21 +15,25 @@ import (
 	"time"
 )
 
-// 程序信息
 const (
-	Name    string = "Clone-repos"
-	Version string = "v0.7.9"
-	Project string = "github.com/yhyj/clone-repos"
+	Name    string = "Clone-repos"                 // 程序名
+	Version string = "v0.7.9"                      // 程序版本
+	Project string = "github.com/yhyj/clone-repos" // 项目地址
 )
 
-// 编译信息
 var (
-	GitCommitHash string = "Unknown"
-	BuildTime     string = "Unknown"
-	BuildBy       string = "Unknown"
+	GitCommitHash string = "Unknown" // git 提交 Hash
+	BuildTime     string = "Unknown" // 编译时间
+	BuildBy       string = "Unknown" // 编译者
 )
 
 // ProgramInfo 返回程序信息
+//
+// 参数：
+//   - only: 是否只返回程序版本
+//
+// 返回：
+//   - 程序信息
 func ProgramInfo(only bool) string {
 	programInfo := fmt.Sprintf("%s\n", Version)
 	if !only {

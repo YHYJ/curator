@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-24 16:41:33
 
-Description: 子命令`config`的实现
+Description: 子命令 `config` 的实现
 */
 
 package cli
@@ -19,7 +19,13 @@ import (
 	"github.com/yhyj/clone-repos/general"
 )
 
-// isTomlFile 判断文件是不是 toml 文件
+// isTomlFile 检测文件是不是 toml 文件
+//
+// 参数：
+//   - filePath: 待检测文件路径
+//
+// 返回：
+//   - 是 toml 文件返回 true，否则返回 false
 func isTomlFile(filePath string) bool {
 	if strings.HasSuffix(filePath, ".toml") {
 		return true
@@ -28,6 +34,13 @@ func isTomlFile(filePath string) bool {
 }
 
 // GetTomlConfig 读取 toml 配置文件
+//
+// 参数：
+//   - filePath: toml 配置文件路径
+//
+// 返回：
+//   - toml 配置树
+//   - 错误信息
 func GetTomlConfig(filePath string) (*toml.Tree, error) {
 	if !general.FileExist(filePath) {
 		return nil, fmt.Errorf("Open %s: no such file or directory", filePath)
@@ -43,8 +56,29 @@ func GetTomlConfig(filePath string) (*toml.Tree, error) {
 }
 
 // WriteTomlConfig 写入 toml 配置文件
+//
+// 参数：
+//   - filePath: toml 配置文件路径
+//
+// 返回：
+//   - 写入的字节数
+//   - 错误信息
 func WriteTomlConfig(filePath string) (int64, error) {
-	// 定义一个map[string]interface{}类型的变量并赋值
+	// 根据系统不同决定某些参数
+	var (
+		scriptNameList = []string{} // 脚本名列表
+	)
+	if general.Platform == "linux" {
+		scriptNameList = []string{
+			"create-hook-link.sh",
+		}
+	} else if general.Platform == "darwin" {
+		scriptNameList = []string{
+			"create-hook-link.sh",
+		}
+	} else if general.Platform == "windows" {
+	}
+	// 定义一个 map[string]interface{} 类型的变量并赋值
 	exampleConf := map[string]interface{}{
 		"ssh": map[string]interface{}{
 			"rsa_file": filepath.Join(general.UserInfo.HomeDir, ".ssh", "id_rsa"),
@@ -53,9 +87,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 			"path": filepath.Join(general.UserInfo.HomeDir, "Documents", "Repos"),
 		},
 		"script": map[string]interface{}{
-			"name_list": []string{
-				"create-hook-link.sh",
-			},
+			"name_list": scriptNameList,
 		},
 		"git": map[string]interface{}{
 			"github_url":      "github.com",

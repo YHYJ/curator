@@ -15,7 +15,15 @@ import (
 	"strings"
 )
 
-// RunCommandGetResult 运行指定命令并获取命令输出
+// RunCommandGetResult 运行命令并返回命令的输出
+//
+// 参数：
+//   - command: 命令
+//   - args: 命令参数
+//
+// 返回：
+//   - 命令的输出
+//   - 错误信息
 func RunCommandGetResult(command string, args []string) (string, error) {
 	_, err := exec.LookPath(command)
 	if err != nil {
@@ -29,12 +37,19 @@ func RunCommandGetResult(command string, args []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// 类型转换
+	// 类型转换消除乱码和格式问题
 	result := strings.TrimRight(string(output), "\n")
 	return result, nil
 }
 
-// RunCommand 运行指定命令（命令无输出）
+// RunCommand 运行命令不返回命令的输出
+//
+// 参数：
+//   - command: 命令
+//   - args: 命令参数
+//
+// 返回：
+//   - 错误信息
 func RunCommand(command string, args []string) error {
 	_, err := exec.LookPath(command)
 	if err != nil {

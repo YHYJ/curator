@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-18 15:16:00
 
-Description:
+Description: 子命令 `run` 的实现
 */
 
 package cli
@@ -16,12 +16,19 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/yhyj/clone-repos/general"
 )
 
 // updateGitConfig 更新 .git/config 文件
+//
+// 参数：
+//   - configFile: .git/config 文件路径
+//   - originalLink: 需要替换的原始链接
+//   - newLink: 替换上去的新链接
+//
+// 返回：
+//   - 错误信息
 func updateGitConfig(configFile, originalLink, newLink string) error {
 	// 以读写模式打开文件
 	file, err := os.OpenFile(configFile, os.O_RDWR, os.ModePerm)
@@ -40,8 +47,8 @@ func updateGitConfig(configFile, originalLink, newLink string) error {
 	matched := false                             // 是否匹配到，用于限制只匹配一次
 
 	// 需要新增的行
-	pushUrl1 := "" // 第一行pushurl
-	pushUrl2 := "" // 第二行pushurl
+	pushUrl1 := "" // 第一行 pushurl
+	pushUrl2 := "" // 第二行 pushurl
 
 	// 逐行读取文件内容
 	for scanner.Scan() {
@@ -49,15 +56,15 @@ func updateGitConfig(configFile, originalLink, newLink string) error {
 
 		// 检索一次模糊匹配的行
 		if !matched && regex.MatchString(line) {
-			// 第一次匹配：将可能存在的"ssh://"删除，并在"/"多于1个时将第1个替换为":"
-			// 该次匹配是专对子模块的.git/config的处理
+			// 第一次匹配：将可能存在的 "ssh://" 删除，并在"/"多于1个时将第1个替换为":"
+			// 该次匹配是专对子模块的 .git/config 的处理
 			line = strings.Replace(line, "ssh://", "", 1)
 			if strings.Count(line, "/") >= 2 {
 				line = strings.Replace(line, "/", ":", 1)
 			}
 			lines = append(lines, line)
-			// 第二次匹配：创建2行"pushurl"
-			// 该次匹配是对于.git/config的通用处理
+			// 第二次匹配：创建2行 "pushurl"
+			// 该次匹配是对于 .git/config 的通用处理
 			pushUrl1 = strings.ReplaceAll(line, "url", "pushurl")
 			pushUrl2 = strings.ReplaceAll(pushUrl1, originalLink, newLink)
 			lines = append(lines, pushUrl1)
@@ -81,6 +88,13 @@ func updateGitConfig(configFile, originalLink, newLink string) error {
 }
 
 // runScript 运行 shell 脚本
+//
+// 参数：
+//   - filePath: 脚本所在目录
+//   - scriptName: 脚本名
+//
+// 返回：
+//   - 错误信息
 func runScript(filePath, scriptName string) error {
 	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
 	if general.FileExist(filepath.Join(filePath, scriptName)) {
@@ -97,7 +111,11 @@ func runScript(filePath, scriptName string) error {
 	return nil
 }
 
-// RollingCloneRepos 克隆仓库
+// RollingCloneRepos 克隆远端仓库到本地
+//
+// 参数：
+//   - confile: 程序配置文件
+//   - source: 远端仓库源，支持 'github' 和 'gitea'，默认为 'github'
 func RollingCloneRepos(confile, source string) {
 	// 加载配置文件
 	conf, err := GetTomlConfig(confile)
@@ -115,8 +133,6 @@ func RollingCloneRepos(confile, source string) {
 		giteaLink := giteaUrl + ":" + giteaUsername
 		repos := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
-		// 定义变量
-		var interval = 100 * time.Millisecond
 		// 获取公钥
 		publicKeys, err := general.GetPublicKeysByGit(pemfile.(string))
 		if err != nil {
@@ -164,7 +180,7 @@ func RollingCloneRepos(confile, source string) {
 				if isRepo { // 是本地仓库
 					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repo already exists")
 					// 添加一个延时，使输出更加顺畅
-					time.Sleep(interval)
+					general.Delay(0.1)
 					continue
 				} else { // 不是本地仓库
 					if general.FolderEmpty(repoPath) { // 空文件夹则删除
@@ -174,30 +190,30 @@ func RollingCloneRepos(confile, source string) {
 					} else { // 文件夹非空
 						fmt.Println("Folder is not a local repo and is not empty")
 						// 添加一个延时，使输出更加顺畅
-						time.Sleep(interval)
+						general.Delay(0.1)
 						continue
 					}
 				}
 			}
 			// 开始克隆
 			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repo.(string), publicKeys)
-			if err != nil { // Clone失败
+			if err != nil { // Clone 失败
 				fmt.Printf(general.ErrorBaseFormat, err)
-			} else { // Clone成功
+			} else { // Clone 成功
 				fmt.Printf(general.SuccessSuffixNoNewLineFormat, "[✔]", "", " ")
-				var errList []string // 使用一个Slice存储所有错误信息以美化输出
+				var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
 					if err := runScript(repoPath, scriptName.(string)); err != nil {
 						errList = append(errList, "Run Script "+scriptName.(string)+": "+err.Error())
 					}
 				}
-				// 处理主仓库的配置文件.git/config
+				// 处理主仓库的配置文件 .git/config
 				configFile := filepath.Join(repoPath, ".git", "config")
 				if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
 					errList = append(errList, "Update Git Config (main): "+err.Error())
 				}
-				// 获取主仓库的worktree
+				// 获取主仓库的 worktree
 				worktree, err := repo.Worktree()
 				if err != nil {
 					errList = append(errList, "Get Local Repo Worktree: "+err.Error())
@@ -207,7 +223,7 @@ func RollingCloneRepos(confile, source string) {
 				if err != nil {
 					errList = append(errList, "Get Local Repo Branch (remote): "+err.Error())
 				}
-				// 根据远程分支refs/remotes/origin/<remoteBranchName>创建本地分支refs/heads/<localBranchName>
+				// 根据远程分支 refs/remotes/origin/<remoteBranchName> 创建本地分支 refs/heads/<localBranchName>
 				otherErrList := general.CreateLocalBranch(repo, remoteBranchs)
 				errList = append(errList, otherErrList...)
 				// 获取主仓库的本地分支信息
@@ -227,7 +243,7 @@ func RollingCloneRepos(confile, source string) {
 				}
 				for _, submodule := range submodules {
 					submoduleStr = submoduleStr + submodule.Config().Name + ", "
-					// 处理子模块的配置文件.git/modules/<submodule>/config
+					// 处理子模块的配置文件 .git/modules/<submodule>/config
 					configFile := filepath.Join(repoPath, ".git", "modules", submodule.Config().Name, "config")
 					if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
 						errList = append(errList, "Update Git Config (submodule): "+err.Error())
@@ -248,7 +264,7 @@ func RollingCloneRepos(confile, source string) {
 				}
 			}
 			// 添加一个延时，使输出更加顺畅
-			time.Sleep(interval)
+			general.Delay(0.1)
 		}
 	}
 }
