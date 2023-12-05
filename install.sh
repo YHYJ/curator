@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 : << !
-Name: main.sh
+Name: install.sh
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-09-19 11:41:03
@@ -61,9 +61,9 @@ RELEASE_API="https://api.github.com/repos/$OWNER/$REPO/releases/latest"
 ACCEPT="application/vnd.github+json"
 
 # 下载文件存储地址
-TEMP_DIR="/tmp/manager-archive/$REPO"
+TEMP_DIR="/tmp/manager/release/$REPO"
 # 下载文件解压地址
-CACHE_DIR="/tmp/manager-archive/$REPO/cache"
+CACHE_DIR="/tmp/manager/release/$REPO/cache"
 
 # 程序文件信息
 PROGRAM_FILE="clone-repos"
