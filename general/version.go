@@ -17,7 +17,7 @@ import (
 
 const (
 	Name    string = "Clone-repos"                 // 程序名
-	Version string = "v0.8.0"                      // 程序版本
+	Version string = "v0.8.1"                      // 程序版本
 	Project string = "github.com/yhyj/clone-repos" // 项目地址
 )
 
