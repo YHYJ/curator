@@ -172,7 +172,7 @@ func RollingCloneRepos(confile, source string) {
 		fmt.Println()
 		for _, repo := range repos {
 			// 提示信息
-			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, "==>", " Cloning ", repo.(string), ":", " ")
+			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repo.(string), ":", " ")
 			repoPath := filepath.Join(storagePath, repo.(string))
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {

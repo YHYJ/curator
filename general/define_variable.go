@@ -24,40 +24,47 @@ var (
 
 	TitleH1Format = "\n\x1b[36;3m%s\x1b[0m\n\n" // 标题输出格式 H1级别标题: <标题文字>
 
-	LineHiddenFormat = "\x1b[30m%s\x1b[0m\n"   // 分隔线输出格式 隐性分隔线: <分隔线>
-	LineShownFormat  = "\x1b[30;1m%s\x1b[0m\n" // 分隔线输出格式 显性分隔线: <分隔线>
+	LineHiddenFormat = "\x1b[30m%s\x1b[0m\n" // 分隔线输出格式 隐性分隔线: <分隔线>
+	LineShownFormat  = "\x1b[30m%s\x1b[0m\n" // 分隔线输出格式 显性分隔线: <分隔线>
 
-	SliceTraverseFormat                  = "\x1b[32;1m%s\x1b[0m\n"                                                                                 // Slice输出格式 切片遍历: <切片内容>
-	SliceTraverseSuffixFormat            = "\x1b[32;1m%s\x1b[0m%s%s\n"                                                                             // Slice输出格式 带后缀的切片遍历: <切片内容><分隔符><后缀>
-	SliceTraverse2PFormat                = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m\n"                                                              // Slice输出格式 切片遍历·2部分: <切片内容1><分隔符><切片内容2>
-	SliceTraverse2PSuffixFormat          = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s\n"                                                          // Slice输出格式 带后缀的切片遍历·2部分: <切片内容1><分隔符><切片内容2><分隔符><后缀>
-	SliceTraverse2PSuffixNoNewLineFormat = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s"                                                            // Slice输出格式 带后缀的切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2><分隔符><后缀>
-	SliceTraverse3PSuffixFormat          = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33;1m%s\x1b[0m%s%s\n"                                     // Slice输出格式 带后缀的切片遍历·3部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><后缀>
-	SliceTraverse4PFormat                = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35;1m%s\x1b[0m\n"                      // Slice输出格式 切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4>
-	SliceTraverse4PSuffixFormat          = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35;1m%s\x1b[0m%s%s\n"                  // Slice输出格式 带后缀的切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4><分隔符><后缀>
-	SliceTraverse5PFormat                = "\x1b[32;1m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33;1m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35;1m%s\x1b[0m\n" // Slice输出格式 切片遍历·5部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4><分隔符><切片内容5>
+	SliceTraverseFormat                  = "\x1b[32m%s\x1b[0m\n"                                                                             // Slice输出格式 切片遍历: <切片内容>
+	SliceTraverseSuffixFormat            = "\x1b[32m%s\x1b[0m%s%s\n"                                                                         // Slice输出格式 带后缀的切片遍历: <切片内容><分隔符><后缀>
+	SliceTraverse2PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m\n"                                                          // Slice输出格式 切片遍历·2部分: <切片内容1><分隔符><切片内容2>
+	SliceTraverse2PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s\n"                                                      // Slice输出格式 带后缀的切片遍历·2部分: <切片内容1><分隔符><切片内容2><分隔符><后缀>
+	SliceTraverse2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s"                                                        // Slice输出格式 带后缀的切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2><分隔符><后缀>
+	SliceTraverse3PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s%s\n"                                   // Slice输出格式 带后缀的切片遍历·3部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><后缀>
+	SliceTraverse4PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n"                    // Slice输出格式 切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4>
+	SliceTraverse4PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m%s%s\n"                // Slice输出格式 带后缀的切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4><分隔符><后缀>
+	SliceTraverse5PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n" // Slice输出格式 切片遍历·5部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4><分隔符><切片内容5>
 
-	AskFormat = "\x1b[34;1m%s\x1b[0m" // 问询信息输出格式 问询信息: <问询信息>
+	AskFormat = "\x1b[34m%s\x1b[0m" // 问询信息输出格式 问询信息: <问询信息>
 
-	SuccessFormat                = "\x1b[32;1m%s\x1b[0m\n"     // 成功信息输出格式 成功信息: <成功信息>
-	SuccessDarkFormat            = "\x1b[36;1m%s\x1b[0m\n"     // 成功信息输出格式 暗色成功信息: <成功信息>
-	SuccessNoNewLineFormat       = "\x1b[32;1m%s\x1b[0m"       // 成功信息输出格式 成功信息·不换行: <成功信息>
-	SuccessSuffixFormat          = "\x1b[32;1m%s\x1b[0m%s%s\n" // 成功信息输出格式 带后缀的成功信息: <成功信息><分隔符><后缀>
-	SuccessSuffixNoNewLineFormat = "\x1b[32;1m%s\x1b[0m%s%s"   // 成功信息输出格式 带后缀的成功信息·不换行: <成功信息><分隔符><后缀>
+	SuccessFormat                = "\x1b[32m%s\x1b[0m\n"     // 成功信息输出格式 成功信息: <成功信息>
+	SuccessDarkFormat            = "\x1b[36m%s\x1b[0m\n"     // 成功信息输出格式 暗色成功信息: <成功信息>
+	SuccessNoNewLineFormat       = "\x1b[32m%s\x1b[0m"       // 成功信息输出格式 成功信息·不换行: <成功信息>
+	SuccessSuffixFormat          = "\x1b[32m%s\x1b[0m%s%s\n" // 成功信息输出格式 带后缀的成功信息: <成功信息><分隔符><后缀>
+	SuccessSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s%s"   // 成功信息输出格式 带后缀的成功信息·不换行: <成功信息><分隔符><后缀>
 
-	TipsPrefixFormat            = "%s%s\x1b[32;1m%s\x1b[0m\n"                    // 提示信息输出格式 带前缀的提示信息: <提示信息>
-	Tips2PSuffixNoNewLineFormat = "\x1b[32;1m%s\x1b[0m%s\x1b[36;1m%s\x1b[0m%s%s" // 提示信息输出格式 带后缀的提示信息·2部分·不换行: <提示信息1><分隔符><提示信息2><分隔符><后缀>
+	TipsPrefixFormat            = "%s%s\x1b[32m%s\x1b[0m\n"                  // 提示信息输出格式 带前缀的提示信息: <提示信息>
+	Tips2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[36m%s\x1b[0m%s%s" // 提示信息输出格式 带后缀的提示信息·2部分·不换行: <提示信息1><分隔符><提示信息2><分隔符><后缀>
 
-	InfoFormat             = "\x1b[33;1m%s\x1b[0m\n"                        // 展示信息输出格式 展示信息: <展示信息>
-	Info2PFormat           = "\x1b[33;1m%s%s\x1b[0m\n"                      // 展示信息输出格式 展示信息·2部分: <展示信息>
-	InfoPrefixFormat       = "%s%s\x1b[33;1m%s\x1b[0m\n"                    // 展示信息输出格式 带前缀的展示信息: <前缀><分隔符><展示信息>
-	Info2PPrefixFormat     = "%s%s\x1b[33;1m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n" // 展示信息输出格式 带前缀的展示信息·2部分: <前缀><分隔符><展示信息1><分隔符><展示信息2>
-	InfoSuffixFormat       = "\x1b[33;1m%s\x1b[0m%s%s\n"                    // 展示信息输出格式 带后缀的展示信息: <展示信息><分隔符><后缀>
-	InfoPrefixSuffixFormat = "%s%s\x1b[33;1m%s\x1b[0m%s%s\n"                // 展示信息输出格式 带前后缀的展示信息: <前缀><分隔符><展示信息><分隔符><后缀>
+	InfoFormat             = "\x1b[33m%s\x1b[0m\n"                        // 展示信息输出格式 展示信息: <展示信息>
+	Info2PFormat           = "\x1b[33m%s%s\x1b[0m\n"                      // 展示信息输出格式 展示信息·2部分: <展示信息>
+	InfoPrefixFormat       = "%s%s\x1b[33m%s\x1b[0m\n"                    // 展示信息输出格式 带前缀的展示信息: <前缀><分隔符><展示信息>
+	Info2PPrefixFormat     = "%s%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n" // 展示信息输出格式 带前缀的展示信息·2部分: <前缀><分隔符><展示信息1><分隔符><展示信息2>
+	InfoSuffixFormat       = "\x1b[33m%s\x1b[0m%s%s\n"                    // 展示信息输出格式 带后缀的展示信息: <展示信息><分隔符><后缀>
+	InfoPrefixSuffixFormat = "%s%s\x1b[33m%s\x1b[0m%s%s\n"                // 展示信息输出格式 带前后缀的展示信息: <前缀><分隔符><展示信息><分隔符><后缀>
 
 	ErrorBaseFormat   = "\x1b[31m%s\x1b[0m\n"     // 错误信息输出格式 基础错误: <错误信息>
 	ErrorPrefixFormat = "%s%s\x1b[31m%s\x1b[0m\n" // 错误信息输出格式 带前缀的错误: <前缀><分隔符><错误信息>
 	ErrorSuffixFormat = "\x1b[31m%s\x1b[0m%s%s\n" // 错误信息输出格式 带后缀的错误: <错误信息><分隔符><后缀>
+)
+
+var (
+	Run = "➤"
+	Dot = "●"
+	Yes = "✔"
+	No  = "✘"
 )
 
 // ---------- 环境变量
