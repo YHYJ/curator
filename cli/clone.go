@@ -17,7 +17,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/yhyj/repos/general"
+	"github.com/yhyj/curator/general"
 )
 
 // updateGitConfig 更新 .git/config 文件

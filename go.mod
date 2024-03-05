@@ -1,4 +1,4 @@
-module github.com/yhyj/repos
+module github.com/yhyj/curator
 
 go 1.20
 

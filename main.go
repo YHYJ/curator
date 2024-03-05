@@ -9,7 +9,7 @@ Description: 主函数
 
 package main
 
-import "github.com/yhyj/repos/cmd"
+import "github.com/yhyj/curator/cmd"
 
 func main() {
 	cmd.Execute()

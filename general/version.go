@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	Name    string = "Repos"                 // 程序名
-	Version string = "v0.9.0"                // 程序版本
-	Project string = "github.com/yhyj/repos" // 项目地址
+	Name    string = "Curator"                 // 程序名
+	Version string = "v0.9.0"                  // 程序版本
+	Project string = "github.com/yhyj/curator" // 项目地址
 )
 
 var (

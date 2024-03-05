@@ -1,11 +1,11 @@
 # 项目名
-PROJECT := github.com/yhyj/repos
+PROJECT := github.com/yhyj/curator
 # 安装文件属主/属组
 ATTRIBUTION := root
 # 编译结果路径
 GENERATE_PATH := build
 # 可执行文件名
-TARGET := repos
+TARGET := curator
 # 可执行文件安装路径
 INSTALL_PATH := /usr/local/bin
 # 资源文件安装路径

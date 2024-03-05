@@ -14,13 +14,13 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/repos/general"
+	"github.com/yhyj/curator/general"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "repos",
-	Short: "Used to clone user-specified repositories",
-	Long:  `repos is used to clone the specified repository.`,
+	Use:   "curator",
+	Short: "My code repository curator",
+	Long:  `Responsible for managing my code repository.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -33,10 +33,10 @@ func Execute() {
 	}
 }
 
-var cfgFile = filepath.Join(general.UserInfo.HomeDir, ".config", "repos", "config.toml")
+var cfgFile = filepath.Join(general.UserInfo.HomeDir, ".config", "curator", "config.toml")
 
 func init() {
-	rootCmd.Flags().BoolP("help", "h", false, "help for repos")
+	rootCmd.Flags().BoolP("help", "h", false, "help for curator")
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "Specify configuration file")
 }
