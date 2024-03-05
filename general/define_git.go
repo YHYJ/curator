@@ -17,8 +17,11 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 )
+
+var remote = "origin" // 远程名称
 
 // CloneRepoViaSSH 使用 SSH 协议将远端仓库克隆到本地
 //
@@ -42,6 +45,53 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 	})
 
 	return repo, err
+}
+
+// PullRepo 拉取远端仓库的更改到本地
+//
+// 参数：
+//   - repo: 本地仓库对象
+//
+// 返回：
+//   - 拉取到的更改的提交信息
+//   - 错误信息
+func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (*object.Commit, *object.Commit, error) {
+	// 获取本地仓库的 worktree
+	worktree, err := repo.Worktree()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// 获取拉取前的最新 Commit 的 Hash 值
+	leftRef, err := repo.Head()
+	if err != nil {
+		return nil, nil, err
+	}
+	leftCommit, err := repo.CommitObject(leftRef.Hash())
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// 拉取远端仓库的更改
+	err = worktree.Pull(&git.PullOptions{
+		RemoteName: remote,
+		Auth:       publicKeys,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// 获取拉取后的最新 Commit 的 Hash 值
+	RightRef, err := repo.Head()
+	if err != nil {
+		return nil, nil, err
+	}
+	RightCommit, err := repo.CommitObject(RightRef.Hash())
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return leftCommit, RightCommit, nil
 }
 
 // IsLocalRepo 检测是不是本地仓库，是的话返回本地仓库对象
@@ -76,7 +126,7 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 	case "local":
 		branchDir = ".git/refs/heads"
 	case "remote":
-		branchDir = ".git/refs/remotes/origin"
+		branchDir = fmt.Sprintf(".git/refs/remotes/%s", remote)
 	default:
 		return nil, fmt.Errorf("Parameter error: %s", "optional value of which is 'local' or 'remote'")
 	}
@@ -90,7 +140,7 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 
 // CreateLocalBranch 本地仓库根据远程分支创建本地分支
 //
-//   - 远程分支 refs/remotes/origin/<remoteBranchName>
+//   - 远程分支 refs/remotes/${remote}/<remoteBranchName>
 //   - 本地分支 refs/heads/<localBranchName>
 //
 // 参数：
@@ -100,8 +150,7 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 // 返回：
 //   - 错误信息切片
 func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
-	var errList []string  // 使用一个 Slice 存储所有错误信息以美化输出
-	var remote = "origin" // 远程名称
+	var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 	for _, branch := range branchs {
 		// 修改 .git/config ，增加新的分支配置
 		branchReferenceName := plumbing.NewBranchReferenceName(branch.Name()) // 构建本地分支 Reference 名，格式： refs/heads/<localBranchName>
@@ -113,8 +162,8 @@ func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
 
 		// 创建一个新的 Reference
 		newBranchReferenceName := plumbing.ReferenceName(branchReferenceName.String()) // refs/heads/test
-		remoteReferenceName := plumbing.NewRemoteReferenceName(remote, branch.Name())  // 构建远程分支 Reference 名，格式： refs/remotes/origin/<remoteBranchName>
-		remoteReferenceData, err := repo.Reference(remoteReferenceName, true)          // 根据远程分支 Reference 名获取其 Hash 值，格式： 1a8f900411d35a620407ce07902aecadfc782ded refs/remotes/origin/test
+		remoteReferenceName := plumbing.NewRemoteReferenceName(remote, branch.Name())  // 构建远程分支 Reference 名，格式： refs/remotes/${remote}/<remoteBranchName>
+		remoteReferenceData, err := repo.Reference(remoteReferenceName, true)          // 根据远程分支 Reference 名获取其 Hash 值，格式： 1a8f900411d35a620407ce07902aecadfc782ded refs/remotes/${remote}/test
 		if err != nil {
 			errList = append(errList, err.Error())
 			continue
