@@ -1,10 +1,10 @@
 /*
-File: run.go
+File: clone.go
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-18 15:16:00
 
-Description: 子命令 `run` 的实现
+Description: 子命令 `clone` 的实现
 */
 
 package cli
@@ -17,7 +17,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/yhyj/clone-repos/general"
+	"github.com/yhyj/repos/general"
 )
 
 // updateGitConfig 更新 .git/config 文件

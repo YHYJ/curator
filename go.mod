@@ -1,4 +1,4 @@
-module github.com/yhyj/clone-repos
+module github.com/yhyj/repos
 
 go 1.20
 

@@ -13,7 +13,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/general"
+	"github.com/yhyj/repos/general"
 )
 
 // versionCmd represents the version command

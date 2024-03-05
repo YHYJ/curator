@@ -6,7 +6,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-09-19 11:41:03
 
-Description: 一键安装clone-repos
+Description: 一键安装repos
 参考了：https://github.com/liuchengxu/space-vim
 
 Attentions:
@@ -24,7 +24,7 @@ Depends:
 # 仓库所有人
 OWNER="YHYJ"
 # 仓库名
-REPO="clone-repos"
+REPO="repos"
 
 # 系统信息
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -66,7 +66,7 @@ TEMP_DIR="/tmp/manager/release/$REPO"
 CACHE_DIR="/tmp/manager/release/$REPO/cache"
 
 # 程序文件信息
-PROGRAM_FILE="clone-repos"
+PROGRAM_FILE="repos"
 PROGRAM_MODE="0755"
 PROGRAM_OWNER="root"
 PROGRAM_GROUP="root"

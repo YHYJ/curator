@@ -13,8 +13,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/cli"
-	"github.com/yhyj/clone-repos/general"
+	"github.com/yhyj/repos/cli"
+	"github.com/yhyj/repos/general"
 )
 
 // configCmd represents the config command

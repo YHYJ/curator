@@ -1,4 +1,4 @@
-<h1 align="center">Clone-repos</h1>
+<h1 align="center">Repos</h1>
 
 <!-- File: README.md -->
 <!-- Author: YJ -->
@@ -8,7 +8,7 @@
 ---
 
 <p align="center">
-  <a href="https://github.com/YHYJ/clone-repos/actions/workflows/release.yml"><img src="https://github.com/YHYJ/clone-repos/actions/workflows/release.yml/badge.svg" alt="Go build and release by GoReleaser"></a>
+  <a href="https://github.com/YHYJ/repos/actions/workflows/release.yml"><img src="https://github.com/YHYJ/repos/actions/workflows/release.yml/badge.svg" alt="Go build and release by GoReleaser"></a>
 </p>
 
 ---
@@ -49,7 +49,7 @@
 ### 一键安装
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YHYJ/clone-repos/main/install.sh | sudo bash -s
+curl -fsSL https://raw.githubusercontent.com/YHYJ/repos/main/install.sh | sudo bash -s
 ```
 
 ## Usage
@@ -62,9 +62,9 @@ curl -fsSL https://raw.githubusercontent.com/YHYJ/clone-repos/main/install.sh | 
   - 'force'：当指定的配置文件已存在时，使用该参数强制覆盖原文件
   - 'print'：打印配置文件内容
 
-- `run`子命令
+- `clone`子命令
 
-  使用该子命令开始执行克隆，有以下参数：
+  使用该子命令进行克隆，有以下参数：
 
   - '--source'：指定使用的仓库源，目前支持 github.com 和 git.yj1516.top
 
@@ -81,7 +81,7 @@ curl -fsSL https://raw.githubusercontent.com/YHYJ/clone-repos/main/install.sh | 
 ### 当前平台
 
 ```bash
-go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/clone-repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/clone-repos/general.BuildTime=`date +%s` -X github.com/yhyj/clone-repos/general.BuildBy=$USER" -o build/clone-repos main.go
+go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/repos/general.BuildTime=`date +%s` -X github.com/yhyj/repos/general.BuildBy=$USER" -o build/repos main.go
 ```
 
 ### 交叉编译
@@ -91,7 +91,7 @@ go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/clone-repos/gen
 #### Linux
 
 ```bash
-CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/clone-repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/clone-repos/general.BuildTime=`date +%s` -X github.com/yhyj/clone-repos/general.BuildBy=$USER" -o build/clone-repos main.go
+CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/repos/general.BuildTime=`date +%s` -X github.com/yhyj/repos/general.BuildBy=$USER" -o build/repos main.go
 ```
 
 > 使用`uname -m`确定硬件架构
@@ -102,7 +102,7 @@ CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s
 #### macOS
 
 ```bash
-CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/clone-repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/clone-repos/general.BuildTime=`date +%s` -X github.com/yhyj/clone-repos/general.BuildBy=$USER" -o build/clone-repos main.go
+CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -X github.com/yhyj/repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/repos/general.BuildTime=`date +%s` -X github.com/yhyj/repos/general.BuildBy=$USER" -o build/repos main.go
 ```
 
 > 使用`uname -m`确定硬件架构
@@ -113,7 +113,7 @@ CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-
 #### Windows
 
 ```powershell
-CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -H windowsgui -X github.com/yhyj/clone-repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/clone-repos/general.BuildTime=`date +%s` -X github.com/yhyj/clone-repos/general.BuildBy=$USER" -o build/clone-repos.exe main.go
+CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -H windowsgui -X github.com/yhyj/repos/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/repos/general.BuildTime=`date +%s` -X github.com/yhyj/repos/general.BuildBy=$USER" -o build/repos.exe main.go
 ```
 
 > 使用`echo %PROCESSOR_ARCHITECTURE%`确定硬件架构

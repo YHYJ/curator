@@ -14,13 +14,13 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/yhyj/clone-repos/general"
+	"github.com/yhyj/repos/general"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "clone-repos",
+	Use:   "repos",
 	Short: "Used to clone user-specified repositories",
-	Long:  `clone-repos is used to clone the specified repository.`,
+	Long:  `repos is used to clone the specified repository.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
@@ -33,10 +33,10 @@ func Execute() {
 	}
 }
 
-var cfgFile = filepath.Join(general.UserInfo.HomeDir, ".config", "clone-repos", "config.toml")
+var cfgFile = filepath.Join(general.UserInfo.HomeDir, ".config", "repos", "config.toml")
 
 func init() {
-	rootCmd.Flags().BoolP("help", "h", false, "help for clone-repos")
+	rootCmd.Flags().BoolP("help", "h", false, "help for repos")
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", cfgFile, "Specify configuration file")
 }

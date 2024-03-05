@@ -16,7 +16,7 @@ import (
 	"strings"
 
 	"github.com/pelletier/go-toml"
-	"github.com/yhyj/clone-repos/general"
+	"github.com/yhyj/repos/general"
 )
 
 // isTomlFile 检测文件是不是 toml 文件
@@ -96,7 +96,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 			"gitea_username":  "YJ",
 			"repos": []string{
 				"checker",
-				"clone-repos",
+				"repos",
 				"eniac",
 				"kbdstage",
 				"LearningCenter",
