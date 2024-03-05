@@ -100,18 +100,18 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 // 返回：
 //   - 错误信息切片
 func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
-	var errList []string //使用一个 Slice 存储所有错误信息以美化输出
+	var errList []string  // 使用一个 Slice 存储所有错误信息以美化输出
+	var remote = "origin" // 远程名称
 	for _, branch := range branchs {
 		// 修改 .git/config ，增加新的分支配置
 		branchReferenceName := plumbing.NewBranchReferenceName(branch.Name()) // 构建本地分支 Reference 名，格式： refs/heads/<localBranchName>
 		repo.CreateBranch(&config.Branch{                                     // 分支配置写入 .git/config
 			Name:   branch.Name(),
-			Remote: "origin",
+			Remote: remote,
 			Merge:  branchReferenceName,
 		})
 
 		// 创建一个新的 Reference
-		remote := "origin"                                                             // 远程名称
 		newBranchReferenceName := plumbing.ReferenceName(branchReferenceName.String()) // refs/heads/test
 		remoteReferenceName := plumbing.NewRemoteReferenceName(remote, branch.Name())  // 构建远程分支 Reference 名，格式： refs/remotes/origin/<remoteBranchName>
 		remoteReferenceData, err := repo.Reference(remoteReferenceName, true)          // 根据远程分支 Reference 名获取其 Hash 值，格式： 1a8f900411d35a620407ce07902aecadfc782ded refs/remotes/origin/test
