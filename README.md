@@ -68,6 +68,12 @@ curl -fsSL https://raw.githubusercontent.com/YHYJ/curator/main/install.sh | sudo
 
   - '--source'：指定使用的仓库源，目前支持 github.com 和 git.yj1516.top
 
+- `pull`子命令
+
+  使用该子命令拉取远端仓库最新修改，有以下参数：
+
+  - '--source'：指定使用的仓库源，目前支持 github.com 和 git.yj1516.top
+
 - `version`子命令
 
   查看程序版本信息
