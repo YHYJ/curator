@@ -131,7 +131,7 @@ func RollingCloneRepos(confile, source string) {
 		githubLink := githubUrl + ":" + githubUsername
 		giteaUsername := conf.Get("git.gitea_username").(string)
 		giteaLink := giteaUrl + ":" + giteaUsername
-		repos := conf.Get("git.repos").([]interface{})
+		repoNames := conf.Get("git.repos").([]interface{})
 		scriptNameList := conf.Get("script.name_list").([]interface{})
 		// 获取公钥
 		publicKeys, err := general.GetPublicKeysByGit(pemfile.(string))
@@ -170,25 +170,24 @@ func RollingCloneRepos(confile, source string) {
 		// 克隆
 		fmt.Printf(general.TipsPrefixFormat, "Clone to", ": ", storagePath)
 		fmt.Println()
-		for _, repo := range repos {
-			// 提示信息
-			repoPath := filepath.Join(storagePath, repo.(string))
+		for _, repoName := range repoNames {
+			repoPath := filepath.Join(storagePath, repoName.(string))
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
-					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Dot, " Cloning ", repo.(string), ":", " ")
+					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Dot, " Cloning ", repoName.(string), ":", " ")
 					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repo already exists")
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
 					continue
 				} else { // 不是本地仓库
-					if general.FolderEmpty(repoPath) { // 空文件夹则删除
+					if general.FolderEmpty(repoPath) { // 是空文件夹，删除后继续克隆
 						if err := general.DeleteFile(repoPath); err != nil {
 							fmt.Printf(general.ErrorBaseFormat, err)
 						}
-					} else { // 文件夹非空
-						fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.No, " Cloning ", repo.(string), ":", " ")
+					} else { // 文件夹非空，处理下一个
+						fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.No, " Cloning ", repoName.(string), ":", " ")
 						fmt.Println("Folder is not a local repo and not empty")
 						// 添加一个延时，使输出更加顺畅
 						general.Delay(0.1)
@@ -197,8 +196,8 @@ func RollingCloneRepos(confile, source string) {
 				}
 			}
 			// 开始克隆
-			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repo.(string), ":", " ")
-			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repo.(string), publicKeys)
+			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repoName.(string), ":", " ")
+			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repoName.(string), publicKeys)
 			if err != nil { // Clone 失败
 				fmt.Printf(general.ErrorBaseFormat, err)
 			} else { // Clone 成功
