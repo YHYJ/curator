@@ -45,7 +45,8 @@ var (
 	SuccessSuffixFormat          = "\x1b[32m%s\x1b[0m%s%s\n" // 成功信息输出格式 带后缀的成功信息: <成功信息><分隔符><后缀>
 	SuccessSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s%s"   // 成功信息输出格式 带后缀的成功信息·不换行: <成功信息><分隔符><后缀>
 
-	TipsPrefixFormat            = "%s%s\x1b[32m%s\x1b[0m\n"                  // 提示信息输出格式 带前缀的提示信息: <提示信息>
+	TipsPrefixFormat            = "%s%s\x1b[32;1m%s\x1b[0m\n"                // 提示信息输出格式 带前缀的提示信息: <前缀><分隔符><提示信息>
+	TipsPrefixSuffixFormat      = "%s%s\x1b[32;1m%s\x1b[0m%s%s\n"            // 提示信息输出格式 带前后缀的提示信息: <前缀><分隔符><提示信息><分隔符><后缀>
 	Tips2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[36m%s\x1b[0m%s%s" // 提示信息输出格式 带后缀的提示信息·2部分·不换行: <提示信息1><分隔符><提示信息2><分隔符><后缀>
 
 	InfoFormat             = "\x1b[33m%s\x1b[0m\n"                        // 展示信息输出格式 展示信息: <展示信息>
@@ -62,7 +63,7 @@ var (
 
 var (
 	Run = "➤"
-	Dot = "●"
+	Dot = "•"
 	Yes = "✔"
 	No  = "✘"
 )

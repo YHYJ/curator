@@ -172,12 +172,12 @@ func RollingCloneRepos(confile, source string) {
 		fmt.Println()
 		for _, repo := range repos {
 			// 提示信息
-			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repo.(string), ":", " ")
 			repoPath := filepath.Join(storagePath, repo.(string))
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
+					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Dot, " Cloning ", repo.(string), ":", " ")
 					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repo already exists")
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
@@ -188,7 +188,8 @@ func RollingCloneRepos(confile, source string) {
 							fmt.Printf(general.ErrorBaseFormat, err)
 						}
 					} else { // 文件夹非空
-						fmt.Println("Folder is not a local repo and is not empty")
+						fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.No, " Cloning ", repo.(string), ":", " ")
+						fmt.Println("Folder is not a local repo and not empty")
 						// 添加一个延时，使输出更加顺畅
 						general.Delay(0.1)
 						continue
@@ -196,6 +197,7 @@ func RollingCloneRepos(confile, source string) {
 				}
 			}
 			// 开始克隆
+			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repo.(string), ":", " ")
 			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repo.(string), publicKeys)
 			if err != nil { // Clone 失败
 				fmt.Printf(general.ErrorBaseFormat, err)
