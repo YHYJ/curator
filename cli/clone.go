@@ -177,7 +177,7 @@ func RollingCloneRepos(confile, source string) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
 					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Dot, " Cloning ", repoName.(string), ":", " ")
-					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repo already exists")
+					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repository already exists")
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
 					continue
@@ -188,7 +188,7 @@ func RollingCloneRepos(confile, source string) {
 						}
 					} else { // 文件夹非空，处理下一个
 						fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.No, " Cloning ", repoName.(string), ":", " ")
-						fmt.Println("Folder is not a local repo and not empty")
+						fmt.Println("Folder is not a local repository and not empty")
 						// 添加一个延时，使输出更加顺畅
 						general.Delay(0.1)
 						continue
@@ -206,23 +206,23 @@ func RollingCloneRepos(confile, source string) {
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
 					if err := runScript(repoPath, scriptName.(string)); err != nil {
-						errList = append(errList, "Run Script "+scriptName.(string)+": "+err.Error())
+						errList = append(errList, "Run script "+scriptName.(string)+": "+err.Error())
 					}
 				}
 				// 处理主仓库的配置文件 .git/config
 				configFile := filepath.Join(repoPath, ".git", "config")
 				if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
-					errList = append(errList, "Update Git Config (main): "+err.Error())
+					errList = append(errList, "Update repository git config (main): "+err.Error())
 				}
 				// 获取主仓库的 worktree
 				worktree, err := repo.Worktree()
 				if err != nil {
-					errList = append(errList, "Get Local Repo Worktree: "+err.Error())
+					errList = append(errList, "Get local repository worktree: "+err.Error())
 				}
 				// 获取主仓库的远程分支信息
 				remoteBranchs, err := general.GetRepoBranchInfo(worktree, "remote")
 				if err != nil {
-					errList = append(errList, "Get Local Repo Branch (remote): "+err.Error())
+					errList = append(errList, "Get local repository branch (remote): "+err.Error())
 				}
 				// 根据远程分支 refs/remotes/origin/<remoteBranchName> 创建本地分支 refs/heads/<localBranchName>
 				otherErrList := general.CreateLocalBranch(repo, remoteBranchs)
@@ -230,7 +230,7 @@ func RollingCloneRepos(confile, source string) {
 				// 获取主仓库的本地分支信息
 				localBranchs, err := general.GetRepoBranchInfo(worktree, "local")
 				if err != nil {
-					errList = append(errList, "Get Local Repo Branch (local): "+err.Error())
+					errList = append(errList, "Get local repository branch (local): "+err.Error())
 				}
 				var localBranchStr string
 				for _, localBranch := range localBranchs {
@@ -240,14 +240,14 @@ func RollingCloneRepos(confile, source string) {
 				submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 				var submoduleStr string
 				if err != nil {
-					errList = append(errList, "Get Local Repo Submodules: "+err.Error())
+					errList = append(errList, "Get local repository submodules: "+err.Error())
 				}
 				for _, submodule := range submodules {
 					submoduleStr = submoduleStr + submodule.Config().Name + ", "
 					// 处理子模块的配置文件 .git/modules/<submodule>/config
 					configFile := filepath.Join(repoPath, ".git", "modules", submodule.Config().Name, "config")
 					if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
-						errList = append(errList, "Update Git Config (submodule): "+err.Error())
+						errList = append(errList, "Update repository git config (submodule): "+err.Error())
 					}
 				}
 				// 处理并输出本地分支和子模块信息
