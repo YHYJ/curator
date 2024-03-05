@@ -111,7 +111,7 @@ func runScript(filePath, scriptName string) error {
 	return nil
 }
 
-// RollingCloneRepos 克隆远端仓库到本地
+// RollingCloneRepos 遍历克隆远端仓库到本地
 //
 // 参数：
 //   - confile: 程序配置文件
