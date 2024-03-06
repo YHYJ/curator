@@ -55,21 +55,21 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 // 返回：
 //   - 拉取到的更改的提交信息
 //   - 错误信息
-func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (*object.Commit, *object.Commit, error) {
+func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.Worktree, leftCommit, rightCommit *object.Commit, err error) {
 	// 获取本地仓库的 worktree
-	worktree, err := repo.Worktree()
+	worktree, err = repo.Worktree()
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	// 获取拉取前的最新 Commit 的 Hash 值
 	leftRef, err := repo.Head()
 	if err != nil {
-		return nil, nil, err
+		return worktree, nil, nil, err
 	}
-	leftCommit, err := repo.CommitObject(leftRef.Hash())
+	leftCommit, err = repo.CommitObject(leftRef.Hash())
 	if err != nil {
-		return nil, nil, err
+		return worktree, nil, nil, err
 	}
 
 	// 拉取远端仓库的更改
@@ -78,20 +78,20 @@ func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (*object.Commit,
 		Auth:       publicKeys,
 	})
 	if err != nil {
-		return nil, nil, err
+		return worktree, nil, nil, err
 	}
 
 	// 获取拉取后的最新 Commit 的 Hash 值
 	RightRef, err := repo.Head()
 	if err != nil {
-		return nil, nil, err
+		return worktree, nil, nil, err
 	}
-	RightCommit, err := repo.CommitObject(RightRef.Hash())
+	rightCommit, err = repo.CommitObject(RightRef.Hash())
 	if err != nil {
-		return nil, nil, err
+		return worktree, nil, nil, err
 	}
 
-	return leftCommit, RightCommit, nil
+	return worktree, leftCommit, rightCommit, nil
 }
 
 // IsLocalRepo 检测是不是本地仓库，是的话返回本地仓库对象
