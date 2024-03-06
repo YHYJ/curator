@@ -228,17 +228,17 @@ func RollingCloneRepos(confile, source string) {
 				otherErrList := general.CreateLocalBranch(repo, remoteBranchs)
 				errList = append(errList, otherErrList...)
 				// 获取主仓库的本地分支信息
+				var localBranchStr string
 				localBranchs, err := general.GetRepoBranchInfo(worktree, "local")
 				if err != nil {
 					errList = append(errList, "Get local repository branch (local): "+err.Error())
 				}
-				var localBranchStr string
 				for _, localBranch := range localBranchs {
 					localBranchStr = localBranchStr + localBranch.Name() + ", "
 				}
 				// 获取子模块信息
-				submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 				var submoduleStr string
+				submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 				if err != nil {
 					errList = append(errList, "Get local repository submodules: "+err.Error())
 				}
