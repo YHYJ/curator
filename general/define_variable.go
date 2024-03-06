@@ -30,8 +30,9 @@ var (
 	SliceTraverseFormat                  = "\x1b[32m%s\x1b[0m\n"                                                                             // Slice输出格式 切片遍历: <切片内容>
 	SliceTraverseSuffixFormat            = "\x1b[32m%s\x1b[0m%s%s\n"                                                                         // Slice输出格式 带后缀的切片遍历: <切片内容><分隔符><后缀>
 	SliceTraverse2PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m\n"                                                          // Slice输出格式 切片遍历·2部分: <切片内容1><分隔符><切片内容2>
+	SliceTraverse2PNoNewLineFormat       = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m"                                                            // Slice输出格式 切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2>
 	SliceTraverse2PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s\n"                                                      // Slice输出格式 带后缀的切片遍历·2部分: <切片内容1><分隔符><切片内容2><分隔符><后缀>
-	SliceTraverse2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s"                                                        // Slice输出格式 带后缀的切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2><分隔符><后缀>
+	SliceTraverse2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s"                                                          // Slice输出格式 带后缀的切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2><后缀>
 	SliceTraverse3PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s%s\n"                                   // Slice输出格式 带后缀的切片遍历·3部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><后缀>
 	SliceTraverse4PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n"                    // Slice输出格式 切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4>
 	SliceTraverse4PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m%s%s\n"                // Slice输出格式 带后缀的切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4><分隔符><后缀>
@@ -51,6 +52,7 @@ var (
 
 	InfoFormat             = "\x1b[33m%s\x1b[0m\n"                        // 展示信息输出格式 展示信息: <展示信息>
 	Info2PFormat           = "\x1b[33m%s%s\x1b[0m\n"                      // 展示信息输出格式 展示信息·2部分: <展示信息>
+	Info2PNoNewLineFormat  = "\x1b[35m%s%s\x1b[0m"                        // 展示信息输出格式 展示信息·2部分·不换行: <展示信息>
 	InfoPrefixFormat       = "%s%s\x1b[33m%s\x1b[0m\n"                    // 展示信息输出格式 带前缀的展示信息: <前缀><分隔符><展示信息>
 	Info2PPrefixFormat     = "%s%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n" // 展示信息输出格式 带前缀的展示信息·2部分: <前缀><分隔符><展示信息1><分隔符><展示信息2>
 	InfoSuffixFormat       = "\x1b[33m%s\x1b[0m%s%s\n"                    // 展示信息输出格式 带后缀的展示信息: <展示信息><分隔符><后缀>
