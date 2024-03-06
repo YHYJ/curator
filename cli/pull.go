@@ -49,15 +49,73 @@ func RollingPullRepos(confile, source string) {
 				isRepo, repo := general.IsLocalRepo(repoPath)
 				if isRepo { // 开始拉取
 					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Pulling ", repoName.(string), ":", " ")
-					leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
+					worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
 					if err != nil {
 						if err == git.NoErrAlreadyUpToDate {
-							fmt.Println("Already up-to-date")
+							fmt.Printf(general.SuccessSuffixNoNewLineFormat, "[✔]", "", " ")
+							fmt.Printf(general.SuccessNoNewLineFormat, "Already up-to-date ")
+							// 尝试拉取子模块
+							submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
+							if err != nil {
+								fmt.Printf(general.ErrorBaseFormat, err)
+								continue
+							}
+							if submodules != nil {
+								fmt.Printf("Submodule: ")
+								for _, submodule := range submodules {
+									fmt.Printf(general.Info2PNoNewLineFormat, submodule.Config().Name, " ")
+									submoduleRepo, err := submodule.Repository()
+									if err != nil {
+										fmt.Printf(general.ErrorBaseFormat, err)
+									} else {
+										_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
+										if err != nil {
+											if err == git.NoErrAlreadyUpToDate {
+												fmt.Printf(general.SuccessNoNewLineFormat, "Already up-to-date ")
+											} else {
+												fmt.Printf(general.ErrorBaseFormat, err)
+											}
+										} else {
+											fmt.Printf(general.SliceTraverse2PSuffixNoNewLineFormat, submoduleLeftCommit.Hash.String()[:6], " --> ", submoduleRightCommit.Hash.String()[:6], " ")
+										}
+									}
+								}
+							}
+							fmt.Println() // 该仓库的子模块处理完成，换行
 						} else {
 							fmt.Printf(general.ErrorBaseFormat, err)
 						}
 					} else {
-						fmt.Printf(general.SliceTraverse2PFormat, leftCommit.Hash.String()[:6], " --> ", rightCommit.Hash.String()[:6])
+						fmt.Printf(general.SuccessSuffixNoNewLineFormat, "[✔]", "", " ")
+						fmt.Printf(general.SliceTraverse2PSuffixNoNewLineFormat, leftCommit.Hash.String()[:6], " --> ", rightCommit.Hash.String()[:6], " ")
+						// 尝试拉取子模块
+						submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
+						if err != nil {
+							fmt.Printf(general.ErrorBaseFormat, err)
+							continue
+						}
+						if submodules != nil {
+							fmt.Printf("Submodule: ")
+							for _, submodule := range submodules {
+								fmt.Printf(general.Info2PNoNewLineFormat, submodule.Config().Name, " ")
+								submoduleRepo, err := submodule.Repository()
+								if err != nil {
+									fmt.Printf(general.ErrorBaseFormat, err)
+								} else {
+									_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
+									if err != nil {
+										if err == git.NoErrAlreadyUpToDate {
+											fmt.Printf(general.SuccessNoNewLineFormat, "Already up-to-date ")
+										} else {
+											fmt.Printf(general.ErrorBaseFormat, err)
+										}
+									} else {
+										fmt.Printf(general.SliceTraverse2PSuffixNoNewLineFormat, submoduleLeftCommit.Hash.String()[:6], " --> ", submoduleRightCommit.Hash.String()[:6], " ")
+									}
+								}
+							}
+						}
+						fmt.Println() // 该仓库的子模块处理完成，换行
 					}
 				} else { // 非本地仓库
 					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.No, " Pulling ", repoName.(string), ":", " ")
@@ -69,7 +127,6 @@ func RollingPullRepos(confile, source string) {
 			}
 			// 添加一个延时，使输出更加顺畅
 			general.Delay(0.1)
-			continue
 		}
 	}
 }
