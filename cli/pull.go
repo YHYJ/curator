@@ -52,8 +52,7 @@ func RollingPullRepos(confile, source string) {
 					worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
 					if err != nil {
 						if err == git.NoErrAlreadyUpToDate {
-							fmt.Printf(general.SuccessSuffixNoNewLineFormat, "[✔]", "", " ")
-							fmt.Printf(general.SuccessNoNewLineFormat, "Already up-to-date ")
+							fmt.Printf(general.SliceTraverse2PNoNewLineFormat, "[✔]", " ", "Already up-to-date ")
 							// 尝试拉取子模块
 							submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 							if err != nil {
@@ -61,9 +60,9 @@ func RollingPullRepos(confile, source string) {
 								continue
 							}
 							if len(submodules) != 0 {
-								fmt.Printf("Submodule: ")
+								fmt.Printf("Submodule:")
 								for _, submodule := range submodules {
-									fmt.Printf(general.Info2PNoNewLineFormat, submodule.Config().Name, " ")
+									fmt.Printf(general.InfoPrefixSuffixNoNewLineFormat, " ", "[", submodule.Config().Name, "]", " ")
 									submoduleRepo, err := submodule.Repository()
 									if err != nil {
 										fmt.Printf(general.ErrorBaseFormat, err)
@@ -71,7 +70,7 @@ func RollingPullRepos(confile, source string) {
 										_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 										if err != nil {
 											if err == git.NoErrAlreadyUpToDate {
-												fmt.Printf(general.SuccessNoNewLineFormat, "Already up-to-date ")
+												fmt.Printf(general.SuccessBlueNoNewLineFormat, "Already up-to-date")
 											} else {
 												fmt.Printf(general.ErrorBaseFormat, err)
 											}
@@ -95,9 +94,9 @@ func RollingPullRepos(confile, source string) {
 							continue
 						}
 						if submodules != nil {
-							fmt.Printf("Submodule: ")
+							fmt.Printf("Submodule:")
 							for _, submodule := range submodules {
-								fmt.Printf(general.Info2PNoNewLineFormat, submodule.Config().Name, " ")
+								fmt.Printf(general.InfoPrefixSuffixNoNewLineFormat, " ", "[", submodule.Config().Name, "]", " ")
 								submoduleRepo, err := submodule.Repository()
 								if err != nil {
 									fmt.Printf(general.ErrorBaseFormat, err)
@@ -105,7 +104,7 @@ func RollingPullRepos(confile, source string) {
 									_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 									if err != nil {
 										if err == git.NoErrAlreadyUpToDate {
-											fmt.Printf(general.SuccessNoNewLineFormat, "Already up-to-date ")
+											fmt.Printf(general.SuccessBlueNoNewLineFormat, "Already up-to-date")
 										} else {
 											fmt.Printf(general.ErrorBaseFormat, err)
 										}

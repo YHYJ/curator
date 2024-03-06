@@ -43,6 +43,7 @@ var (
 	SuccessFormat                = "\x1b[32m%s\x1b[0m\n"     // 成功信息输出格式 成功信息: <成功信息>
 	SuccessDarkFormat            = "\x1b[36m%s\x1b[0m\n"     // 成功信息输出格式 暗色成功信息: <成功信息>
 	SuccessNoNewLineFormat       = "\x1b[32m%s\x1b[0m"       // 成功信息输出格式 成功信息·不换行: <成功信息>
+	SuccessBlueNoNewLineFormat   = "\x1b[34m%s\x1b[0m"       // 成功信息输出格式 蓝色成功信息·不换行: <成功信息>
 	SuccessSuffixFormat          = "\x1b[32m%s\x1b[0m%s%s\n" // 成功信息输出格式 带后缀的成功信息: <成功信息><分隔符><后缀>
 	SuccessSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s%s"   // 成功信息输出格式 带后缀的成功信息·不换行: <成功信息><分隔符><后缀>
 
@@ -50,13 +51,14 @@ var (
 	TipsPrefixSuffixFormat      = "%s%s\x1b[32;1m%s\x1b[0m%s%s\n"            // 提示信息输出格式 带前后缀的提示信息: <前缀><分隔符><提示信息><分隔符><后缀>
 	Tips2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[36m%s\x1b[0m%s%s" // 提示信息输出格式 带后缀的提示信息·2部分·不换行: <提示信息1><分隔符><提示信息2><分隔符><后缀>
 
-	InfoFormat             = "\x1b[33m%s\x1b[0m\n"                        // 展示信息输出格式 展示信息: <展示信息>
-	Info2PFormat           = "\x1b[33m%s%s\x1b[0m\n"                      // 展示信息输出格式 展示信息·2部分: <展示信息>
-	Info2PNoNewLineFormat  = "\x1b[35m%s%s\x1b[0m"                        // 展示信息输出格式 展示信息·2部分·不换行: <展示信息>
-	InfoPrefixFormat       = "%s%s\x1b[33m%s\x1b[0m\n"                    // 展示信息输出格式 带前缀的展示信息: <前缀><分隔符><展示信息>
-	Info2PPrefixFormat     = "%s%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n" // 展示信息输出格式 带前缀的展示信息·2部分: <前缀><分隔符><展示信息1><分隔符><展示信息2>
-	InfoSuffixFormat       = "\x1b[33m%s\x1b[0m%s%s\n"                    // 展示信息输出格式 带后缀的展示信息: <展示信息><分隔符><后缀>
-	InfoPrefixSuffixFormat = "%s%s\x1b[33m%s\x1b[0m%s%s\n"                // 展示信息输出格式 带前后缀的展示信息: <前缀><分隔符><展示信息><分隔符><后缀>
+	InfoFormat                      = "\x1b[33m%s\x1b[0m\n"                        // 展示信息输出格式 展示信息: <展示信息>
+	Info2PFormat                    = "\x1b[33m%s%s\x1b[0m\n"                      // 展示信息输出格式 展示信息·2部分: <展示信息>
+	Info2PNoNewLineFormat           = "\x1b[35m%s%s\x1b[0m"                        // 展示信息输出格式 展示信息·2部分·不换行: <展示信息>
+	InfoPrefixFormat                = "%s%s\x1b[33m%s\x1b[0m\n"                    // 展示信息输出格式 带前缀的展示信息: <前缀><分隔符><展示信息>
+	Info2PPrefixFormat              = "%s%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n" // 展示信息输出格式 带前缀的展示信息·2部分: <前缀><分隔符><展示信息1><分隔符><展示信息2>
+	InfoSuffixFormat                = "\x1b[33m%s\x1b[0m%s%s\n"                    // 展示信息输出格式 带后缀的展示信息: <展示信息><分隔符><后缀>
+	InfoPrefixSuffixFormat          = "%s%s\x1b[33m%s\x1b[0m%s%s\n"                // 展示信息输出格式 带前后缀的展示信息: <前缀><分隔符><展示信息><分隔符><后缀>
+	InfoPrefixSuffixNoNewLineFormat = "%s%s\x1b[35m%s\x1b[0m%s%s"                  // 展示信息输出格式 带前后缀的展示信息·不换行: <前缀><分隔符><展示信息><分隔符><后缀>
 
 	ErrorBaseFormat   = "\x1b[31m%s\x1b[0m\n"     // 错误信息输出格式 基础错误: <错误信息>
 	ErrorPrefixFormat = "%s%s\x1b[31m%s\x1b[0m\n" // 错误信息输出格式 带前缀的错误: <前缀><分隔符><错误信息>
