@@ -1,3 +1,4 @@
+- [ ] 子命令pull中如果子模块commit了后pull下来但是主模块没有commit，在再次pull主模块时会报错"worktree contains unstaged changes" (2024-03-06 11:00)
 - [ ] 参考https://blog.csdn.net/qq_30505673/article/details/86615394重写toml文件读取方法，确保读取结果是map (2023-04-18 16:27)
 - [ ] 完善参数解析，确保能够解析包含"~"和环境变量的配置项 (2023-04-18 16:31)
 - [X] 将原属于`root`的操作移动到`run`子命令下 (2023-04-21 15:38)
