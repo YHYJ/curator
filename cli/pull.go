@@ -93,7 +93,7 @@ func RollingPullRepos(confile, source string) {
 							fmt.Printf(general.ErrorBaseFormat, err)
 							continue
 						}
-						if submodules != nil {
+						if len(submodules) != 0 {
 							fmt.Printf("Submodule:")
 							for _, submodule := range submodules {
 								fmt.Printf(general.InfoPrefixSuffixNoNewLineFormat, " ", "[", submodule.Config().Name, "]", " ")
