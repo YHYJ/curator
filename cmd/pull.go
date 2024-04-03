@@ -17,7 +17,7 @@ import (
 // pullCmd represents the pull command
 var pullCmd = &cobra.Command{
 	Use:   "pull",
-	Short: "Pull changes from a remote repository",
+	Short: "Fetch from and merge with another repository or local branch",
 	Long:  `Pull the latest changes from the origin remote and merge into the current branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 解析参数
