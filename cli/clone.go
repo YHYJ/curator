@@ -167,17 +167,22 @@ func RollingCloneRepos(confile, source string) {
 			}
 		}()
 
+		// 创建运行状态符号
+		yesSymbol := fmt.Sprintf("%s%s%s", "[", general.Yes, "]")
+		noSymbol := fmt.Sprintf("%s%s%s", "[", general.No, "]")
+		dotSymbol := fmt.Sprintf("%s%s%s", "[", general.Dot, "]")
 		// 克隆
-		fmt.Printf(general.TipsPrefixFormat, "Clone to", ": ", storagePath)
+		fmt.Printf(general.TipsPrefixFormat, "Clone to", " ", storagePath)
 		fmt.Println()
 		for _, repoName := range repoNames {
 			repoPath := filepath.Join(storagePath, repoName.(string))
+			// 开始克隆
+			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repoName.(string), ":", " ")
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
-					fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Dot, " Cloning ", repoName.(string), ":", " ")
-					fmt.Printf(general.SliceTraverse2PFormat, "[✔]", " ", "Local repository already exists")
+					fmt.Printf(general.InfoSuffixFormat, dotSymbol, " ", "Local repository already exists")
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
 					continue
@@ -187,21 +192,18 @@ func RollingCloneRepos(confile, source string) {
 							fmt.Printf(general.ErrorBaseFormat, err)
 						}
 					} else { // 文件夹非空，处理下一个
-						fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.No, " Cloning ", repoName.(string), ":", " ")
-						fmt.Println("Folder is not a local repository and not empty")
+						fmt.Printf(general.ErrorSuffixFormat, noSymbol, " ", "Folder is not a local repository and not empty")
 						// 添加一个延时，使输出更加顺畅
 						general.Delay(0.1)
 						continue
 					}
 				}
 			}
-			// 开始克隆
-			fmt.Printf(general.Tips2PSuffixNoNewLineFormat, general.Run, " Cloning ", repoName.(string), ":", " ")
 			repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repoName.(string), publicKeys)
 			if err != nil { // Clone 失败
 				fmt.Printf(general.ErrorBaseFormat, err)
 			} else { // Clone 成功
-				fmt.Printf(general.SuccessSuffixNoNewLineFormat, "[✔]", "", " ")
+				fmt.Printf(general.SuccessSuffixNoNewLineFormat, yesSymbol, "", " ")
 				var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
