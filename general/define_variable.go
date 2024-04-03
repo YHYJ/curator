@@ -31,7 +31,7 @@ var (
 	SliceTraverseSuffixFormat            = "\x1b[32m%s\x1b[0m%s%s\n"                                                                         // Slice输出格式 带后缀的切片遍历: <切片内容><分隔符><后缀>
 	SliceTraverse2PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m\n"                                                          // Slice输出格式 切片遍历·2部分: <切片内容1><分隔符><切片内容2>
 	SliceTraverse2PNoNewLineFormat       = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m"                                                            // Slice输出格式 切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2>
-	SliceTraverse2PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s%s\n"                                                      // Slice输出格式 带后缀的切片遍历·2部分: <切片内容1><分隔符><切片内容2><分隔符><后缀>
+	SliceTraverse2PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\n"                                                        // Slice输出格式 带后缀的切片遍历·2部分: <切片内容1><分隔符><切片内容2><后缀>
 	SliceTraverse2PSuffixNoNewLineFormat = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s"                                                          // Slice输出格式 带后缀的切片遍历·2部分·不换行: <切片内容1><分隔符><切片内容2><后缀>
 	SliceTraverse3PSuffixFormat          = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s%s\n"                                   // Slice输出格式 带后缀的切片遍历·3部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><后缀>
 	SliceTraverse4PFormat                = "\x1b[32m%s\x1b[0m%s\x1b[34m%s\x1b[0m%s\x1b[33m%s\x1b[0m%s\x1b[35m%s\x1b[0m\n"                    // Slice输出格式 切片遍历·4部分: <切片内容1><分隔符><切片内容2><分隔符><切片内容3><分隔符><切片内容4>
@@ -66,10 +66,14 @@ var (
 )
 
 var (
+	// 运行状态符号
 	Run = "➤"
 	Dot = "•"
 	Yes = "✔"
 	No  = "✘"
+	// 运行过程符号
+	JoinerIng    = "├──"
+	JoinerFinish = "└──"
 )
 
 // ---------- 环境变量
