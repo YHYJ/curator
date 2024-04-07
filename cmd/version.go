@@ -4,14 +4,13 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-18 13:21:10
 
-Description: 程序子命令'version'时执行
+Description: 由程序子命令 version 执行
 */
 
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/general"
 )
@@ -25,8 +24,17 @@ var versionCmd = &cobra.Command{
 		// 解析参数
 		onlyFlag, _ := cmd.Flags().GetBool("only")
 
-		programInfo := general.ProgramInfo(onlyFlag)
-		fmt.Printf(programInfo)
+		programInfo := general.ProgramInfo()
+
+		if onlyFlag {
+			color.Printf("%s %s\n", general.LightText(programInfo["Name"]), general.LightText(programInfo["Version"]))
+		} else {
+			color.Printf("%s %s\n", general.LightText(programInfo["Name"]), general.LightText(programInfo["Version"]))
+			color.Printf("%s %s\n", general.SecondaryText("Project:"), general.SecondaryText(programInfo["Project"]))
+			color.Printf("%s %s\n", general.SecondaryText("Build rev:"), general.SecondaryText(programInfo["GitCommitHash"]))
+			color.Printf("%s %s\n", general.SecondaryText("Built on:"), general.SecondaryText(programInfo["BuildTime"]))
+			color.Printf("%s %s\n", general.SecondaryText("Built by:"), general.SecondaryText(programInfo["BuildBy"]))
+		}
 	},
 }
 

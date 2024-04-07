@@ -14,6 +14,8 @@ import (
 	"os/user"
 	"runtime"
 	"strconv"
+
+	"github.com/gookit/color"
 )
 
 // ---------- 代码变量
@@ -63,6 +65,41 @@ var (
 	ErrorBaseFormat   = "\x1b[31m%s\x1b[0m\n"     // 错误信息输出格式 基础错误: <错误信息>
 	ErrorPrefixFormat = "%s%s\x1b[31m%s\x1b[0m\n" // 错误信息输出格式 带前缀的错误: <前缀><分隔符><错误信息>
 	ErrorSuffixFormat = "\x1b[31m%s\x1b[0m%s%s\n" // 错误信息输出格式 带后缀的错误: <错误信息><分隔符><后缀>
+)
+
+var (
+	FgBlack   = color.FgBlack.Render   // 前景色 - 黑色
+	FgWhite   = color.FgWhite.Render   // 前景色 - 白色
+	FgGray    = color.FgGray.Render    // 前景色 - 灰色
+	FgRed     = color.FgRed.Render     // 前景色 - 红色
+	FgGreen   = color.FgGreen.Render   // 前景色 - 绿色
+	FgYellow  = color.FgYellow.Render  // 前景色 - 黄色
+	FgBlue    = color.FgBlue.Render    // 前景色 - 蓝色
+	FgMagenta = color.FgMagenta.Render // 前景色 - 品红
+	FgCyan    = color.FgCyan.Render    // 前景色 - 青色
+
+	BgBlack   = color.BgBlack.Render   // 背景色 - 黑色
+	BgWhite   = color.BgWhite.Render   // 背景色 - 白色
+	BgGray    = color.BgGray.Render    // 背景色 - 灰色
+	BgRed     = color.BgRed.Render     // 背景色 - 红色
+	BgGreen   = color.BgGreen.Render   // 背景色 - 绿色
+	BgYellow  = color.BgYellow.Render  // 背景色 - 黄色
+	BgBlue    = color.BgBlue.Render    // 背景色 - 蓝色
+	BgMagenta = color.BgMagenta.Render // 背景色 - 品红
+	BgCyan    = color.BgCyan.Render    // 背景色 - 青色
+
+	InfoText      = color.Info.Render      // Info 文本
+	NoteText      = color.Note.Render      // Note 文本
+	LightText     = color.Light.Render     // Light 文本
+	ErrorText     = color.Error.Render     // Error 文本
+	DangerText    = color.Danger.Render    // Danger 文本
+	NoticeText    = color.Notice.Render    // Notice 文本
+	SuccessText   = color.Success.Render   // Success 文本
+	CommentText   = color.Comment.Render   // Comment 文本
+	PrimaryText   = color.Primary.Render   // Primary 文本
+	WarnText      = color.Warn.Render      // Warn 文本
+	QuestionText  = color.Question.Render  // Question 文本
+	SecondaryText = color.Secondary.Render // Secondary 文本
 )
 
 var (

@@ -10,8 +10,7 @@ Description: 程序子命令 'config' 时执行
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/cli"
 	"github.com/yhyj/curator/general"
@@ -42,33 +41,33 @@ var configCmd = &cobra.Command{
 			if cfgFileExist {
 				if forceFlag {
 					if err := general.DeleteFile(cfgFile); err != nil {
-						fmt.Printf(general.ErrorBaseFormat, err)
+						color.Error.Println(err)
 						return
 					}
 					if err := general.CreateFile(cfgFile); err != nil {
-						fmt.Printf(general.ErrorBaseFormat, err)
+						color.Error.Println(err)
 						return
 					}
 					_, err := cli.WriteTomlConfig(cfgFile)
 					if err != nil {
-						fmt.Printf(general.ErrorBaseFormat, err)
+						color.Error.Println(err)
 						return
 					}
-					fmt.Printf(general.InfoPrefixSuffixFormat, "Create", " ", cfgFile, ": ", "file overwritten")
+					color.Printf("%s %s: %s\n", general.FgWhite("Create"), general.PrimaryText(cfgFile), general.SuccessText("file overwritten"))
 				} else {
-					fmt.Printf(general.InfoPrefixSuffixFormat, "Create", " ", cfgFile, ": ", "file exists (use --force to overwrite)")
+					color.Printf("%s %s: %s %s\n", general.FgWhite("Create"), general.PrimaryText(cfgFile), general.WarnText("file exists"), general.SecondaryText("(use --force to overwrite)"))
 				}
 			} else {
 				if err := general.CreateFile(cfgFile); err != nil {
-					fmt.Printf(general.ErrorBaseFormat, err)
+					color.Error.Println(err)
 					return
 				}
 				_, err := cli.WriteTomlConfig(cfgFile)
 				if err != nil {
-					fmt.Printf(general.ErrorBaseFormat, err)
+					color.Error.Println(err)
 					return
 				}
-				fmt.Printf(general.InfoPrefixSuffixFormat, "Create", " ", cfgFile, ": ", "file created")
+				color.Printf("%s %s: %s\n", general.FgWhite("Create"), general.PrimaryText(cfgFile), general.SuccessText("file created"))
 			}
 		}
 
@@ -76,12 +75,12 @@ var configCmd = &cobra.Command{
 			if cfgFileExist {
 				configTree, err := cli.GetTomlConfig(cfgFile)
 				if err != nil {
-					fmt.Printf(general.ErrorBaseFormat, err)
+					color.Error.Println(err)
 				} else {
-					fmt.Println(configTree)
+					color.Println(general.NoteText(configTree))
 				}
 			} else {
-				fmt.Printf(general.ErrorBaseFormat, cfgFileNotFoundMessage)
+				color.Error.Println(cfgFileNotFoundMessage)
 			}
 		}
 	},

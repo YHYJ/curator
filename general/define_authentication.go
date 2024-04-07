@@ -18,6 +18,7 @@ import (
 
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
+	"github.com/gookit/color"
 	cssh "golang.org/x/crypto/ssh"
 	"golang.org/x/term"
 )
@@ -42,7 +43,7 @@ func GetPublicKeysByGit(pemFile string) (*ssh.PublicKeys, error) {
 		if err == x509.IncorrectPasswordError || strings.Contains(err.Error(), "empty password") {
 			maxAttempts := 3 // 最大尝试次数
 			for attempts := 0; attempts < maxAttempts; attempts++ {
-				fmt.Printf("Enter passphrase for key '%s' (%d/%d): ", pemFile, attempts+1, maxAttempts)
+				color.Printf("%s '%s' (%s/%s): ", FgWhite("Enter passphrase for key"), PrimaryText(pemFile), WarnText(attempts+1), NoticeText(maxAttempts))
 				password, err := term.ReadPassword(int(syscall.Stdin))
 				if err != nil {
 					return nil, err
