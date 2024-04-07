@@ -172,12 +172,12 @@ func RollingCloneRepos(confile, source string) {
 		for _, repoName := range repoNames {
 			repoPath := filepath.Join(storagePath, repoName.(string))
 			// 开始克隆
-			color.Printf("%s %s %s: ", general.FgGreen(general.Run), general.LightText("Cloning"), general.FgCyan(repoName.(string)))
+			color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Cloning"), general.FgCyan(repoName.(string)))
 			// 克隆前检测是否存在同名本地仓库或非空文件夹
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
-					color.Printf("%s %s\n", general.FgBlue(general.Dot), general.SecondaryText("Local repository already exists"))
+					color.Printf("%s %s\n", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Local repository already exists"))
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
 					continue
@@ -187,7 +187,7 @@ func RollingCloneRepos(confile, source string) {
 							color.Error.Println(err)
 						}
 					} else { // 文件夹非空，处理下一个
-						color.Printf("%s %s\n", general.FgYellow(general.No), general.WarnText("Folder is not a local repository and not empty"))
+						color.Printf("%s %s\n", general.WarningFlag, general.WarnText("Folder is not a local repository and not empty"))
 						// 添加一个延时，使输出更加顺畅
 						general.Delay(0.1)
 						continue
@@ -198,8 +198,8 @@ func RollingCloneRepos(confile, source string) {
 			if err != nil { // Clone 失败
 				color.Error.Println(err)
 			} else { // Clone 成功
-				length := len(general.Run) + len("Cloning") // 仓库信息缩进长度
-				color.Printf("%s %s\n", general.SuccessText(general.Yes), general.CommentText("Receive object completed"))
+				length := len(general.RunFlag) + len("Cloning") // 仓库信息缩进长度
+				color.Printf("%s %s\n", general.SuccessFlag, general.CommentText("Receive object completed"))
 				var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 				// 执行脚本
 				for _, scriptName := range scriptNameList {
@@ -234,8 +234,7 @@ func RollingCloneRepos(confile, source string) {
 				for _, localBranch := range localBranchs {
 					localBranchStr = append(localBranchStr, localBranch.Name())
 				}
-				color.Printf(strings.Repeat(" ", length)) // 子模块信息相对主模块进行一次缩进
-				color.Printf("%s [%s]\n", "🌿", general.FgCyan(strings.Join(localBranchStr, " ")))
+				color.Printf("%s%s %s [%s]\n", strings.Repeat(" ", length), general.JoinerFinish, general.BranchFlag, general.FgCyan(strings.Join(localBranchStr, " ")))
 				// 获取子模块信息
 				submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 				if err != nil {
@@ -249,7 +248,7 @@ func RollingCloneRepos(confile, source string) {
 						}
 						return general.JoinerIng
 					}()
-					color.Printf("%s%s %s %s\n", strings.Repeat(" ", length), joiner, "📦", general.FgMagenta(submodule.Config().Name))
+					color.Printf("%s%s %s %s\n", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagenta(submodule.Config().Name))
 					// 处理子模块的配置文件 .git/modules/<submodule>/config
 					configFile := filepath.Join(repoPath, ".git", "modules", submodule.Config().Name, "config")
 					if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {

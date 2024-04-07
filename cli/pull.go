@@ -46,7 +46,7 @@ func RollingPullRepos(confile, source string) {
 		for _, repoName := range repoNames {
 			repoPath := filepath.Join(storagePath, repoName.(string))
 			// 开始拉取
-			color.Printf("%s %s %s: ", general.FgGreen(general.Run), general.LightText("Pulling"), general.FgCyan(repoName.(string)))
+			color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Pulling"), general.FgCyan(repoName.(string)))
 			// 拉取前检测本地仓库是否存在
 			if general.FileExist(repoPath) {
 				isRepo, repo := general.IsLocalRepo(repoPath)
@@ -54,7 +54,7 @@ func RollingPullRepos(confile, source string) {
 					worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
 					if err != nil {
 						if err == git.NoErrAlreadyUpToDate {
-							color.Printf("%s %s\n", general.FgBlue(general.Dot), general.SecondaryText("Already up-to-date"))
+							color.Printf("%s %s\n", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Already up-to-date"))
 							// 尝试拉取子模块
 							submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 							if err != nil {
@@ -62,7 +62,7 @@ func RollingPullRepos(confile, source string) {
 								continue
 							}
 							if len(submodules) != 0 {
-								length := len(general.Run) + len("Pulling") // 子模块缩进长度
+								length := len(general.RunFlag) + len("Pulling") // 子模块缩进长度
 								for index, submodule := range submodules {
 									// 创建和主模块的连接符
 									joiner := func() string {
@@ -71,7 +71,7 @@ func RollingPullRepos(confile, source string) {
 										}
 										return general.JoinerIng
 									}()
-									color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, "📦", general.FgMagenta(submodule.Config().Name))
+									color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagenta(submodule.Config().Name))
 									submoduleRepo, err := submodule.Repository()
 									if err != nil {
 										color.Error.Println(err)
@@ -79,7 +79,7 @@ func RollingPullRepos(confile, source string) {
 										_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 										if err != nil {
 											if err == git.NoErrAlreadyUpToDate {
-												color.Printf("%s %s", general.FgBlue(general.Dot), general.SecondaryText("Already up-to-date"))
+												color.Printf("%s %s", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Already up-to-date"))
 											} else {
 												color.Error.Println(err)
 											}
@@ -94,7 +94,7 @@ func RollingPullRepos(confile, source string) {
 							color.Error.Println(err)
 						}
 					} else {
-						color.Printf("%s %s %s %s\n", general.Yes, general.FgBlue(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGray(rightCommit.Hash.String()[:6]))
+						color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlue(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGray(rightCommit.Hash.String()[:6]))
 						// 尝试拉取子模块
 						submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 						if err != nil {
@@ -102,7 +102,7 @@ func RollingPullRepos(confile, source string) {
 							continue
 						}
 						if len(submodules) != 0 {
-							length := len(general.Run) + len("Pulling") // 子模块缩进长度
+							length := len(general.RunFlag) + len("Pulling") // 子模块缩进长度
 							for index, submodule := range submodules {
 								// 创建和主模块的连接符
 								joiner := func() string {
@@ -111,7 +111,7 @@ func RollingPullRepos(confile, source string) {
 									}
 									return general.JoinerIng
 								}()
-								color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, "📦", general.FgMagenta(submodule.Config().Name))
+								color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagenta(submodule.Config().Name))
 								submoduleRepo, err := submodule.Repository()
 								if err != nil {
 									color.Error.Println(err)
@@ -119,7 +119,7 @@ func RollingPullRepos(confile, source string) {
 									_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 									if err != nil {
 										if err == git.NoErrAlreadyUpToDate {
-											color.Printf("%s %s", general.FgBlue(general.Dot), general.SecondaryText("Already up-to-date"))
+											color.Printf("%s %s", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Already up-to-date"))
 										} else {
 											color.Error.Println(err)
 										}
@@ -132,10 +132,10 @@ func RollingPullRepos(confile, source string) {
 						}
 					}
 				} else { // 非本地仓库
-					color.Printf("%s %s\n", general.FgRed(general.No), general.ErrorText("Folder is not a local repository"))
+					color.Printf("%s %s\n", general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
 				}
 			} else {
-				color.Printf("%s %s\n", general.FgRed(general.No), general.ErrorText("The local repository does not exist"))
+				color.Printf("%s %s\n", general.ErrorFlag, general.ErrorText("The local repository does not exist"))
 			}
 			// 添加一个延时，使输出更加顺畅
 			general.Delay(0.1)
