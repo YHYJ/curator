@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-06-09 15:01:47
 
-Description: 执行系统命令的函数
+Description: 执行系统命令
 */
 
 package general

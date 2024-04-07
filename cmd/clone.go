@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-21 15:45:25
 
-Description: 程序子命令'clone'时执行
+Description: 执行子命令 'clone'
 */
 
 package cmd

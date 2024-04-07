@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-24 16:41:33
 
-Description: 子命令 `config` 的实现
+Description: 子命令 'config' 的实现
 */
 
 package cli

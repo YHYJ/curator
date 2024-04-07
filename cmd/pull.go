@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2024-03-05 14:10：36
 
-Description: 程序子命令'pull'时执行
+Description: 执行子命令 'pull'
 */
 
 package cmd

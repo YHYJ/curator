@@ -4,7 +4,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2023-04-18 13:16:00
 
-Description: 程序未带子命令或参数时执行
+Description: 执行程序
 */
 
 package cmd
@@ -17,6 +17,7 @@ import (
 	"github.com/yhyj/curator/general"
 )
 
+// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "curator",
 	Short: "My code repository curator",
