@@ -84,7 +84,7 @@ func RollingPullRepos(confile, source string) {
 												color.Error.Println(err)
 											}
 										} else {
-											color.Printf("%s %s %s", general.FgBlue(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGray(submoduleRightCommit.Hash.String()[:6]))
+											color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlue(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreen(submoduleRightCommit.Hash.String()[:6]))
 										}
 									}
 									color.Println() // 子模块处理完成，换行
@@ -94,7 +94,7 @@ func RollingPullRepos(confile, source string) {
 							color.Error.Println(err)
 						}
 					} else {
-						color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlue(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGray(rightCommit.Hash.String()[:6]))
+						color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlue(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreen(rightCommit.Hash.String()[:6]))
 						// 尝试拉取子模块
 						submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 						if err != nil {
@@ -124,7 +124,7 @@ func RollingPullRepos(confile, source string) {
 											color.Error.Println(err)
 										}
 									} else {
-										color.Printf("%s %s %s", general.FgBlue(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGray(submoduleRightCommit.Hash.String()[:6]))
+										color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlue(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreen(submoduleRightCommit.Hash.String()[:6]))
 									}
 								}
 								color.Println() // 子模块处理完成，换行
