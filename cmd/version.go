@@ -27,7 +27,7 @@ var versionCmd = &cobra.Command{
 		programInfo := general.ProgramInfo()
 
 		if onlyFlag {
-			color.Printf("%s\n", general.LightText(programInfo["Version"]))
+			color.Printf("%s\n", programInfo["Version"])
 		} else {
 			color.Printf("%s %s\n", general.LightText(programInfo["Name"]), general.LightText(programInfo["Version"]))
 			color.Printf("%s %s\n", general.SecondaryText("Project:"), general.SecondaryText(programInfo["Project"]))
