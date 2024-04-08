@@ -32,7 +32,7 @@ func ReadFileLine(file string, line int) string {
 	// 打开文件
 	text, err := os.Open(file)
 	if err != nil {
-		log.Println(err)
+		log.Println(FgRed(err))
 	}
 	defer text.Close()
 
@@ -62,7 +62,7 @@ func ReadFileKey(file, key string) string {
 	// 打开文件
 	text, err := os.Open(file)
 	if err != nil {
-		log.Println(err)
+		log.Println(FgRed(err))
 	}
 	defer text.Close()
 
@@ -89,7 +89,7 @@ func ReadFileCount(file, key string) int {
 	// 打开文件
 	text, err := os.Open(file)
 	if err != nil {
-		log.Println(err)
+		log.Println(FgRed(err))
 	}
 	defer text.Close()
 
