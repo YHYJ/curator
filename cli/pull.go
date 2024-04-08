@@ -54,7 +54,7 @@ func RollingPullRepos(confile, source string) {
 					worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
 					if err != nil {
 						if err == git.NoErrAlreadyUpToDate {
-							color.Printf("%s %s\n", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Already up-to-date"))
+							color.Printf("%s %s\n", general.FgBlue(general.LatestFlag), general.SecondaryText("Already up-to-date"))
 							// 尝试拉取子模块
 							submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 							if err != nil {
@@ -79,7 +79,7 @@ func RollingPullRepos(confile, source string) {
 										_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 										if err != nil {
 											if err == git.NoErrAlreadyUpToDate {
-												color.Printf("%s %s", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Already up-to-date"))
+												color.Printf("%s %s", general.FgBlue(general.LatestFlag), general.SecondaryText("Already up-to-date"))
 											} else {
 												color.Error.Println(err)
 											}
@@ -119,7 +119,7 @@ func RollingPullRepos(confile, source string) {
 									_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 									if err != nil {
 										if err == git.NoErrAlreadyUpToDate {
-											color.Printf("%s %s", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Already up-to-date"))
+											color.Printf("%s %s", general.FgBlue(general.LatestFlag), general.SecondaryText("Already up-to-date"))
 										} else {
 											color.Error.Println(err)
 										}

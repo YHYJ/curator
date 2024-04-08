@@ -177,7 +177,7 @@ func RollingCloneRepos(confile, source string) {
 			if general.FileExist(repoPath) {
 				isRepo, _ := general.IsLocalRepo(repoPath)
 				if isRepo { // 是本地仓库
-					color.Printf("%s %s\n", general.FgBlue(general.UnmodifiedFlag), general.SecondaryText("Local repository already exists"))
+					color.Printf("%s %s\n", general.FgBlue(general.LatestFlag), general.SecondaryText("Local repository already exists"))
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
 					continue
