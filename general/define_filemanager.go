@@ -166,12 +166,12 @@ func FileEmpty(filePath string) bool {
 //   - 包括隐藏文件
 //
 // 参数：
-//   - filePath: 文件夹路径
+//   - dirPath: 文件夹路径
 //
 // 返回：
 //   - 文件夹为空返回 true，否则返回 false
-func FolderEmpty(filePath string) bool {
-	file, err := os.Open(filePath)
+func FolderEmpty(dirPath string) bool {
+	file, err := os.Open(dirPath)
 	if err != nil {
 		return true
 	}
