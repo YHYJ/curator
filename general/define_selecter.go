@@ -1,10 +1,12 @@
 /*
-File: define_filter.go
+File: define_selecter.go
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2024-04-10 13:33:59
 
-Description: 过滤器
+Description: 选择器
+
+- Update, View 等方法通过 model 与用户进行交互
 */
 
 package general
@@ -63,7 +65,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// 监控按键事件
 	case tea.KeyMsg:
 		// 对按下的相应按键做出对应反应
-		switch msg.String() {
+		switch keyPress := msg.String(); keyPress {
 		case quietKey, "ctrl+c", "esc":
 			// 取消所有选中
 			m.selected = make(map[int]struct{})
@@ -124,19 +126,19 @@ func (m model) View() string {
 	// 对 choices 进行迭代
 	for i, choice := range m.choices {
 		// 检查光标是否指向当前选项，默认未指向
-		cursor := " " // 未指向当前选项
+		cursor := CursorOffFlag // 未指向当前选项
 		if m.cursor == i {
-			cursor = ">" // 指向当前选项
+			cursor = CursorOnFlag // 指向当前选项
 		}
 		// 检查当前选项是否被选中
-		checked := " " // 未选中
-		if i == 0 {    // 如果当前选项索引为0即是 "Select All"
+		checked := UnselectedFlag // 未选中
+		if i == 0 {               // 如果当前选项索引为0即是 "Select All"
 			if len(m.selected) == len(m.choices)-1 { // 所有选项都已选中（不包括 "Select All" 这个特殊选项）
-				checked = "x" // 已选中
+				checked = SelectedFlag // 已选中
 			}
 		} else { // 如果当前选项索引不为0即非 "Select All"
 			if _, ok := m.selected[i]; ok { // 当前选项的索引在已选中选项中
-				checked = "x" // 已选中
+				checked = SelectedFlag // 已选中
 			}
 		}
 		s.WriteString(color.Sprintf("%s [%s] %s\n", cursor, checked, choice))
