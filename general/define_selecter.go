@@ -117,13 +117,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) View() string {
 	// 定时显示主题
 	name := "repo name" // 选项类型
+
 	// 构建显示内容
 	s := strings.Builder{}
 	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
 	s.WriteString(color.Sprintf(MultiSelectTips, name))
 	s.WriteString(color.Sprintf(QuietTips, quietKey))
 	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
+
 	// 对 choices 进行迭代
+	SelectedFlag = color.Sprintf("%s", SuccessText(SelectedFlag))
 	for i, choice := range m.choices {
 		// 检查光标是否指向当前选项，默认未指向
 		cursor := CursorOffFlag // 未指向当前选项
