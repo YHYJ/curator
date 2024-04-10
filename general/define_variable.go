@@ -21,25 +21,39 @@ import (
 // ---------- 代码变量
 
 var (
-	FgBlack   = color.FgBlack.Render   // 前景色 - 黑色
-	FgWhite   = color.FgWhite.Render   // 前景色 - 白色
-	FgGray    = color.FgGray.Render    // 前景色 - 灰色
-	FgRed     = color.FgRed.Render     // 前景色 - 红色
-	FgGreen   = color.FgGreen.Render   // 前景色 - 绿色
-	FgYellow  = color.FgYellow.Render  // 前景色 - 黄色
-	FgBlue    = color.FgBlue.Render    // 前景色 - 蓝色
-	FgMagenta = color.FgMagenta.Render // 前景色 - 品红
-	FgCyan    = color.FgCyan.Render    // 前景色 - 青色
+	FgBlackText        = color.FgBlack.Render        // 前景色 - 黑色
+	FgWhiteText        = color.FgWhite.Render        // 前景色 - 白色
+	FgLightWhiteText   = color.FgLightWhite.Render   // 前景色 - 亮白色
+	FgGrayText         = color.FgGray.Render         // 前景色 - 灰色
+	FgRedText          = color.FgRed.Render          // 前景色 - 红色
+	FgLightRedText     = color.FgLightRed.Render     // 前景色 - 亮红色
+	FgGreenText        = color.FgGreen.Render        // 前景色 - 绿色
+	FgLightGreenText   = color.FgLightGreen.Render   // 前景色 - 亮绿色
+	FgYellowText       = color.FgYellow.Render       // 前景色 - 黄色
+	FgLightYellowText  = color.FgLightYellow.Render  // 前景色 - 亮黄色
+	FgBlueText         = color.FgBlue.Render         // 前景色 - 蓝色
+	FgLightBlueText    = color.FgLightBlue.Render    // 前景色 - 亮蓝色
+	FgMagentaText      = color.FgMagenta.Render      // 前景色 - 品红
+	FgLightMagentaText = color.FgLightMagenta.Render // 前景色 - 亮品红
+	FgCyanText         = color.FgCyan.Render         // 前景色 - 青色
+	FgLightCyanText    = color.FgLightCyan.Render    // 前景色 - 亮青色
 
-	BgBlack   = color.BgBlack.Render   // 背景色 - 黑色
-	BgWhite   = color.BgWhite.Render   // 背景色 - 白色
-	BgGray    = color.BgGray.Render    // 背景色 - 灰色
-	BgRed     = color.BgRed.Render     // 背景色 - 红色
-	BgGreen   = color.BgGreen.Render   // 背景色 - 绿色
-	BgYellow  = color.BgYellow.Render  // 背景色 - 黄色
-	BgBlue    = color.BgBlue.Render    // 背景色 - 蓝色
-	BgMagenta = color.BgMagenta.Render // 背景色 - 品红
-	BgCyan    = color.BgCyan.Render    // 背景色 - 青色
+	BgBlackText        = color.BgBlack.Render        // 背景色 - 黑色
+	BgWhiteText        = color.BgWhite.Render        // 背景色 - 白色
+	BgLightWhiteText   = color.BgLightWhite.Render   // 背景色 - 亮白色
+	BgGrayText         = color.BgGray.Render         // 背景色 - 灰色
+	BgRedText          = color.BgRed.Render          // 背景色 - 红色
+	BgLightRedText     = color.BgLightRed.Render     // 背景色 - 亮红色
+	BgGreenText        = color.BgGreen.Render        // 背景色 - 绿色
+	BgLightGreenText   = color.BgLightGreen.Render   // 背景色 - 亮绿色
+	BgYellowText       = color.BgYellow.Render       // 背景色 - 黄色
+	BgLightYellowText  = color.BgLightYellow.Render  // 背景色 - 亮黄色
+	BgBlueText         = color.BgBlue.Render         // 背景色 - 蓝色
+	BgLightBlueText    = color.BgLightBlue.Render    // 背景色 - 亮蓝色
+	BgMagentaText      = color.BgMagenta.Render      // 背景色 - 品红
+	BgLightMagentaText = color.BgLightMagenta.Render // 背景色 - 亮品红
+	BgCyanText         = color.BgCyan.Render         // 背景色 - 青色
+	BgLightCyanText    = color.BgLightCyan.Render    // 背景色 - 亮青色
 
 	InfoText      = color.Info.Render      // Info 文本
 	NoteText      = color.Note.Render      // Note 文本
@@ -61,7 +75,13 @@ var (
 	SuccessFlag = "✅"  // 运行状态符号 - 成功
 	WarningFlag = "⚠️" // 运行状态符号 - 警告
 	ErrorFlag   = "❌"  // 运行状态符号 - 失败
-	SelectFlag  = "👉"  // 运行状态符号 - 选择
+)
+
+var (
+	CursorOnFlag   = "👉"  // 选择器符号 - 光标在
+	CursorOffFlag  = "  " // 选择器符号 - 光标不在
+	SelectedFlag   = "•"  // 选择器符号 - 已选中
+	UnselectedFlag = " "  // 选择器符号 - 已选中
 )
 
 var (
