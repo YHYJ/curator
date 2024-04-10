@@ -61,6 +61,19 @@ var (
 	SuccessFlag = "✅"  // 运行状态符号 - 成功
 	WarningFlag = "⚠️" // 运行状态符号 - 警告
 	ErrorFlag   = "❌"  // 运行状态符号 - 失败
+	SelectFlag  = "👉"  // 运行状态符号 - 选择
+)
+
+var (
+	Separator1st = "=" // 分隔符 - 1级
+	Separator2st = "-" // 分隔符 - 2级
+	Separator3st = "·" // 分隔符 - 3级
+)
+
+var (
+	MultiSelectTips  = "Please select from the %s below (multi-select)\n"  // 提示词 - 多选
+	SingleSelectTips = "Please select from the %s below (single-select)\n" // 提示词 - 单选
+	QuietTips        = "Press '%s' to quit\n"                              // 提示词 - 退出
 )
 
 var (

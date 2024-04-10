@@ -10,6 +10,7 @@ Description: 执行子命令 'clone'
 package cmd
 
 import (
+	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/cli"
 )
@@ -20,10 +21,20 @@ var cloneCmd = &cobra.Command{
 	Short: "Clone the specified repository",
 	Long:  `Clone the repository specified in the configuration file.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// 获取配置文件路径
+		cfgFile, _ := cmd.Flags().GetString("config")
 		// 解析参数
 		sourceFlag, _ := cmd.Flags().GetString("source")
 
-		cli.RollingCloneRepos(cfgFile, sourceFlag)
+		// 读取配置文件
+		configTree, err := cli.GetTomlConfig(cfgFile)
+		if err != nil {
+			color.Error.Println(err)
+			return
+		}
+
+		// 使用指定的数据源进行克隆
+		cli.RollingCloneRepos(configTree, sourceFlag)
 	},
 }
 

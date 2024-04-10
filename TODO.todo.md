@@ -1,4 +1,3 @@
-- [ ] 基于 [Bubble Tea](https://github.com/charmbracelet/bubbletea) 添加 TUI，允许用户选择要处理的 repo (2024-04-09 14:41)
 - [ ] 子命令pull中如果子模块commit了后pull下来但是主模块没有commit，在再次pull主模块时会报错"worktree contains unstaged changes" (2024-03-06 11:00)
 - [X] 将原属于`root`的操作移动到`run`子命令下 (2023-04-21 15:38)
 - [X] 添加生成示例配置文件功能 (2023-04-21 15:36)
@@ -14,3 +13,4 @@
   - [X] 仓库克隆完成后输出子模块信息 (2023-10-11 16:52)
   - [X] 仓库克隆完成后输出分支信息（go-git暂时没有，.git/refs/heads下每个文件名即是分支名） (2023-10-11 16:52)
   - [X] 多模块多分支仓库克隆完成后子模块检出所有分支名而不是哈希 (2023-10-12 08:53)
+- [X] 基于 [Bubble Tea](https://github.com/charmbracelet/bubbletea) 添加 TUI，允许用户选择要处理的 repo (2024-04-09 14:41)
