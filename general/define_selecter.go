@@ -36,7 +36,7 @@ type model struct {
 // 返回：
 //   - model
 func initialModel(choices []string) model {
-	allChoices := []string{"Select All"}
+	allChoices := []string{color.Sprintf("%s%s", SelectAllFlag, FgLightRedText(SelectAllTips))}
 	allChoices = append(allChoices, choices...)
 
 	return model{
@@ -121,17 +121,18 @@ func (m model) View() string {
 	// 构建显示内容
 	s := strings.Builder{}
 	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
-	s.WriteString(color.Sprintf(MultiSelectTips, name))
-	s.WriteString(color.Sprintf(QuietTips, quietKey))
+	s.WriteString(color.Sprintf(QuestionText(MultiSelectTips), name))
+	s.WriteString(color.Sprintf(SecondaryText(QuietTips), quietKey))
 	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
 
 	// 对 choices 进行迭代
-	SelectedFlag = color.Sprintf("%s", SuccessText(SelectedFlag))
+	SelectedFlag = SuccessText(SelectedFlag)
 	for i, choice := range m.choices {
 		// 检查光标是否指向当前选项，默认未指向
 		cursor := CursorOffFlag // 未指向当前选项
 		if m.cursor == i {
-			cursor = CursorOnFlag // 指向当前选项
+			cursor = CursorOnFlag            // 指向当前选项
+			choice = NoticeText(choice) // 光标所在选项着色
 		}
 		// 检查当前选项是否被选中
 		checked := UnselectedFlag // 未选中
@@ -141,7 +142,8 @@ func (m model) View() string {
 			}
 		} else { // 如果当前选项索引不为0即非 "Select All"
 			if _, ok := m.selected[i]; ok { // 当前选项的索引在已选中选项中
-				checked = SelectedFlag // 已选中
+				checked = SelectedFlag           // 已选中
+				choice = FgLightBlueText(choice) // 已选中选项着色
 			}
 		}
 		s.WriteString(color.Sprintf("%s [%s] %s\n", cursor, checked, choice))
