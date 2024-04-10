@@ -162,7 +162,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	}()
 
 	// 克隆
-	color.Info.Tips("%s %s\n", general.FgWhite("Clone to"), general.PrimaryText(config.Storage.Path))
+	color.Info.Tips("%s %s\n", general.FgWhiteText("Clone to"), general.PrimaryText(config.Storage.Path))
 	// TODO: 测试 TUI 选项卡 <10-04-24, YJ> //
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
@@ -172,12 +172,12 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始克隆
-		color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Cloning"), general.FgCyan(repoName))
+		color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Cloning"), general.FgCyanText(repoName))
 		// 克隆前检测是否存在同名本地仓库或非空文件夹
 		if general.FileExist(repoPath) {
 			isRepo, _ := general.IsLocalRepo(repoPath)
 			if isRepo { // 是本地仓库
-				color.Printf("%s %s\n", general.FgBlue(general.LatestFlag), general.SecondaryText("Local repository already exists"))
+				color.Printf("%s %s\n", general.FgBlueText(general.LatestFlag), general.SecondaryText("Local repository already exists"))
 				// 添加一个延时，使输出更加顺畅
 				general.Delay(0.1)
 				continue
@@ -234,7 +234,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 			for _, localBranch := range localBranchs {
 				localBranchStr = append(localBranchStr, localBranch.Name())
 			}
-			color.Printf("%s%s %s [%s]\n", strings.Repeat(" ", length), general.JoinerFinish, general.BranchFlag, general.FgCyan(strings.Join(localBranchStr, " ")))
+			color.Printf("%s%s %s [%s]\n", strings.Repeat(" ", length), general.JoinerFinish, general.BranchFlag, general.FgCyanText(strings.Join(localBranchStr, " ")))
 			// 获取子模块信息
 			submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 			if err != nil {
@@ -248,7 +248,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					}
 					return general.JoinerIng
 				}()
-				color.Printf("%s%s %s %s\n", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagenta(submodule.Config().Name))
+				color.Printf("%s%s %s %s\n", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
 				// 处理子模块的配置文件 .git/modules/<submodule>/config
 				configFile := filepath.Join(repoPath, ".git", "modules", submodule.Config().Name, "config")
 				if err = updateGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {

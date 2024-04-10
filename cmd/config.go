@@ -53,9 +53,9 @@ var configCmd = &cobra.Command{
 						color.Error.Println(err)
 						return
 					}
-					color.Printf("%s %s: %s\n", general.FgWhite("Create"), general.PrimaryText(cfgFile), general.SuccessText("file overwritten"))
+					color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(cfgFile), general.SuccessText("file overwritten"))
 				} else {
-					color.Printf("%s %s: %s %s\n", general.FgWhite("Create"), general.PrimaryText(cfgFile), general.WarnText("file exists"), general.SecondaryText("(use --force to overwrite)"))
+					color.Printf("%s %s: %s %s\n", general.FgWhiteText("Create"), general.PrimaryText(cfgFile), general.WarnText("file exists"), general.SecondaryText("(use --force to overwrite)"))
 				}
 			} else {
 				if err := general.CreateFile(cfgFile); err != nil {
@@ -67,7 +67,7 @@ var configCmd = &cobra.Command{
 					color.Error.Println(err)
 					return
 				}
-				color.Printf("%s %s: %s\n", general.FgWhite("Create"), general.PrimaryText(cfgFile), general.SuccessText("file created"))
+				color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(cfgFile), general.SuccessText("file created"))
 			}
 		}
 

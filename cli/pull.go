@@ -42,11 +42,11 @@ func RollingPullRepos(confile, source string) {
 
 		// 创建运行状态符号
 		// 拉取
-		color.Info.Tips("%s %s\n", general.FgWhite("Fetch from and merge with"), general.FgGreen(source))
+		color.Info.Tips("%s %s\n", general.FgWhiteText("Fetch from and merge with"), general.FgGreenText(source))
 		for _, repoName := range repoNames {
 			repoPath := filepath.Join(storagePath, repoName.(string))
 			// 开始拉取
-			color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Pulling"), general.FgCyan(repoName.(string)))
+			color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Pulling"), general.FgCyanText(repoName.(string)))
 			// 拉取前检测本地仓库是否存在
 			if general.FileExist(repoPath) {
 				isRepo, repo := general.IsLocalRepo(repoPath)
@@ -54,7 +54,7 @@ func RollingPullRepos(confile, source string) {
 					worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
 					if err != nil {
 						if err == git.NoErrAlreadyUpToDate {
-							color.Printf("%s %s\n", general.FgBlue(general.LatestFlag), general.SecondaryText("Already up-to-date"))
+							color.Printf("%s %s\n", general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"))
 							// 尝试拉取子模块
 							submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 							if err != nil {
@@ -71,7 +71,7 @@ func RollingPullRepos(confile, source string) {
 										}
 										return general.JoinerIng
 									}()
-									color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagenta(submodule.Config().Name))
+									color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
 									submoduleRepo, err := submodule.Repository()
 									if err != nil {
 										color.Error.Println(err)
@@ -79,12 +79,12 @@ func RollingPullRepos(confile, source string) {
 										_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 										if err != nil {
 											if err == git.NoErrAlreadyUpToDate {
-												color.Printf("%s %s", general.FgBlue(general.LatestFlag), general.SecondaryText("Already up-to-date"))
+												color.Printf("%s %s", general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"))
 											} else {
 												color.Error.Println(err)
 											}
 										} else {
-											color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlue(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreen(submoduleRightCommit.Hash.String()[:6]))
+											color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]))
 										}
 									}
 									color.Println() // 子模块处理完成，换行
@@ -94,7 +94,7 @@ func RollingPullRepos(confile, source string) {
 							color.Error.Println(err)
 						}
 					} else {
-						color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlue(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreen(rightCommit.Hash.String()[:6]))
+						color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreenText(rightCommit.Hash.String()[:6]))
 						// 尝试拉取子模块
 						submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 						if err != nil {
@@ -111,7 +111,7 @@ func RollingPullRepos(confile, source string) {
 									}
 									return general.JoinerIng
 								}()
-								color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagenta(submodule.Config().Name))
+								color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
 								submoduleRepo, err := submodule.Repository()
 								if err != nil {
 									color.Error.Println(err)
@@ -119,12 +119,12 @@ func RollingPullRepos(confile, source string) {
 									_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
 									if err != nil {
 										if err == git.NoErrAlreadyUpToDate {
-											color.Printf("%s %s", general.FgBlue(general.LatestFlag), general.SecondaryText("Already up-to-date"))
+											color.Printf("%s %s", general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"))
 										} else {
 											color.Error.Println(err)
 										}
 									} else {
-										color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlue(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreen(submoduleRightCommit.Hash.String()[:6]))
+										color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]))
 									}
 								}
 								color.Println() // 子模块处理完成，换行
