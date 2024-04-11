@@ -48,7 +48,7 @@ func GetPublicKeysByGit(pemFile string) (*ssh.PublicKeys, error) {
 				if err != nil {
 					return nil, err
 				}
-				fmt.Println() // 换行
+				color.Println() // 换行
 				publicKeys, err := ssh.NewPublicKeysFromFile("git", pemFile, string(password))
 
 				clearPassword(password)

@@ -19,6 +19,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
+	"github.com/gookit/color"
 )
 
 var remote = "origin" // 远程名称
@@ -126,7 +127,7 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 	case "local":
 		branchDir = ".git/refs/heads"
 	case "remote":
-		branchDir = fmt.Sprintf(".git/refs/remotes/%s", remote)
+		branchDir = color.Sprintf(".git/refs/remotes/%s", remote)
 	default:
 		return nil, fmt.Errorf("Parameter error: %s", "optional value of which is 'local' or 'remote'")
 	}
