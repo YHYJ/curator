@@ -32,7 +32,6 @@ var configCmd = &cobra.Command{
 		var (
 			noticeSlogan []string // 提示标语
 		)
-
 		// 检查参数
 		if !createFlag && !printFlag {
 			cmd.Help()
