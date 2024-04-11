@@ -13,6 +13,7 @@ import (
 	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/cli"
+	"github.com/yhyj/curator/general"
 )
 
 // pullCmd represents the pull command
@@ -27,7 +28,7 @@ var pullCmd = &cobra.Command{
 		sourceFlag, _ := cmd.Flags().GetString("source")
 
 		// 读取配置文件
-		configTree, err := cli.GetTomlConfig(cfgFile)
+		configTree, err := general.GetTomlConfig(cfgFile)
 		if err != nil {
 			color.Error.Println(err)
 			return

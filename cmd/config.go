@@ -10,10 +10,8 @@ Description: 执行子命令 'config'
 package cmd
 
 import (
-	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/cli"
-	"github.com/yhyj/curator/general"
 )
 
 // configCmd represents the config command
@@ -29,59 +27,14 @@ var configCmd = &cobra.Command{
 		forceFlag, _ := cmd.Flags().GetBool("force")
 		printFlag, _ := cmd.Flags().GetBool("print")
 
-		var (
-			cfgFileNotFoundMessage = "Configuration file not found (use --create to create a configuration file)" // 配置文件不存在
-		)
-
-		// 检查配置文件是否存在
-		cfgFileExist := general.FileExist(cfgFile)
-
-		// 执行配置文件操作
+		// 创建配置文件流程
 		if createFlag {
-			if cfgFileExist {
-				if forceFlag {
-					if err := general.DeleteFile(cfgFile); err != nil {
-						color.Error.Println(err)
-						return
-					}
-					if err := general.CreateFile(cfgFile); err != nil {
-						color.Error.Println(err)
-						return
-					}
-					_, err := cli.WriteTomlConfig(cfgFile)
-					if err != nil {
-						color.Error.Println(err)
-						return
-					}
-					color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(cfgFile), general.SuccessText("file overwritten"))
-				} else {
-					color.Printf("%s %s: %s %s\n", general.FgWhiteText("Create"), general.PrimaryText(cfgFile), general.WarnText("file exists"), general.SecondaryText("(use --force to overwrite)"))
-				}
-			} else {
-				if err := general.CreateFile(cfgFile); err != nil {
-					color.Error.Println(err)
-					return
-				}
-				_, err := cli.WriteTomlConfig(cfgFile)
-				if err != nil {
-					color.Error.Println(err)
-					return
-				}
-				color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(cfgFile), general.SuccessText("file created"))
-			}
+			cli.CreateConfigFile(cfgFile, forceFlag)
 		}
 
+		// 打印配置文件流程
 		if printFlag {
-			if cfgFileExist {
-				configTree, err := cli.GetTomlConfig(cfgFile)
-				if err != nil {
-					color.Error.Println(err)
-				} else {
-					color.Println(general.NoteText(configTree))
-				}
-			} else {
-				color.Error.Println(cfgFileNotFoundMessage)
-			}
+			cli.PrintConfigFile(cfgFile)
 		}
 	},
 }

@@ -12,6 +12,7 @@ package general
 import (
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -67,5 +68,29 @@ func RunCommand(command string, args []string) error {
 		return err
 	}
 
+	return nil
+}
+
+// RunScript 运行 shell 脚本
+//
+// 参数：
+//   - filePath: 脚本所在目录
+//   - scriptName: 脚本名
+//
+// 返回：
+//   - 错误信息
+func RunScript(filePath, scriptName string) error {
+	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
+	if FileExist(filepath.Join(filePath, scriptName)) {
+		// 进到指定目录
+		if err := os.Chdir(filePath); err != nil {
+			return err
+		}
+		// 运行脚本
+		bashArgs := []string{scriptName}
+		if err := RunCommand("bash", bashArgs); err != nil {
+			return err
+		}
+	}
 	return nil
 }

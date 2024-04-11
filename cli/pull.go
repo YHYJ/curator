@@ -30,7 +30,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	// storagePath := conf.Get("storage.path").(string)
 	// repoNames := conf.Get("git.repos").([]interface{})
 	// 获取配置项
-	config, err := LoadConfigToStruct(configTree)
+	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
 		color.Error.Println(err)
 		return
