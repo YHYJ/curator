@@ -10,6 +10,7 @@ Description: 执行子命令 'pull'
 package cmd
 
 import (
+	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/cli"
 )
@@ -20,10 +21,19 @@ var pullCmd = &cobra.Command{
 	Short: "Fetch from and merge with another repository or local branch",
 	Long:  `Pull the latest changes from the origin remote and merge into the current branch.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// 获取配置文件路径
+		cfgFile, _ := cmd.Flags().GetString("config")
 		// 解析参数
 		sourceFlag, _ := cmd.Flags().GetString("source")
 
-		cli.RollingPullRepos(cfgFile, sourceFlag)
+		// 读取配置文件
+		configTree, err := cli.GetTomlConfig(cfgFile)
+		if err != nil {
+			color.Error.Println(err)
+			return
+		}
+
+		cli.RollingPullRepos(configTree, sourceFlag)
 	},
 }
 
