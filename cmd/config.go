@@ -36,7 +36,6 @@ var configCmd = &cobra.Command{
 		if !createFlag && !printFlag {
 			cmd.Help()
 			noticeSlogan = append(noticeSlogan, "Please refer to the above help information")
-			createFlag, printFlag = false, false
 		}
 
 		// 创建配置文件流程
