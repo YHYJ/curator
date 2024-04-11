@@ -65,9 +65,6 @@ func isTomlFile(filePath string) bool {
 //   - toml 配置树
 //   - 错误信息
 func GetTomlConfig(filePath string) (*toml.Tree, error) {
-	if !FileExist(filePath) {
-		return nil, fmt.Errorf("Open %s: no such file or directory", filePath)
-	}
 	if !isTomlFile(filePath) {
 		return nil, fmt.Errorf("Open %s: is not a toml file", filePath)
 	}
