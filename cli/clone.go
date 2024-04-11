@@ -162,7 +162,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	}()
 
 	// 克隆
-	color.Info.Tips("%s %s\n", general.FgWhiteText("Clone to"), general.PrimaryText(config.Storage.Path))
+	color.Info.Tips("%s: %s", general.FgWhiteText("Repository root"), general.PrimaryText(config.Storage.Path))
 	// TODO: 测试 TUI 选项卡 <10-04-24, YJ> //
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
