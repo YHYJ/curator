@@ -11,6 +11,7 @@ package cli
 
 import (
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/gookit/color"
@@ -70,10 +71,14 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	// 克隆
 	color.Info.Tips("%s %s", general.FgWhiteText("Clone repository from"), general.FgGreenText(source))
 	color.Info.Tips("%s: %s", general.FgWhiteText("Repository root"), general.PrimaryText(config.Storage.Path))
+	// 让用户选择需要 Clone 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
 		color.Error.Println(err)
 	}
+	// 对所选的存储库进行排序
+	sort.Strings(selectedRepos)
+	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始克隆
