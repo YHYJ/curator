@@ -131,7 +131,7 @@ func (m model) View() string {
 		// 检查光标是否指向当前选项，默认未指向
 		cursor := CursorOffFlag // 未指向当前选项
 		if m.cursor == i {
-			cursor = CursorOnFlag            // 指向当前选项
+			cursor = CursorOnFlag                              // 指向当前选项
 			choice = color.Sprintf("\x1b[7m%s\x1b[0m", choice) // 光标所在选项着色
 		}
 		// 检查当前选项是否被选中
