@@ -58,7 +58,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始拉取
-		color.Printf("%s %s %s: ", general.RunFlag, general.LightText("Pulling"), general.FgCyanText(repoName))
+		color.Printf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Pulling"), general.FgCyanText(repoName))
 		// 拉取前检测本地仓库是否存在
 		if general.FileExist(repoPath) {
 			isRepo, repo := general.IsLocalRepo(repoPath)
@@ -96,7 +96,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 											color.Error.Println(err)
 										}
 									} else {
-										color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]))
+										color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]))
 									}
 								}
 								color.Println() // 子模块处理完成，换行
@@ -106,7 +106,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 						color.Error.Println(err)
 					}
 				} else {
-					color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreenText(rightCommit.Hash.String()[:6]))
+					color.Printf("%s %s %s %s\n", general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(rightCommit.Hash.String()[:6]))
 					// 尝试拉取子模块
 					submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 					if err != nil {
@@ -136,7 +136,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 										color.Error.Println(err)
 									}
 								} else {
-									color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.LightText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]))
+									color.Printf("%s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]))
 								}
 							}
 							color.Println() // 子模块处理完成，换行
