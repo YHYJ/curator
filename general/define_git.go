@@ -26,7 +26,7 @@ import (
 	"github.com/gookit/color"
 )
 
-var remote = "origin" // 远程名称
+var remoteName = "origin" // 远程名称
 
 // CloneRepoViaSSH 使用 SSH 协议将远端仓库克隆到本地
 //
@@ -79,8 +79,9 @@ func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.W
 
 	// 拉取远端仓库的更改
 	err = worktree.Pull(&git.PullOptions{
-		RemoteName: remote,
-		Auth:       publicKeys,
+		Auth:          publicKeys,
+		RemoteName:    remoteName,
+		ReferenceName: leftRef.Name(),
 	})
 	if err != nil {
 		return worktree, nil, nil, err
@@ -131,7 +132,7 @@ func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, err
 	case "local":
 		branchDir = ".git/refs/heads"
 	case "remote":
-		branchDir = color.Sprintf(".git/refs/remotes/%s", remote)
+		branchDir = color.Sprintf(".git/refs/remotes/%s", remoteName)
 	default:
 		return nil, fmt.Errorf("Parameter error: %s", "optional value of which is 'local' or 'remote'")
 	}
@@ -161,14 +162,14 @@ func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
 		branchReferenceName := plumbing.NewBranchReferenceName(branch.Name()) // 构建本地分支 Reference 名，格式： refs/heads/<localBranchName>
 		repo.CreateBranch(&config.Branch{                                     // 分支配置写入 .git/config
 			Name:   branch.Name(),
-			Remote: remote,
+			Remote: remoteName,
 			Merge:  branchReferenceName,
 		})
 
 		// 创建一个新的 Reference
-		newBranchReferenceName := plumbing.ReferenceName(branchReferenceName.String()) // refs/heads/test
-		remoteReferenceName := plumbing.NewRemoteReferenceName(remote, branch.Name())  // 构建远程分支 Reference 名，格式： refs/remotes/${remote}/<remoteBranchName>
-		remoteReferenceData, err := repo.Reference(remoteReferenceName, true)          // 根据远程分支 Reference 名获取其 Hash 值，格式： 1a8f900411d35a620407ce07902aecadfc782ded refs/remotes/${remote}/test
+		newBranchReferenceName := plumbing.ReferenceName(branchReferenceName.String())    // refs/heads/test
+		remoteReferenceName := plumbing.NewRemoteReferenceName(remoteName, branch.Name()) // 构建远程分支 Reference 名，格式： refs/remotes/${remote}/<remoteBranchName>
+		remoteReferenceData, err := repo.Reference(remoteReferenceName, true)             // 根据远程分支 Reference 名获取其 Hash 值，格式： 1a8f900411d35a620407ce07902aecadfc782ded refs/remotes/${remote}/test
 		if err != nil {
 			errList = append(errList, err.Error())
 			continue
