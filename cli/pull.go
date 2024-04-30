@@ -27,10 +27,6 @@ import (
 //   - source: 远端仓库源，支持 'github' 和 'gitea'，默认为 'github'
 func RollingPullRepos(configTree *toml.Tree, source string) {
 	// 获取配置项
-	// pemfile := conf.Get("ssh.rsa_file")
-	// storagePath := conf.Get("storage.path").(string)
-	// repoNames := conf.Get("git.repos").([]interface{})
-	// 获取配置项
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
 		color.Error.Println(err)
