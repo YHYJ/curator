@@ -117,12 +117,26 @@ func IsLocalRepo(path string) (bool, *git.Repository, *plumbing.Reference) {
 	}
 
 	// 获取 HEAD 引用
-	headRef, err := repo.Head()
-	if err != nil {
-		return false, nil, nil
-	}
+	headRef := GetRepoHeadRef(repo)
 
 	return true, repo, headRef
+}
+
+// GetRepoHeadRef 获取本地仓库对象 HEAD 指向的引用
+//
+// 参数：
+//   - repo: 本地仓库对象
+//
+// 返回：
+//   - HEAD 引用
+func GetRepoHeadRef(repo *git.Repository) *plumbing.Reference {
+	// 获取 HEAD 引用
+	headRef, err := repo.Head()
+	if err != nil {
+		return nil
+	}
+
+	return headRef
 }
 
 // GetRepoBranchInfo 获取本地仓库的[本地|远程]分支信息
