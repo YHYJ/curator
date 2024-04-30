@@ -57,7 +57,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		color.Printf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Pulling"), general.FgCyanText(repoName))
 		// 拉取前检测本地仓库是否存在
 		if general.FileExist(repoPath) {
-			isRepo, repo := general.IsLocalRepo(repoPath)
+			isRepo, repo, _ := general.IsLocalRepo(repoPath)
 			if isRepo {
 				worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
 				if err != nil {

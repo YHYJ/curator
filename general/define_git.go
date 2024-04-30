@@ -100,7 +100,7 @@ func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.W
 	return worktree, leftCommit, rightCommit, nil
 }
 
-// IsLocalRepo 检测是不是本地仓库，是的话返回本地仓库对象
+// IsLocalRepo 检测是不是本地仓库，是的话返回本地仓库对象及其 HEAD 指向的引用
 //
 // 参数：
 //   - path: 本地仓库路径
@@ -108,13 +108,21 @@ func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.W
 // 返回：
 //   - 是否本地仓库
 //   - 本地仓库对象
-func IsLocalRepo(path string) (bool, *git.Repository) {
+//   - HEAD 引用
+func IsLocalRepo(path string) (bool, *git.Repository, *plumbing.Reference) {
 	// 能打开就是本地仓库
 	repo, err := git.PlainOpen(path)
 	if err != nil {
-		return false, nil
+		return false, nil, nil
 	}
-	return true, repo
+
+	// 获取 HEAD 引用
+	headRef, err := repo.Head()
+	if err != nil {
+		return false, nil, nil
+	}
+
+	return true, repo, headRef
 }
 
 // GetRepoBranchInfo 获取本地仓库的[本地|远程]分支信息

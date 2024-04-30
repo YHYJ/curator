@@ -85,7 +85,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		color.Printf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Cloning"), general.FgCyanText(repoName))
 		// 克隆前检测是否存在同名本地仓库或非空文件夹
 		if general.FileExist(repoPath) {
-			isRepo, _ := general.IsLocalRepo(repoPath)
+			isRepo, _, _ := general.IsLocalRepo(repoPath)
 			if isRepo { // 是本地仓库
 				color.Printf("%s %s\n", general.FgBlueText(general.LatestFlag), general.SecondaryText("Local repository already exists"))
 				// 添加一个延时，使输出更加顺畅
