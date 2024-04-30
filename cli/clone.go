@@ -109,7 +109,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 			color.Error.Println(err)
 		} else { // Clone 成功
 			length := len(general.RunFlag) + len("Cloning") // 仓库信息缩进长度
-			color.Printf("%s %s\n", general.SuccessFlag, general.CommentText("Receive object completed"))
+			color.Printf("%s %s\n", general.SuccessFlag, general.FgGreenText("Receive object completed"))
 			var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 			// 执行脚本
 			for _, scriptName := range config.Script.NameList {
