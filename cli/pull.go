@@ -53,7 +53,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
-		// 开始拉取
+		// 开始拉取提示
 		color.Printf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Pulling"), general.FgCyanText(repoName))
 		// 拉取前检测本地仓库是否存在
 		if general.FileExist(repoPath) {
