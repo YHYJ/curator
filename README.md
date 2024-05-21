@@ -25,7 +25,6 @@
   * [交叉编译](#交叉编译)
     * [Linux](#linux)
     * [macOS](#macos)
-    * [Windows](#windows)
 
 <!-- vim-markdown-toc -->
 
@@ -42,7 +41,7 @@
 
 ---
 
-用于克隆指定用户的指定仓库
+用于克隆指定用户的指定仓库，支持 Linux 和 macOS
 
 ## Install
 
@@ -112,17 +111,6 @@ CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-
 ```
 
 > 使用`uname -m`确定硬件架构
->
-> - 结果是 x86_64 则 GOARCH=amd64
-> - 结果是 aarch64 则 GOARCH=arm64
-
-#### Windows
-
-```powershell
-CGO_ENABLED=1 GOOS=windows GOARCH=amd64 go build -gcflags="-trimpath" -ldflags="-s -w -H windowsgui -X github.com/yhyj/curator/general.GitCommitHash=`git rev-parse HEAD` -X github.com/yhyj/curator/general.BuildTime=`date +%s` -X github.com/yhyj/curator/general.BuildBy=$USER" -o build/curator.exe main.go
-```
-
-> 使用`echo %PROCESSOR_ARCHITECTURE%`确定硬件架构
 >
 > - 结果是 x86_64 则 GOARCH=amd64
 > - 结果是 aarch64 则 GOARCH=arm64
