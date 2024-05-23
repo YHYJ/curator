@@ -14,7 +14,9 @@ import (
 	"os/user"
 	"runtime"
 	"strconv"
+	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/gookit/color"
 )
 
@@ -107,6 +109,8 @@ var (
 	JoinerIng    = "├──" // 条目连接符号 - 中间条目
 	JoinerFinish = "└──" // 条目连接符号 - 最后条目
 )
+
+var WaitSpinner = spinner.New(spinner.CharSets[11], 100*time.Millisecond) // 等待动画
 
 // ---------- 环境变量
 
