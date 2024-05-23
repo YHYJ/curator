@@ -181,14 +181,26 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 				// 获取子模块的 worktree
 				isRepo, submoduleRepo, _ := general.IsLocalRepo(submodule.Config().Path)
 				if isRepo {
-					// 获取主仓库的远程分支信息
+					// 获取子模块的远程分支信息
 					submoduleRemoteBranchs, err := general.GetRepoBranchInfo(worktree, true, submodule.Config().Name, "remote")
 					if err != nil {
 						errList = append(errList, "Get local repository branch (remote): "+err.Error())
 					}
 					// 根据远程分支 modules/<submoduleName>/refs/remotes/origin/<remoteBranchName> 创建本地分支 modules/<submoduleName>/refs/heads/<localBranchName>
-					otherErrList := general.CreateLocalBranch(submoduleRepo, submoduleRemoteBranchs)
-					errList = append(errList, otherErrList...)
+					clbErrList := general.CreateLocalBranch(submoduleRepo, submoduleRemoteBranchs)
+					errList = append(errList, clbErrList...)
+					// 获取子模块的 worktree
+					submoduleWorktree, err := submoduleRepo.Worktree()
+					if err != nil {
+						errList = append(errList, "Get local repository worktree: "+err.Error())
+					}
+					// 获取子模块默认分支名
+					submoduleDefaultBranchName, gdbnErrList := general.GetDefaultBranchName(submoduleRepo, publicKeys)
+					errList = append(errList, gdbnErrList...)
+					// 切换到默认分支
+					if err := general.CheckoutBranch(submoduleWorktree, submoduleDefaultBranchName); err != nil {
+						errList = append(errList, "Checkout to default branch: "+err.Error())
+					}
 					// 获取子模块的本地分支信息
 					var submoduleLocalBranchStr []string
 					submoduleLocalBranchs, err := general.GetRepoBranchInfo(worktree, true, submodule.Config().Name, "local")

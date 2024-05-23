@@ -58,7 +58,9 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 //   - repo: 本地仓库对象
 //
 // 返回：
-//   - 拉取到的更改的提交信息
+//   - 仓库的 git 工作树对象
+//   - 拉取前本地最新 Commit 的 Hash 值
+//   - 拉取后本地最新 Commit 的 Hash 值
 //   - 错误信息
 func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.Worktree, leftCommit, rightCommit *object.Commit, err error) {
 	// 获取本地仓库的 worktree
@@ -190,7 +192,9 @@ func GetRepoBranchInfo(worktree *git.Worktree, isSubmodule bool, submoduleName s
 // 返回：
 //   - 错误信息切片
 func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
-	var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
+	// 使用一个 Slice 存储所有错误信息以美化输出
+	var errList []string
+
 	for _, branch := range branchs {
 		// 修改 .git/config ，增加新的分支配置
 		branchReferenceName := plumbing.NewBranchReferenceName(branch.Name()) // 构建本地分支 Reference 名，格式： refs/heads/<localBranchName>
@@ -299,4 +303,58 @@ func ModifyGitConfig(configFile, originalLink, newLink string) error {
 	writer.Flush()
 
 	return nil
+}
+
+// GetDefaultBranchName 获取默认分支名
+//
+// 参数：
+//   - repo: 本地仓库对象
+//   - publicKeys: ssh 公钥
+//
+// 返回：
+//   - 默认分支名
+//   - 错误信息切片
+func GetDefaultBranchName(repo *git.Repository, publicKeys *ssh.PublicKeys) (string, []string) {
+	var defaultBranchName string
+	// 使用一个 Slice 存储所有错误信息以美化输出
+	var errList []string
+
+	// 获取默认分支名
+	remotes, _ := repo.Remotes() // 远程仓库信息
+	for _, remote := range remotes {
+		references, err := remote.List(&git.ListOptions{Auth: publicKeys}) // 远程引用信息
+		if err != nil {
+			errList = append(errList, "Failed to list references: "+err.Error())
+			continue
+		}
+		for _, reference := range references {
+			if reference.Name().Short() == "HEAD" { // 寻找 HEAD 引用
+				// 输出 HEAD 分支名称
+				defaultBranchName = reference.Target().Short()
+				break
+			}
+		}
+	}
+
+	return defaultBranchName, errList
+}
+
+// CheckoutBranch 切换到指定分支
+//
+// 参数：
+//   - worktree: 仓库的 git 工作树对象
+//   - branchName: 分支名
+//
+// 返回：
+//   - 错误信息
+func CheckoutBranch(worktree *git.Worktree, branchName string) error {
+	// 获取分支引用
+	branch := plumbing.ReferenceName("refs/heads/" + branchName)
+
+	// 切换分支
+	err := worktree.Checkout(&git.CheckoutOptions{
+		Branch: branch,
+		Force:  false, // 如果有未提交的更改，不强制切换分支（否则会丢弃本地更改）
+	})
+	return err
 }
