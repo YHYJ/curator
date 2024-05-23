@@ -82,12 +82,15 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始克隆提示
-		color.Printf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Cloning"), general.FgCyanText(repoName))
+		actionPrint := color.Sprintf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Cloning"), general.FgCyanText(repoName))
+		general.WaitSpinner.Prefix = actionPrint
+		general.WaitSpinner.Start()
 		// 克隆前检测是否存在同名本地仓库或非空文件夹
 		if general.FileExist(repoPath) {
 			isRepo, _, _ := general.IsLocalRepo(repoPath)
 			if isRepo { // 是本地仓库
-				color.Printf("%s %s\n", general.FgBlueText(general.LatestFlag), general.SecondaryText("Local repository already exists"))
+				general.WaitSpinner.Stop()
+				color.Printf("%s%s %s\n", actionPrint, general.FgBlueText(general.LatestFlag), general.SecondaryText("Local repository already exists"))
 				// 添加一个延时，使输出更加顺畅
 				general.Delay(0.1)
 				continue
@@ -97,19 +100,27 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 						color.Error.Println(err)
 					}
 				} else { // 文件夹非空，处理下一个
-					color.Printf("%s %s\n", general.WarningFlag, general.WarnText("Folder is not a local repository and not empty"))
+					general.WaitSpinner.Stop()
+					color.Printf("%s%s %s\n", actionPrint, general.WarningFlag, general.WarnText("Folder is not a local repository and not empty"))
 					// 添加一个延时，使输出更加顺畅
 					general.Delay(0.1)
 					continue
 				}
 			}
 		}
+
+		// 开始克隆
 		repo, err := general.CloneRepoViaSSH(repoPath, repoSource["repoSourceUrl"], repoSource["repoSourceUsername"], repoName, publicKeys)
+
+		// 克隆结束
 		if err != nil { // Clone 失败
+			general.WaitSpinner.Stop()
+			color.Printf("%s", actionPrint)
 			color.Error.Println(err)
 		} else { // Clone 成功
 			length := len(general.RunFlag) + len("Cloning") // 仓库信息缩进长度
-			color.Printf("%s %s\n", general.SuccessFlag, general.FgGreenText("Receive object completed"))
+			general.WaitSpinner.Stop()
+			color.Printf("%s%s %s\n", actionPrint, general.SuccessFlag, general.FgGreenText("Receive object completed"))
 			var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 			// 执行脚本
 			for _, scriptName := range config.Script.NameList {
@@ -145,6 +156,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 				localBranchStr = append(localBranchStr, localBranch.Name())
 			}
 			color.Printf("%s%s %s [%s]\n", strings.Repeat(" ", length), general.JoinerFinish, general.BranchFlag, general.FgCyanText(strings.Join(localBranchStr, " ")))
+
 			// 获取子模块信息
 			submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 			if err != nil {
