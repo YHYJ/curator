@@ -177,7 +177,9 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					}
 					return general.JoinerIng
 				}()
-				color.Printf("%s%s %s %s ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+				actionPrint := color.Sprintf("%s%s %s %s ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+				general.WaitSpinner.Prefix = actionPrint
+				general.WaitSpinner.Start()
 				// 获取子模块的 worktree
 				isRepo, submoduleRepo, _ := general.IsLocalRepo(submodule.Config().Path)
 				if isRepo {
@@ -210,7 +212,8 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					for _, submoduleLocalBranch := range submoduleLocalBranchs {
 						submoduleLocalBranchStr = append(submoduleLocalBranchStr, submoduleLocalBranch.Name())
 					}
-					color.Printf("%s\n", general.SecondaryText("[", strings.Join(submoduleLocalBranchStr, " "), "]"))
+					general.WaitSpinner.Stop()
+					color.Printf("%s%s\n", actionPrint, general.SecondaryText("[", strings.Join(submoduleLocalBranchStr, " "), "]"))
 				} else { // 子模块非本地仓库
 					general.WaitSpinner.Stop()
 					color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
