@@ -100,7 +100,10 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 			} else { // 不是本地仓库
 				if general.FolderEmpty(repoPath) { // 是空文件夹，删除后继续克隆
 					if err := general.DeleteFile(repoPath); err != nil {
+						general.WaitSpinner.Stop()
+						color.Printf("%s", actionPrint)
 						color.Error.Println(err)
+						continue
 					}
 				} else { // 文件夹非空，处理下一个
 					general.WaitSpinner.Stop()
