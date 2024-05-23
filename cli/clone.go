@@ -76,6 +76,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
 		color.Error.Println(err)
+		return
 	}
 
 	// 对所选的存储库进行排序
