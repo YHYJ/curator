@@ -143,18 +143,30 @@ func GetRepoHeadRef(repo *git.Repository) *plumbing.Reference {
 //
 // 参数：
 //   - worktree: 仓库的 git 工作树对象
+//   - isSubmodule: 该仓库是否作为子模块
+//   - submoduleName: 当该仓库作为子模块时需要仓库名
 //   - which: 'local' or 'remote'，指定要获取的是本地分支还是远程分支
 //
 // 返回：
 //   - 分支信息
 //   - 错误信息
-func GetRepoBranchInfo(worktree *git.Worktree, which string) ([]fs.FileInfo, error) {
+func GetRepoBranchInfo(worktree *git.Worktree, isSubmodule bool, submoduleName string, which string) ([]fs.FileInfo, error) {
 	var branchDir string
 	switch which {
 	case "local":
-		branchDir = ".git/refs/heads"
+		switch isSubmodule {
+		case false:
+			branchDir = ".git/refs/heads"
+		case true:
+			branchDir = color.Sprintf(".git/modules/%s/refs/heads", submoduleName)
+		}
 	case "remote":
-		branchDir = color.Sprintf(".git/refs/remotes/%s", remoteName)
+		switch isSubmodule {
+		case false:
+			branchDir = color.Sprintf(".git/refs/remotes/%s", remoteName)
+		case true:
+			branchDir = color.Sprintf(".git/modules/%s/refs/remotes/%s", submoduleName, remoteName)
+		}
 	default:
 		return nil, fmt.Errorf("Parameter error: %s", "optional value of which is 'local' or 'remote'")
 	}

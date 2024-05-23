@@ -127,7 +127,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		} else { // Clone 成功
 			length := len(general.RunFlag) + len("Cloning") // 仓库信息缩进长度
 			general.WaitSpinner.Stop()
-			color.Printf("%s%s %s\n", actionPrint, general.SuccessFlag, general.FgGreenText("Receive object completed"))
+			color.Printf("%s%s %s ", actionPrint, general.SuccessFlag, general.FgGreenText("Receive object completed"))
 			var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 			// 执行脚本
 			for _, scriptName := range config.Script.NameList {
@@ -146,7 +146,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 				errList = append(errList, "Get local repository worktree: "+err.Error())
 			}
 			// 获取主仓库的远程分支信息
-			remoteBranchs, err := general.GetRepoBranchInfo(worktree, "remote")
+			remoteBranchs, err := general.GetRepoBranchInfo(worktree, false, "", "remote")
 			if err != nil {
 				errList = append(errList, "Get local repository branch (remote): "+err.Error())
 			}
@@ -155,14 +155,14 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 			errList = append(errList, otherErrList...)
 			// 获取主仓库的本地分支信息
 			var localBranchStr []string
-			localBranchs, err := general.GetRepoBranchInfo(worktree, "local")
+			localBranchs, err := general.GetRepoBranchInfo(worktree, false, "", "local")
 			if err != nil {
 				errList = append(errList, "Get local repository branch (local): "+err.Error())
 			}
 			for _, localBranch := range localBranchs {
 				localBranchStr = append(localBranchStr, localBranch.Name())
 			}
-			color.Printf("%s%s %s [%s]\n", strings.Repeat(" ", length), general.JoinerFinish, general.BranchFlag, general.FgCyanText(strings.Join(localBranchStr, " ")))
+			color.Printf("%s\n", general.SecondaryText("[", strings.Join(localBranchStr, " "), "]"))
 
 			// 获取子模块信息
 			submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
@@ -177,11 +177,31 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					}
 					return general.JoinerIng
 				}()
-				color.Printf("%s%s %s %s\n", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
-				// 处理子模块的配置文件 .git/modules/<submodule>/config
-				configFile := filepath.Join(repoPath, ".git", "modules", submodule.Config().Name, "config")
-				if err = general.ModifyGitConfig(configFile, repoSource["originalLink"], repoSource["newLink"]); err != nil {
-					errList = append(errList, "Update repository git config (submodule): "+err.Error())
+				color.Printf("%s%s %s %s ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+				// 获取子模块的 worktree
+				isRepo, submoduleRepo, _ := general.IsLocalRepo(submodule.Config().Path)
+				if isRepo {
+					// 获取主仓库的远程分支信息
+					submoduleRemoteBranchs, err := general.GetRepoBranchInfo(worktree, true, submodule.Config().Name, "remote")
+					if err != nil {
+						errList = append(errList, "Get local repository branch (remote): "+err.Error())
+					}
+					// 根据远程分支 modules/<submoduleName>/refs/remotes/origin/<remoteBranchName> 创建本地分支 modules/<submoduleName>/refs/heads/<localBranchName>
+					otherErrList := general.CreateLocalBranch(submoduleRepo, submoduleRemoteBranchs)
+					errList = append(errList, otherErrList...)
+					// 获取子模块的本地分支信息
+					var submoduleLocalBranchStr []string
+					submoduleLocalBranchs, err := general.GetRepoBranchInfo(worktree, true, submodule.Config().Name, "local")
+					if err != nil {
+						errList = append(errList, "Get local repository branch (local): "+err.Error())
+					}
+					for _, submoduleLocalBranch := range submoduleLocalBranchs {
+						submoduleLocalBranchStr = append(submoduleLocalBranchStr, submoduleLocalBranch.Name())
+					}
+					color.Printf("%s\n", general.SecondaryText("[", strings.Join(submoduleLocalBranchStr, " "), "]"))
+				} else { // 子模块非本地仓库
+					general.WaitSpinner.Stop()
+					color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
 				}
 			}
 			// 输出克隆完成后其他操作产生的错误信息
