@@ -40,32 +40,44 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		return
 	}
 
-	// 拉取
+	// 信息横幅
 	color.Info.Tips("%s %s", general.FgWhiteText("Fetch from and merge with"), general.FgGreenText(source))
 	color.Info.Tips("%s: %s", general.FgWhiteText("Repository root"), general.PrimaryText(config.Storage.Path))
+
 	// 让用户选择需要 Pull 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
 		color.Error.Println(err)
 	}
+
 	// 对所选的存储库进行排序
 	sort.Strings(selectedRepos)
+
 	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始拉取提示
-		color.Printf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Pulling"), general.FgCyanText(repoName))
+		actionPrint := color.Sprintf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Pulling"), general.FgCyanText(repoName))
+		general.WaitSpinner.Prefix = actionPrint
+		general.WaitSpinner.Start()
 		// 拉取前检测本地仓库是否存在
 		if general.FileExist(repoPath) {
 			isRepo, repo, headRef := general.IsLocalRepo(repoPath)
-			if isRepo {
+			if isRepo { // 本地仓库可以拉取
+				// 开始拉取
 				worktree, leftCommit, rightCommit, err := general.PullRepo(repo, publicKeys)
+				// 拉取结束
 				if err != nil {
 					if err == git.NoErrAlreadyUpToDate {
-						color.Printf("%s %s %s\n", general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"), general.SecondaryText("[", headRef.Name().Short(), "]"))
+						// 本地仓库已经是最新
+						general.WaitSpinner.Stop()
+						color.Printf("%s%s %s %s\n", actionPrint, general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"), general.SecondaryText("[", headRef.Name().Short(), "]"))
+
 						// 尝试拉取子模块
 						submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 						if err != nil {
+							general.WaitSpinner.Stop()
+							color.Printf("%s", actionPrint)
 							color.Error.Println(err)
 							continue
 						}
@@ -79,34 +91,52 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 									}
 									return general.JoinerIng
 								}()
-								color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+								// 开始拉取提示
+								subActionPrint := color.Sprintf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+								general.WaitSpinner.Prefix = subActionPrint
+								general.WaitSpinner.Start()
 								submoduleRepo, err := submodule.Repository()
 								if err != nil {
+									general.WaitSpinner.Stop()
+									color.Printf("%s", subActionPrint)
 									color.Error.Println(err)
 								} else {
+									// 开始拉取
 									submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
 									_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
+									// 拉取结束
 									if err != nil {
 										if err == git.NoErrAlreadyUpToDate {
-											color.Printf("%s %s %s", general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
+											general.WaitSpinner.Stop()
+											color.Printf("%s%s %s %s", subActionPrint, general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
 										} else {
+											general.WaitSpinner.Stop()
+											color.Printf("%s", subActionPrint)
 											color.Error.Println(err)
 										}
 									} else {
-										color.Printf("%s %s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
+										general.WaitSpinner.Stop()
+										color.Printf("%s%s %s %s %s %s", subActionPrint, general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
 									}
 								}
-								color.Println() // 子模块处理完成，换行
+								color.Println() // 当前子模块处理完成，处理下一个子模块
 							}
 						}
 					} else {
+						general.WaitSpinner.Stop()
+						color.Printf("%s", actionPrint)
 						color.Error.Println(err)
 					}
 				} else {
-					color.Printf("%s %s %s %s %s\n", general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(rightCommit.Hash.String()[:6]), general.SecondaryText("[", headRef.Name().Short(), "]"))
+					// 成功拉取
+					general.WaitSpinner.Stop()
+					color.Printf("%s%s %s %s %s %s\n", actionPrint, general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(rightCommit.Hash.String()[:6]), general.SecondaryText("[", headRef.Name().Short(), "]"))
+
 					// 尝试拉取子模块
 					submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
 					if err != nil {
+						general.WaitSpinner.Stop()
+						color.Printf("%s", actionPrint)
 						color.Error.Println(err)
 						continue
 					}
@@ -120,32 +150,45 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 								}
 								return general.JoinerIng
 							}()
-							color.Printf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+							// 开始拉取提示
+							subActionPrint := color.Sprintf("%s%s %s %s: ", strings.Repeat(" ", length), joiner, general.SubmoduleFlag, general.FgMagentaText(submodule.Config().Name))
+							general.WaitSpinner.Prefix = subActionPrint
+							general.WaitSpinner.Start()
 							submoduleRepo, err := submodule.Repository()
 							if err != nil {
+								general.WaitSpinner.Stop()
+								color.Printf("%s", subActionPrint)
 								color.Error.Println(err)
 							} else {
+								// 开始拉取
 								submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
 								_, submoduleLeftCommit, submoduleRightCommit, err := general.PullRepo(submoduleRepo, publicKeys)
+								// 拉取结束
 								if err != nil {
 									if err == git.NoErrAlreadyUpToDate {
-										color.Printf("%s %s %s", general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
+										general.WaitSpinner.Stop()
+										color.Printf("%s%s %s %s", subActionPrint, general.FgBlueText(general.LatestFlag), general.SecondaryText("Already up-to-date"), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
 									} else {
+										general.WaitSpinner.Stop()
+										color.Printf("%s", subActionPrint)
 										color.Error.Println(err)
 									}
 								} else {
-									color.Printf("%s %s %s %s %s", general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
+									general.WaitSpinner.Stop()
+									color.Printf("%s%s %s %s %s %s", subActionPrint, general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
 								}
 							}
-							color.Println() // 子模块处理完成，换行
+							color.Println() // 当前子模块处理完成，处理下一个子模块
 						}
 					}
 				}
-			} else { // 非本地仓库
-				color.Printf("%s %s\n", general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
+			} else { // 非本地仓库无法拉取
+				general.WaitSpinner.Stop()
+				color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
 			}
 		} else {
-			color.Printf("%s %s\n", general.ErrorFlag, general.ErrorText("The local repository does not exist"))
+			general.WaitSpinner.Stop()
+			color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("The local repository does not exist"))
 		}
 		// 添加一个延时，使输出更加顺畅
 		general.Delay(0.1)
