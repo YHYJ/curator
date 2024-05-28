@@ -40,8 +40,18 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		return
 	}
 
+	// 检测本地存储库是否存在为已 Clone 存储库计数
+	totalNum := len(config.Git.Repos) // 总存储库数
+	clonedNum := 0                    // 已 Clone 存储库数
+	for _, repoName := range config.Git.Repos {
+		repoPath := filepath.Join(config.Storage.Path, repoName) // 本地存储库路径
+		if general.FileExist(repoPath) {
+			clonedNum++
+		}
+	}
+
 	// 信息横幅
-	color.Info.Tips("%s %s", general.FgWhiteText("Fetch from and merge with"), general.FgGreenText(source))
+	color.Info.Tips("%s %s: %s/%s", general.FgWhiteText("Fetch from and merge with"), general.FgGreenText(source), general.FgWhiteText(clonedNum), general.FgWhiteText(totalNum))
 	color.Info.Tips("%s: %s", general.FgWhiteText("Repository root"), general.PrimaryText(config.Storage.Path))
 
 	// 让用户选择需要 Pull 的存储库
@@ -50,7 +60,6 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		color.Error.Println(err)
 		return
 	}
-
 	// 对所选的存储库进行排序
 	sort.Strings(selectedRepos)
 
