@@ -36,7 +36,7 @@ type model struct {
 // 返回：
 //   - model
 func initialModel(choices []string) model {
-	allChoices := []string{color.Sprintf("%s%s", SelectAllFlag, FgLightRedText(SelectAllTips))}
+	allChoices := []string{color.Sprintf("%s%s", SelectAllFlag, FgLightYellowText(SelectAllTips))}
 	allChoices = append(allChoices, choices...)
 
 	return model{
