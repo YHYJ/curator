@@ -74,7 +74,10 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	for _, repoName := range config.Git.Repos {
 		repoPath := filepath.Join(config.Storage.Path, repoName) // 本地存储库路径
 		if general.FileExist(repoPath) {
-			clonedNum++
+			isRepo, _, _ := general.IsLocalRepo(repoPath)
+			if isRepo {
+				clonedNum++
+			}
 		}
 	}
 
