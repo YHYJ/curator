@@ -129,9 +129,9 @@ func (m model) View() string {
 	SelectedFlag = SuccessText(SelectedFlag)
 	for i, choice := range m.choices {
 		// 检查光标是否指向当前选项，默认未指向
-		cursor := CursorOffFlag // 未指向当前选项
+		cursorFlag := CursorOffFlag // 未指向当前选项
 		if m.cursor == i {
-			cursor = CursorOnFlag                              // 指向当前选项
+			cursorFlag = CursorOnFlag                          // 指向当前选项
 			choice = color.Sprintf("\x1b[7m%s\x1b[0m", choice) // 光标所在选项着色
 		}
 		// 检查当前选项是否被选中
@@ -146,7 +146,7 @@ func (m model) View() string {
 				choice = FgLightBlueText(choice) // 已选中选项着色
 			}
 		}
-		s.WriteString(color.Sprintf("%s [%s] %s\n", cursor, checked, choice))
+		s.WriteString(color.Sprintf("%s [%s] %s\n", cursorFlag, checked, choice))
 	}
 	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
 	return s.String()
