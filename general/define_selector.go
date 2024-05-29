@@ -1,10 +1,10 @@
 /*
-File: define_selecter.go
+File: define_selector.go
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2024-04-10 13:33:59
 
-Description: 选择器
+Description: 定义选择器
 
 - Update, View 等方法通过 model 与用户进行交互
 */
@@ -19,7 +19,8 @@ import (
 	"github.com/gookit/color"
 )
 
-var quietKey = "q"
+var quietKey = "q"                // 默认的退出键
+var selectorType = "program name" // 选择器主题
 
 // model 结构体，选择器的数据
 type model struct {
@@ -83,7 +84,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cursor = 0
 			}
 		case " ":
-			// 选中光标所在项
 			if m.cursor == 0 { // 选中“全选”项
 				// 在全选和取消全选之间切换
 				if len(m.selected) == len(m.choices)-1 { // 取消全选
@@ -94,7 +94,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.selected[i] = struct{}{} // 选中所有非 "Select All" 选项
 					}
 				}
-			} else { // 选中其他项
+			} else { // 选中其他选项
 				// 判断当前光标所在选项是否被选中
 				_, ok := m.selected[m.cursor]
 				if ok { // 已选中，取消选中
@@ -117,15 +117,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // 返回：
 //   - string: 绘制内容
 func (m model) View() string {
-	// 定时显示主题
-	name := "repo name" // 选项类型
-
 	// 构建显示内容
 	s := strings.Builder{}
-	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
-	s.WriteString(color.Sprintf(QuestionText(MultiSelectTips), name))
+	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(selectorType))))
+	s.WriteString(color.Sprintf(QuestionText(MultiSelectTips), selectorType))
 	s.WriteString(color.Sprintf(SecondaryText(QuietTips), quietKey))
-	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
+	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(selectorType))))
 
 	// 对 choices 进行迭代
 	SelectedFlag = SuccessText(SelectedFlag)
@@ -150,7 +147,7 @@ func (m model) View() string {
 		}
 		s.WriteString(color.Sprintf("%s [%s] %s\n", cursorFlag, checked, choice))
 	}
-	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(name))))
+	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(selectorType))))
 	return s.String()
 }
 
