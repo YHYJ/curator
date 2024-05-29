@@ -83,7 +83,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.cursor = 0
 			}
 		case " ":
-			if m.cursor == 0 { // 选中 "Select All" 选项
+			// 选中光标所在项
+			if m.cursor == 0 { // 选中“全选”项
 				// 在全选和取消全选之间切换
 				if len(m.selected) == len(m.choices)-1 {
 					m.selected = make(map[int]struct{})
@@ -93,7 +94,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.selected[i] = struct{}{} // 选中所有非 "Select All" 选项
 					}
 				}
-			} else { // 选中其他选项
+			} else { // 选中其他项
 				// 判断当前光标所在选项是否被选中
 				_, ok := m.selected[m.cursor]
 				if ok { // 已选中，取消选中
@@ -103,6 +104,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		case "enter":
+			// 回车执行
 			return m, tea.Quit
 		}
 	}
