@@ -66,7 +66,7 @@ func PrintConfigFile(configFile string) {
 	fileExist := general.FileExist(configFile)
 
 	var (
-		cfgFileNotFoundMessage = "Configuration file not found (use --create to create a configuration file)" // 配置文件不存在
+		configFileNotFoundMessage = "Configuration file not found (use --create to create a configuration file)" // 配置文件不存在
 	)
 
 	if fileExist {
@@ -77,6 +77,6 @@ func PrintConfigFile(configFile string) {
 			color.Println(general.PrimaryText(configTree))
 		}
 	} else {
-		color.Danger.Println(cfgFileNotFoundMessage)
+		color.Danger.Println(configFileNotFoundMessage)
 	}
 }
