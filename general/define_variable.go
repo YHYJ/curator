@@ -139,6 +139,7 @@ var Platform = runtime.GOOS                   // 操作系统
 var Arch = runtime.GOARCH                     // 系统架构
 var Sep = string(filepath.Separator)          // 路径分隔符
 var UserInfo, _ = GetUserInfoByName(UserName) // 用户信息
+var Language = GetLanguage()                  // 系统语言
 
 var (
 	programDir = strings.ToLower(Name)                      // 程序目录
@@ -166,6 +167,20 @@ func GetVariable(key string) string {
 	variable := os.Getenv(key)
 
 	return variable
+}
+
+// GetLanguage 获取系统语言
+//
+// 返回:
+//   - 系统语言，目前仅支持 zh 或 en
+func GetLanguage() string {
+	language := GetVariable("LANGUAGE")
+	if strings.Contains(language, "zh") {
+		return "zh"
+	} else {
+		return "en"
+
+	}
 }
 
 // GetHostname 获取系统 HOSTNAME
