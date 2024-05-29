@@ -27,16 +27,16 @@ func CreateConfigFile(configFile string, reWrite bool) {
 	if fileExist {
 		if reWrite {
 			if err := general.DeleteFile(configFile); err != nil {
-				color.Error.Println(err)
+				color.Danger.Println(err)
 				return
 			}
 			if err := general.CreateFile(configFile); err != nil {
-				color.Error.Println(err)
+				color.Danger.Println(err)
 				return
 			}
 			_, err := general.WriteTomlConfig(configFile)
 			if err != nil {
-				color.Error.Println(err)
+				color.Danger.Println(err)
 				return
 			}
 			color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file overwritten"))
@@ -45,12 +45,12 @@ func CreateConfigFile(configFile string, reWrite bool) {
 		}
 	} else {
 		if err := general.CreateFile(configFile); err != nil {
-			color.Error.Println(err)
+			color.Danger.Println(err)
 			return
 		}
 		_, err := general.WriteTomlConfig(configFile)
 		if err != nil {
-			color.Error.Println(err)
+			color.Danger.Println(err)
 			return
 		}
 		color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file created"))
@@ -72,11 +72,11 @@ func PrintConfigFile(configFile string) {
 	if fileExist {
 		configTree, err := general.GetTomlConfig(configFile)
 		if err != nil {
-			color.Error.Println(err)
+			color.Danger.Println(err)
 		} else {
-			color.Println(general.NoteText(configTree))
+			color.Println(general.PrimaryText(configTree))
 		}
 	} else {
-		color.Error.Println(cfgFileNotFoundMessage)
+		color.Danger.Println(cfgFileNotFoundMessage)
 	}
 }

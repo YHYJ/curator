@@ -28,14 +28,14 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	// 获取配置项
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
-		color.Error.Println(err)
+		color.Danger.Println(err)
 		return
 	}
 
 	// 获取公钥
 	publicKeys, err := general.GetPublicKeysByGit(config.SSH.RsaFile)
 	if err != nil {
-		color.Error.Println(err)
+		color.Danger.Println(err)
 		return
 	}
 
@@ -88,7 +88,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	// 让用户选择需要 Clone 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
-		color.Error.Println(err)
+		color.Danger.Println(err)
 		return
 	}
 	// 对所选的存储库进行排序
@@ -115,7 +115,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					if err := general.DeleteFile(repoPath); err != nil {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
-						color.Error.Println(err)
+						color.Danger.Println(err)
 						continue
 					}
 				} else { // 文件夹非空，处理下一个
@@ -135,7 +135,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		if err != nil { // Clone 失败
 			general.WaitSpinner.Stop()
 			color.Printf("%s", actionPrint)
-			color.Error.Println(err)
+			color.Danger.Println(err)
 		} else { // Clone 成功
 			length := len(general.RunFlag) + len("Cloning") // 仓库信息缩进长度
 			general.WaitSpinner.Stop()
@@ -228,12 +228,12 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					color.Printf("%s%s\n", actionPrint, general.SecondaryText("[", strings.Join(submoduleLocalBranchStr, " "), "]"))
 				} else { // 子模块非本地仓库
 					general.WaitSpinner.Stop()
-					color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
+					color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.DangerText("Folder is not a local repository"))
 				}
 			}
 			// 输出克隆完成后其他操作产生的错误信息
 			for _, err := range errList {
-				color.Error.Println(err)
+				color.Danger.Println(err)
 			}
 		}
 		// 添加一个延时，使输出更加顺畅

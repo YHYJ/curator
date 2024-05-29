@@ -29,14 +29,14 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	// 获取配置项
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
-		color.Error.Println(err)
+		color.Danger.Println(err)
 		return
 	}
 
 	// 获取公钥
 	publicKeys, err := general.GetPublicKeysByGit(config.SSH.RsaFile)
 	if err != nil {
-		color.Error.Println(err)
+		color.Danger.Println(err)
 		return
 	}
 
@@ -60,7 +60,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	// 让用户选择需要 Pull 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
-		color.Error.Println(err)
+		color.Danger.Println(err)
 		return
 	}
 	// 对所选的存储库进行排序
@@ -91,7 +91,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 						if err != nil {
 							general.WaitSpinner.Stop()
 							color.Printf("%s", actionPrint)
-							color.Error.Println(err)
+							color.Danger.Println(err)
 							continue
 						}
 						if len(submodules) != 0 {
@@ -112,7 +112,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 								if err != nil {
 									general.WaitSpinner.Stop()
 									color.Printf("%s", subActionPrint)
-									color.Error.Println(err)
+									color.Danger.Println(err)
 								} else {
 									// 开始拉取
 									submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
@@ -125,7 +125,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 										} else {
 											general.WaitSpinner.Stop()
 											color.Printf("%s", subActionPrint)
-											color.Error.Println(err)
+											color.Danger.Println(err)
 										}
 									} else {
 										general.WaitSpinner.Stop()
@@ -138,7 +138,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 					} else {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
-						color.Error.Println(err)
+						color.Danger.Println(err)
 					}
 				} else {
 					// 成功拉取
@@ -150,7 +150,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 					if err != nil {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
-						color.Error.Println(err)
+						color.Danger.Println(err)
 						continue
 					}
 					if len(submodules) != 0 {
@@ -171,7 +171,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 							if err != nil {
 								general.WaitSpinner.Stop()
 								color.Printf("%s", subActionPrint)
-								color.Error.Println(err)
+								color.Danger.Println(err)
 							} else {
 								// 开始拉取
 								submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
@@ -184,7 +184,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 									} else {
 										general.WaitSpinner.Stop()
 										color.Printf("%s", subActionPrint)
-										color.Error.Println(err)
+										color.Danger.Println(err)
 									}
 								} else {
 									general.WaitSpinner.Stop()
@@ -197,11 +197,11 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 				}
 			} else { // 非本地仓库无法拉取
 				general.WaitSpinner.Stop()
-				color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("Folder is not a local repository"))
+				color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.DangerText("Folder is not a local repository"))
 			}
 		} else {
 			general.WaitSpinner.Stop()
-			color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.ErrorText("The local repository does not exist"))
+			color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.DangerText("The local repository does not exist"))
 		}
 		// 添加一个延时，使输出更加顺畅
 		general.Delay(0.1)
