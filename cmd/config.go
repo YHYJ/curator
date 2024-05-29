@@ -23,7 +23,7 @@ var configCmd = &cobra.Command{
 	Long:  `Manipulate the program's configuration files, including generating and printing.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 获取配置文件路径
-		cfgFile, _ := cmd.Flags().GetString("config")
+		configFile, _ := cmd.Flags().GetString("config")
 		// 解析参数
 		createFlag, _ := cmd.Flags().GetBool("create")
 		forceFlag, _ := cmd.Flags().GetBool("force")
@@ -40,12 +40,12 @@ var configCmd = &cobra.Command{
 
 		// 创建配置文件流程
 		if createFlag {
-			cli.CreateConfigFile(cfgFile, forceFlag)
+			cli.CreateConfigFile(configFile, forceFlag)
 		}
 
 		// 打印配置文件流程
 		if printFlag {
-			cli.PrintConfigFile(cfgFile)
+			cli.PrintConfigFile(configFile)
 		}
 
 		// 输出标语

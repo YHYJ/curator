@@ -12,8 +12,10 @@ package general
 import (
 	"os"
 	"os/user"
+	"path/filepath"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/briandowns/spinner"
@@ -114,9 +116,17 @@ var WaitSpinner = spinner.New(spinner.CharSets[11], 100*time.Millisecond) // 等
 
 // ---------- 环境变量
 
-var Platform = runtime.GOOS                   // 操作系统
-var Arch = runtime.GOARCH                     // 系统架构
-var UserInfo, _ = GetUserInfoByName(UserName) // 用户信息
+// 用来处理不同系统之间的变量名差异
+var platformChart = map[string]map[string]string{
+	"windows": {
+		"HOME":     "USERPROFILE",  // 用户主目录路径
+		"USER":     "USERNAME",     // 当前登录用户名
+		"SHELL":    "ComSpec",      // 默认 shell 或命令提示符路径
+		"PWD":      "CD",           // 当前工作目录路径
+		"HOSTNAME": "COMPUTERNAME", // 计算机主机名
+	},
+}
+
 // 用户名，当程序提权运行时，使用 SUDO_USER 变量获取提权前的用户名
 var UserName = func() string {
 	if GetVariable("SUDO_USER") != "" {
@@ -125,16 +135,19 @@ var UserName = func() string {
 	return GetVariable("USER")
 }()
 
-// 用来处理不同系统之间的变量名差异
-var platformChart = map[string]map[string]string{
-	"windows": {
-		"HOME":     "USERPROFILE",  // 用户主目录路径
-		"USER":     "USERNAME",     // 当前登录用户名
-		"SHELL":    "ComSpec",      // 默认shell或命令提示符路径
-		"PWD":      "CD",           // 当前工作目录路径
-		"HOSTNAME": "COMPUTERNAME", // 计算机主机名
-	},
-}
+var Platform = runtime.GOOS                   // 操作系统
+var Arch = runtime.GOARCH                     // 系统架构
+var UserInfo, _ = GetUserInfoByName(UserName) // 用户信息
+
+var (
+	programDir = strings.ToLower(Name)                      // 程序目录
+	configDir  = filepath.Join(UserInfo.HomeDir, ".config") // 配置目录
+	configFile = "config.toml"                              // 配置文件
+
+	ConfigFile = filepath.Join(configDir, programDir, configFile) // 配置文件路径
+)
+
+// ---------- 函数
 
 // GetVariable 获取环境变量
 //

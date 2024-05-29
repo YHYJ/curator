@@ -23,12 +23,12 @@ var cloneCmd = &cobra.Command{
 	Long:  `Clone the repository specified in the configuration file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// 获取配置文件路径
-		cfgFile, _ := cmd.Flags().GetString("config")
+		configFile, _ := cmd.Flags().GetString("config")
 		// 解析参数
 		sourceFlag, _ := cmd.Flags().GetString("source")
 
 		// 读取配置文件
-		configTree, err := general.GetTomlConfig(cfgFile)
+		configTree, err := general.GetTomlConfig(configFile)
 		if err != nil {
 			color.Danger.Println(err)
 			return
