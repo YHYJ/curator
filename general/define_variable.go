@@ -137,6 +137,7 @@ var UserName = func() string {
 
 var Platform = runtime.GOOS                   // 操作系统
 var Arch = runtime.GOARCH                     // 系统架构
+var Sep = string(filepath.Separator)          // 路径分隔符
 var UserInfo, _ = GetUserInfoByName(UserName) // 用户信息
 
 var (
