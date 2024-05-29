@@ -16,103 +16,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/briandowns/spinner"
-	"github.com/gookit/color"
 )
-
-// ---------- 代码变量
-
-var (
-	FgBlackText        = color.FgBlack.Render        // 前景色 - 黑色
-	FgWhiteText        = color.FgWhite.Render        // 前景色 - 白色
-	FgLightWhiteText   = color.FgLightWhite.Render   // 前景色 - 亮白色
-	FgGrayText         = color.FgGray.Render         // 前景色 - 灰色
-	FgRedText          = color.FgRed.Render          // 前景色 - 红色
-	FgLightRedText     = color.FgLightRed.Render     // 前景色 - 亮红色
-	FgGreenText        = color.FgGreen.Render        // 前景色 - 绿色
-	FgLightGreenText   = color.FgLightGreen.Render   // 前景色 - 亮绿色
-	FgYellowText       = color.FgYellow.Render       // 前景色 - 黄色
-	FgLightYellowText  = color.FgLightYellow.Render  // 前景色 - 亮黄色
-	FgBlueText         = color.FgBlue.Render         // 前景色 - 蓝色
-	FgLightBlueText    = color.FgLightBlue.Render    // 前景色 - 亮蓝色
-	FgMagentaText      = color.FgMagenta.Render      // 前景色 - 品红
-	FgLightMagentaText = color.FgLightMagenta.Render // 前景色 - 亮品红
-	FgCyanText         = color.FgCyan.Render         // 前景色 - 青色
-	FgLightCyanText    = color.FgLightCyan.Render    // 前景色 - 亮青色
-
-	BgBlackText        = color.BgBlack.Render        // 背景色 - 黑色
-	BgWhiteText        = color.BgWhite.Render        // 背景色 - 白色
-	BgLightWhiteText   = color.BgLightWhite.Render   // 背景色 - 亮白色
-	BgGrayText         = color.BgGray.Render         // 背景色 - 灰色
-	BgRedText          = color.BgRed.Render          // 背景色 - 红色
-	BgLightRedText     = color.BgLightRed.Render     // 背景色 - 亮红色
-	BgGreenText        = color.BgGreen.Render        // 背景色 - 绿色
-	BgLightGreenText   = color.BgLightGreen.Render   // 背景色 - 亮绿色
-	BgYellowText       = color.BgYellow.Render       // 背景色 - 黄色
-	BgLightYellowText  = color.BgLightYellow.Render  // 背景色 - 亮黄色
-	BgBlueText         = color.BgBlue.Render         // 背景色 - 蓝色
-	BgLightBlueText    = color.BgLightBlue.Render    // 背景色 - 亮蓝色
-	BgMagentaText      = color.BgMagenta.Render      // 背景色 - 品红
-	BgLightMagentaText = color.BgLightMagenta.Render // 背景色 - 亮品红
-	BgCyanText         = color.BgCyan.Render         // 背景色 - 青色
-	BgLightCyanText    = color.BgLightCyan.Render    // 背景色 - 亮青色
-
-	InfoText      = color.Info.Render      // Info 文本
-	NoteText      = color.Note.Render      // Note 文本
-	LightText     = color.Light.Render     // Light 文本
-	ErrorText     = color.Error.Render     // Error 文本
-	DangerText    = color.Danger.Render    // Danger 文本
-	NoticeText    = color.Notice.Render    // Notice 文本
-	SuccessText   = color.Success.Render   // Success 文本
-	CommentText   = color.Comment.Render   // Comment 文本
-	PrimaryText   = color.Primary.Render   // Primary 文本
-	WarnText      = color.Warn.Render      // Warn 文本
-	QuestionText  = color.Question.Render  // Question 文本
-	SecondaryText = color.Secondary.Render // Secondary 文本
-)
-
-var (
-	RunFlag     = "🐙"  // 运行状态符号 - 运行中
-	LatestFlag  = "🌟"  // 运行状态符号 - 已是最新
-	SuccessFlag = "✅"  // 运行状态符号 - 成功
-	WarningFlag = "⚠️" // 运行状态符号 - 警告
-	ErrorFlag   = "❌"  // 运行状态符号 - 失败
-)
-
-var (
-	CursorOnFlag   = "👉"  // 选择器符号 - 光标在
-	CursorOffFlag  = "  " // 选择器符号 - 光标不在
-	SelectedFlag   = "•"  // 选择器符号 - 已选中
-	UnselectedFlag = " "  // 选择器符号 - 已选中
-	SelectAllFlag  = "⭐️" // 选择器符号 - 全选
-)
-
-var (
-	Separator1st = "=" // 分隔符 - 1级
-	Separator2st = "-" // 分隔符 - 2级
-	Separator3st = "·" // 分隔符 - 3级
-)
-
-var (
-	MultiSelectTips  = "Please select from the %s below (multi-select)\n"  // 提示词 - 多选
-	SingleSelectTips = "Please select from the %s below (single-select)\n" // 提示词 - 单选
-	QuietTips        = "Press '%s' to quit\n"                              // 提示词 - 退出
-	SelectAllTips    = "Select All"                                        // 提示词 - 全选
-)
-
-var (
-	BranchFlag    = "🌿" // Git 符号 - 分支
-	SubmoduleFlag = "📦" // Git 符号 - 子模块
-)
-
-var (
-	JoinerIng    = "├──" // 条目连接符号 - 中间条目
-	JoinerFinish = "└──" // 条目连接符号 - 最后条目
-)
-
-var WaitSpinner = spinner.New(spinner.CharSets[11], 100*time.Millisecond) // 等待动画
 
 // ---------- 环境变量
 
@@ -149,7 +53,7 @@ var (
 	ConfigFile = filepath.Join(configDir, programDir, configFile) // 配置文件路径
 )
 
-// ---------- 函数
+// ---------- 变量相关函数
 
 // GetVariable 获取环境变量
 //
