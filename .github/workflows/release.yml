@@ -2,6 +2,8 @@ name: "Go Build and Release by GoReleaser"
 
 on:
   push:
+    branches:
+      - "main"
     tags:
       - "v*.*.*"
 
