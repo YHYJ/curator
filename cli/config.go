@@ -57,6 +57,35 @@ func CreateConfigFile(configFile string, reWrite bool) {
 	}
 }
 
+// OpenConfigFile 打开配置文件
+//
+// 参数：
+//   - configFile: 配置文件路径
+func OpenConfigFile(configFile string) {
+	// 检查配置文件是否存在
+	fileExist := general.FileExist(configFile)
+
+	if fileExist {
+		editor := general.GetVariable("EDITOR")
+		if editor == "" {
+			editor = "vim"
+			err := general.RunCommand(editor, []string{configFile})
+			if err != nil {
+				editor = "vi"
+				err = general.RunCommand(editor, []string{configFile})
+				if err != nil {
+					color.Danger.Println(err)
+				}
+			}
+		} else {
+			err := general.RunCommand(editor, []string{configFile})
+			if err != nil {
+				color.Danger.Println(err)
+			}
+		}
+	}
+}
+
 // PrintConfigFile 打印配置文件内容
 //
 // 参数：
