@@ -103,20 +103,9 @@ func LoadConfigToStruct(configTree *toml.Tree) (*Config, error) {
 //   - 写入的字节数
 //   - 错误信息
 func WriteTomlConfig(filePath string) (int64, error) {
-	// 根据系统不同决定某些参数
-	var (
-		scriptNameList = []string{} // 脚本名列表
-	)
-	if Platform == "linux" {
-		scriptNameList = []string{
-			"create-hook-link.sh",
-		}
-	} else if Platform == "darwin" {
-		scriptNameList = []string{
-			"create-hook-link.sh",
-		}
-	} else if Platform == "windows" {
-	}
+	// 脚本名列表
+	var scriptNameList []string = []string{"create-hook-link.sh"}
+
 	// 定义一个 map[string]interface{} 类型的变量并赋值
 	exampleConf := map[string]interface{}{
 		"ssh": map[string]interface{}{
