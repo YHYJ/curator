@@ -41,7 +41,7 @@
 
 ---
 
-用于克隆指定用户的指定仓库，支持 Linux 和 macOS 系统
+用于克隆指定用户的指定仓库，支持 Linux 和 macOS
 
 ## Install
 
