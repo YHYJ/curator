@@ -104,7 +104,7 @@ func LoadConfigToStruct(configTree *toml.Tree) (*Config, error) {
 //   - 错误信息
 func WriteTomlConfig(filePath string) (int64, error) {
 	// 脚本名列表
-	var scriptNameList []string = []string{"create-hook-link.sh"}
+	var scriptNameList = []string{"create-hook-link.sh"}
 
 	// 定义一个 map[string]interface{} 类型的变量并赋值
 	exampleConf := map[string]interface{}{
