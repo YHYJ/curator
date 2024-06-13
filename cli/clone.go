@@ -28,14 +28,16 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	// 获取配置项
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
-		color.Danger.Println(err)
+		fileName, lineNo := general.GetCallerInfo()
+		color.Danger.Printf("Load config error (%s:%d): %s\n", fileName, lineNo+1, err)
 		return
 	}
 
 	// 获取公钥
 	publicKeys, err := general.GetPublicKeysByGit(config.SSH.RsaFile)
 	if err != nil {
-		color.Danger.Println(err)
+		fileName, lineNo := general.GetCallerInfo()
+		color.Danger.Printf("Get public key error (%s:%d): %s\n", fileName, lineNo+1, err)
 		return
 	}
 
@@ -88,7 +90,8 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	// 让用户选择需要 Clone 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
 	if err != nil {
-		color.Danger.Println(err)
+		fileName, lineNo := general.GetCallerInfo()
+		color.Danger.Printf("Filter error (%s:%d): %s\n", fileName, lineNo+1, err)
 		return
 	}
 	// 对所选的存储库进行排序
@@ -115,7 +118,8 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 					if err := general.DeleteFile(repoPath); err != nil {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
-						color.Danger.Println(err)
+						fileName, lineNo := general.GetCallerInfo()
+						color.Danger.Printf("Delete file error (%s:%d): %s\n", fileName, lineNo+1, err)
 						continue
 					}
 				} else { // 文件夹非空，处理下一个
@@ -135,7 +139,8 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		if err != nil { // Clone 失败
 			general.WaitSpinner.Stop()
 			color.Printf("%s", actionPrint)
-			color.Danger.Println(err)
+			fileName, lineNo := general.GetCallerInfo()
+			color.Danger.Printf("Clone repository error (%s:%d): %s\n", fileName, lineNo+1, err)
 		} else { // Clone 成功
 			length := len(general.RunFlag) + len("Cloning") // 仓库信息缩进长度
 			general.WaitSpinner.Stop()

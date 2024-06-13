@@ -27,16 +27,19 @@ func CreateConfigFile(configFile string, reWrite bool) {
 	if fileExist {
 		if reWrite {
 			if err := general.DeleteFile(configFile); err != nil {
-				color.Danger.Println(err)
+				fileName, lineNo := general.GetCallerInfo()
+				color.Danger.Printf("Delete file error (%s:%d): %s\n", fileName, lineNo+1, err)
 				return
 			}
 			if err := general.CreateFile(configFile); err != nil {
-				color.Danger.Println(err)
+				fileName, lineNo := general.GetCallerInfo()
+				color.Danger.Printf("Create file error (%s:%d): %s\n", fileName, lineNo+1, err)
 				return
 			}
 			_, err := general.WriteTomlConfig(configFile)
 			if err != nil {
-				color.Danger.Println(err)
+				fileName, lineNo := general.GetCallerInfo()
+				color.Danger.Printf("Write config error (%s:%d): %s\n", fileName, lineNo+1, err)
 				return
 			}
 			color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file overwritten"))
@@ -45,12 +48,14 @@ func CreateConfigFile(configFile string, reWrite bool) {
 		}
 	} else {
 		if err := general.CreateFile(configFile); err != nil {
-			color.Danger.Println(err)
+			fileName, lineNo := general.GetCallerInfo()
+			color.Danger.Printf("Create file error (%s:%d): %s\n", fileName, lineNo+1, err)
 			return
 		}
 		_, err := general.WriteTomlConfig(configFile)
 		if err != nil {
-			color.Danger.Println(err)
+			fileName, lineNo := general.GetCallerInfo()
+			color.Danger.Printf("Write config error (%s:%d): %s\n", fileName, lineNo+1, err)
 			return
 		}
 		color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file created"))
@@ -74,13 +79,15 @@ func OpenConfigFile(configFile string) {
 				editor = "vi"
 				err = general.RunCommand(editor, []string{configFile})
 				if err != nil {
-					color.Danger.Println(err)
+					fileName, lineNo := general.GetCallerInfo()
+					color.Danger.Printf("Run command error (%s:%d): %s\n", fileName, lineNo+1, err)
 				}
 			}
 		} else {
 			err := general.RunCommand(editor, []string{configFile})
 			if err != nil {
-				color.Danger.Println(err)
+				fileName, lineNo := general.GetCallerInfo()
+				color.Danger.Printf("Run command error (%s:%d): %s\n", fileName, lineNo+1, err)
 			}
 		}
 	}
@@ -101,7 +108,8 @@ func PrintConfigFile(configFile string) {
 	if fileExist {
 		configTree, err := general.GetTomlConfig(configFile)
 		if err != nil {
-			color.Danger.Println(err)
+			fileName, lineNo := general.GetCallerInfo()
+			color.Danger.Printf("Get config error (%s:%d): %s\n", fileName, lineNo+1, err)
 		} else {
 			color.Println(general.PrimaryText(configTree))
 		}
