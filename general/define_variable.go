@@ -79,6 +79,9 @@ func GetVariable(key string) string {
 //   - 系统语言，目前仅支持 zh 或 en
 func GetLanguage() string {
 	language := GetVariable("LANGUAGE")
+	if language == "" {
+		language = GetVariable("LANG")
+	}
 	if strings.Contains(language, "zh") {
 		return "zh"
 	} else {
