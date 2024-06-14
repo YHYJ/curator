@@ -80,14 +80,14 @@ func OpenConfigFile(configFile string) {
 				err = general.RunCommand(editor, []string{configFile})
 				if err != nil {
 					fileName, lineNo := general.GetCallerInfo()
-					color.Danger.Printf("Run command error (%s:%d): %s\n", fileName, lineNo+1, err)
+					color.Danger.Printf("Open config file error (%s:%d): %s\n", fileName, lineNo+1, err)
 				}
 			}
 		} else {
 			err := general.RunCommand(editor, []string{configFile})
 			if err != nil {
 				fileName, lineNo := general.GetCallerInfo()
-				color.Danger.Printf("Run command error (%s:%d): %s\n", fileName, lineNo+1, err)
+				color.Danger.Printf("Open config file error (%s:%d): %s\n", fileName, lineNo+1, err)
 			}
 		}
 	}
