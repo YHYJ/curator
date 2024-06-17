@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 : << !
-Name: sync-hook.sh
+Name: sync.sh
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2024-04-16 16:51:07
 
-Description: 从 System 同步 git 钩子
+Description: 从 System 同步脚本和 git hook 等
 
 Attentions:
 -
@@ -16,8 +16,8 @@ Depends:
 !
 
 script_dir=$(dirname "$0")                              # 本脚本所在路径
-hooks_dir="${script_dir}/hooks"                         # git 钩子路径
-system_hooks_dir="${HOME}/Documents/Repos/System/hooks" # 本地 System 存储库 git 钩子路径
+hooks_dir="${script_dir}/hooks"                         # git hook 路径
+system_hooks_dir="${HOME}/Documents/Repos/System/hooks" # 本地 System 存储库 git hook 路径
 repo_name="https://github.com/YHYJ/System.git"          # 云端 System 存储库路径
 tmp_dir="/tmp/sync-hook"                                # 临时目录
 
