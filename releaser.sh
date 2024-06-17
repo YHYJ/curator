@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 : << !
-Name: x.sh
+Name: releaser.sh
 Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2024-06-14 16:33:16
 
-Description: 一键释出
+Description: 一键释出新版本
 
 Attentions:
 -
@@ -15,16 +15,11 @@ Depends:
 -
 !
 
-# 版本文件
-target_file="general/version.go"
+target_file="general/version.go" # 版本文件
+version_var="Version string"     # 版本变量
 
-# 版本变量
-version_var="Version string"
-
-# 获取暂存区（已暂存但未提交）文件中的版本变量值（旧）
-staged_version=$(git show :$target_file | grep "$version_var" | awk -F '"' '{print $2}')
-# 获取工作区（未提交的变更）文件中的版本变量值（新）
-current_version=$(grep "$version_var" $target_file | awk -F '"' '{print $2}')
+staged_version=$(git show :$target_file | grep "$version_var" | awk -F '"' '{print $2}') # 获取暂存区（已暂存但未提交）文件中的版本变量值（旧）
+current_version=$(grep "$version_var" $target_file | awk -F '"' '{print $2}')            # 获取工作区（未提交的变更）文件中的版本变量值（新）
 
 # 1. 判断是否是版本变量的值发生变更
 if [ "$staged_version" != "$current_version" ]; then
