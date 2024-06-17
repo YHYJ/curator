@@ -10,7 +10,6 @@ Description: 执行子命令 'config'
 package cmd
 
 import (
-	"github.com/gookit/color"
 	"github.com/spf13/cobra"
 	"github.com/yhyj/curator/cli"
 	"github.com/yhyj/curator/general"
@@ -30,13 +29,10 @@ var configCmd = &cobra.Command{
 		openFlag, _ := cmd.Flags().GetBool("open")
 		printFlag, _ := cmd.Flags().GetBool("print")
 
-		var (
-			noticeSlogan []string // 提示标语
-		)
 		// 检查参数
 		if !createFlag && !printFlag && !openFlag {
 			cmd.Help()
-			noticeSlogan = append(noticeSlogan, "Please refer to the above help information")
+			general.Notifier = append(general.Notifier, "Please refer to the above help information")
 		}
 
 		// 创建配置文件流程
@@ -54,13 +50,8 @@ var configCmd = &cobra.Command{
 			cli.PrintConfigFile(configFile)
 		}
 
-		// 输出标语
-		if len(noticeSlogan) > 0 {
-			color.Println()
-			for _, slogan := range noticeSlogan {
-				color.Notice.Tips(general.PrimaryText(slogan))
-			}
-		}
+		// 显示通知
+		general.Notification()
 	},
 }
 
