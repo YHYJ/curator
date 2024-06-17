@@ -15,3 +15,7 @@ var (
 	QuietTips        = "Press '%s' to quit\n"                              // 提示词 - 退出
 	SelectAllTips    = "Select All"                                        // 提示词 - 全选
 )
+
+var (
+	OverWriteTips = "%s file already exists, do you want to overwrite it?" // 提示词 - 文件已存在是否覆写
+)

@@ -18,14 +18,21 @@ import (
 //
 // 参数：
 //   - configFile: 配置文件路径
-//   - reWrite: 是否覆写
-func CreateConfigFile(configFile string, reWrite bool) {
+func CreateConfigFile(configFile string) {
 	// 检查配置文件是否存在
 	fileExist := general.FileExist(configFile)
 
 	// 检测并创建配置文件
 	if fileExist {
-		if reWrite {
+		// 询问是否覆写已存在的配置文件
+		overWrite, err := general.AskUser(general.QuestionText(color.Sprintf(general.OverWriteTips, "Configuration")), []string{"y", "N"})
+		if err != nil {
+			fileName, lineNo := general.GetCallerInfo()
+			color.Danger.Printf("Ask user error (%s:%d): %s\n", fileName, lineNo+1, err)
+			return
+		}
+
+		if overWrite == "y" {
 			if err := general.DeleteFile(configFile); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
 				color.Danger.Printf("Delete file error (%s:%d): %s\n", fileName, lineNo+1, err)
@@ -43,8 +50,6 @@ func CreateConfigFile(configFile string, reWrite bool) {
 				return
 			}
 			color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file overwritten"))
-		} else {
-			color.Printf("%s %s: %s %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.WarnText("file exists"), general.SecondaryText("(use --force to overwrite)"))
 		}
 	} else {
 		if err := general.CreateFile(configFile); err != nil {

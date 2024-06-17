@@ -25,7 +25,6 @@ var configCmd = &cobra.Command{
 		configFile, _ := cmd.Flags().GetString("config")
 		// 解析参数
 		createFlag, _ := cmd.Flags().GetBool("create")
-		forceFlag, _ := cmd.Flags().GetBool("force")
 		openFlag, _ := cmd.Flags().GetBool("open")
 		printFlag, _ := cmd.Flags().GetBool("print")
 
@@ -37,7 +36,7 @@ var configCmd = &cobra.Command{
 
 		// 创建配置文件流程
 		if createFlag {
-			cli.CreateConfigFile(configFile, forceFlag)
+			cli.CreateConfigFile(configFile)
 		}
 
 		// 打开配置文件流程
@@ -57,7 +56,6 @@ var configCmd = &cobra.Command{
 
 func init() {
 	configCmd.Flags().BoolP("create", "", false, "Create a default configuration file")
-	configCmd.Flags().BoolP("force", "", false, "Overwrite existing configuration files")
 	configCmd.Flags().BoolP("open", "", false, "Open the configuration file with the default editor")
 	configCmd.Flags().BoolP("print", "", false, "Print configuration file content")
 
