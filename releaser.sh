@@ -6,7 +6,7 @@ Author: YJ
 Email: yj1516268@outlook.com
 Created Time: 2024-06-14 16:33:16
 
-Description: 一键释出新版本
+Description: 一键释出新版本 - go 代码专用
 
 Attentions:
 -
