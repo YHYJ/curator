@@ -11,7 +11,6 @@ package cli
 
 import (
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/gookit/color"
@@ -94,8 +93,6 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		color.Danger.Printf("Filter error (%s:%d): %s\n", fileName, lineNo+1, err)
 		return
 	}
-	// 对所选的存储库进行排序
-	sort.Strings(selectedRepos)
 
 	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {
