@@ -124,8 +124,9 @@ func (m model) View() string {
 	s.WriteString(color.Sprintf(SecondaryText(QuietTips), quietKey))
 	s.WriteString(color.Sprintf("%s\n", strings.Repeat(Separator1st, len(MultiSelectTips)+len(selectorType))))
 
-	// 对 choices 进行迭代
-	SelectedFlag = SuccessText(SelectedFlag)
+	// 对所有选项进行迭代
+	SelectedFlag = SuccessText(SelectedFlag) // 选中状态标识
+	selectedCount := 1                       // 已选中选项计数
 	for i, choice := range m.choices {
 		// 检查光标是否指向当前选项，默认未指向
 		cursorFlag := CursorOffFlag // 未指向当前选项
@@ -135,14 +136,15 @@ func (m model) View() string {
 		}
 		// 检查当前选项是否被选中
 		checked := UnselectedFlag // 未选中
-		if i == 0 {               // 如果当前选项索引为0即是 "Select All"
+		if i == 0 {               // 如果当前选项索引为 0 即是 "Select All"
 			if len(m.selected) == len(m.choices)-1 { // 所有选项都已选中（不包括 "Select All" 这个特殊选项）
 				checked = SelectedFlag // 已选中
 			}
-		} else { // 如果当前选项索引不为0即非 "Select All"
+		} else { // 如果当前选项索引不为 0 即非 "Select All"
 			if _, ok := m.selected[i]; ok { // 当前选项的索引在已选中选项中
-				checked = SelectedFlag           // 已选中
-				choice = FgLightBlueText(choice) // 已选中选项着色
+				checked = SelectedFlag                                                                           // 已选中
+				choice = color.Sprintf("%s %s", FgLightBlueText(choice), SecondaryText("(", selectedCount, ")")) // 已选中选项着色
+				selectedCount++
 			}
 		}
 		s.WriteString(color.Sprintf("%s [%s] %s\n", cursorFlag, checked, choice))
