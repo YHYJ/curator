@@ -55,8 +55,8 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	}
 
 	// 信息横幅
-	color.Info.Tips("%s %s: %s/%s", general.FgWhiteText("Fetch from and merge with"), general.FgGreenText(source), general.FgWhiteText(clonedNum), general.FgWhiteText(totalNum))
-	color.Info.Tips("%s: %s", general.FgWhiteText("Repository root"), general.PrimaryText(config.Storage.Path))
+	color.Info.Tips("Fetch from and merge with %s: %d/%d", general.FgGreenText(source), clonedNum, totalNum)
+	color.Info.Tips("Repository root: %s", general.PrimaryText(config.Storage.Path))
 
 	// 让用户选择需要 Pull 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
@@ -70,7 +70,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始拉取提示
-		actionPrint := color.Sprintf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Pulling"), general.FgCyanText(repoName))
+		actionPrint := color.Sprintf("%s Pulling %s: ", general.RunFlag, general.FgCyanText(repoName))
 		general.WaitSpinner.Prefix = actionPrint
 		general.WaitSpinner.Start()
 		// 拉取前检测本地仓库是否存在
@@ -132,7 +132,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 										}
 									} else {
 										general.WaitSpinner.Stop()
-										color.Printf("%s%s %s %s %s %s", subActionPrint, general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
+										color.Printf("%s%s %s --> %s %s", subActionPrint, general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
 									}
 								}
 								color.Println() // 当前子模块处理完成，处理下一个子模块
@@ -147,7 +147,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 				} else {
 					// 成功拉取
 					general.WaitSpinner.Stop()
-					color.Printf("%s%s %s %s %s %s\n", actionPrint, general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(rightCommit.Hash.String()[:6]), general.SecondaryText("[", headRef.Name().Short(), "]"))
+					color.Printf("%s%s %s --> %s %s\n", actionPrint, general.SuccessFlag, general.FgBlueText(leftCommit.Hash.String()[:6]), general.FgGreenText(rightCommit.Hash.String()[:6]), general.SecondaryText("[", headRef.Name().Short(), "]"))
 
 					// 尝试拉取子模块
 					submodules, err := general.GetLocalRepoSubmoduleInfo(worktree)
@@ -195,7 +195,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 									}
 								} else {
 									general.WaitSpinner.Stop()
-									color.Printf("%s%s %s %s %s %s", subActionPrint, general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgWhiteText("-->"), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
+									color.Printf("%s%s %s --> %s %s", subActionPrint, general.SuccessFlag, general.FgBlueText(submoduleLeftCommit.Hash.String()[:6]), general.FgGreenText(submoduleRightCommit.Hash.String()[:6]), general.SecondaryText("[", submoduleRepoHeadRef.Name().Short(), "]"))
 								}
 							}
 							color.Println() // 当前子模块处理完成，处理下一个子模块

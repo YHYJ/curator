@@ -49,7 +49,7 @@ func CreateConfigFile(configFile string) {
 				color.Danger.Printf("Write config error (%s:%d): %s\n", fileName, lineNo+1, err)
 				return
 			}
-			color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file overwritten"))
+			color.Printf("Create %s: %s\n", general.PrimaryText(configFile), general.SuccessText("file overwritten"))
 		}
 	} else {
 		if err := general.CreateFile(configFile); err != nil {
@@ -63,7 +63,7 @@ func CreateConfigFile(configFile string) {
 			color.Danger.Printf("Write config error (%s:%d): %s\n", fileName, lineNo+1, err)
 			return
 		}
-		color.Printf("%s %s: %s\n", general.FgWhiteText("Create"), general.PrimaryText(configFile), general.SuccessText("file created"))
+		color.Printf("Create %s: %s\n", general.PrimaryText(configFile), general.SuccessText("file created"))
 	}
 }
 

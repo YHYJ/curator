@@ -83,8 +83,8 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	}
 
 	// 信息横幅
-	color.Info.Tips("%s %s: %s/%s", general.FgWhiteText("Clone repository from"), general.FgGreenText(source), general.FgWhiteText(clonedNum), general.FgWhiteText(totalNum))
-	color.Info.Tips("%s: %s", general.FgWhiteText("Repository root"), general.PrimaryText(config.Storage.Path))
+	color.Info.Tips("Clone repository from %s: %d/%d", general.FgGreenText(source), clonedNum, totalNum)
+	color.Info.Tips("Repository root: %s", general.PrimaryText(config.Storage.Path))
 
 	// 让用户选择需要 Clone 的存储库
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
@@ -98,7 +98,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始克隆提示
-		actionPrint := color.Sprintf("%s %s %s: ", general.RunFlag, general.FgWhiteText("Cloning"), general.FgCyanText(repoName))
+		actionPrint := color.Sprintf("%s Cloning %s: ", general.RunFlag, general.FgCyanText(repoName))
 		general.WaitSpinner.Prefix = actionPrint
 		general.WaitSpinner.Start()
 		// 克隆前检测是否存在同名本地仓库或非空文件夹

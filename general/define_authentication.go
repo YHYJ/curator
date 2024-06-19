@@ -43,7 +43,7 @@ func GetPublicKeysByGit(pemFile string) (*ssh.PublicKeys, error) {
 		if err == x509.IncorrectPasswordError || strings.Contains(err.Error(), "empty password") {
 			maxAttempts := 3 // 最大尝试次数
 			for attempts := 0; attempts < maxAttempts; attempts++ {
-				color.Printf("%s '%s' (%s/%s): ", FgWhiteText("Enter passphrase for key"), PrimaryText(pemFile), WarnText(attempts+1), NoticeText(maxAttempts))
+				color.Printf("Enter passphrase for key '%s' (%s/%s): ", PrimaryText(pemFile), WarnText(attempts+1), NoticeText(maxAttempts))
 				password, err := term.ReadPassword(int(syscall.Stdin))
 				if err != nil {
 					return nil, err
