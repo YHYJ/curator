@@ -33,7 +33,7 @@ type GitConfig struct {
 	Repos          []string `toml:"repos"`
 }
 type ScriptConfig struct {
-	NameList []string `toml:"name_list"`
+	RunQueue []string `toml:"run_queue"`
 }
 type SSHConfig struct {
 	RsaFile string `toml:"rsa_file"`
@@ -103,8 +103,8 @@ func LoadConfigToStruct(configTree *toml.Tree) (*Config, error) {
 //   - 写入的字节数
 //   - 错误信息
 func WriteTomlConfig(filePath string) (int64, error) {
-	// 脚本名列表
-	var scriptNameList = []string{"create-git-hook.sh"}
+	// 存储库初次克隆到本地后自动执行的脚本队列
+	var scriptRunQueue = []string{"create-git-hook.sh"}
 
 	// 定义一个 map[string]interface{} 类型的变量并赋值
 	exampleConf := map[string]interface{}{
@@ -115,7 +115,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 			"path": filepath.Join(UserInfo.HomeDir, "Documents", "Repos"),
 		},
 		"script": map[string]interface{}{
-			"name_list": scriptNameList,
+			"run_queue": scriptRunQueue,
 		},
 		"git": map[string]interface{}{
 			"github_url":      "github.com",

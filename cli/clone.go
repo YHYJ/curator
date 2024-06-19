@@ -147,7 +147,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 			color.Printf("%s%s %s ", actionPrint, general.SuccessFlag, general.FgGreenText("Receive object completed"))
 			var errList []string // 使用一个 Slice 存储所有错误信息以美化输出
 			// 执行脚本
-			for _, scriptName := range config.Script.NameList {
+			for _, scriptName := range config.Script.RunQueue {
 				if err := general.RunScript(repoPath, scriptName); err != nil {
 					errList = append(errList, "Run script "+scriptName+": "+err.Error())
 				}
