@@ -60,8 +60,7 @@ func Delay(second float32) {
 //   - 错误信息
 func AskUser(question string, answers []string) (string, error) {
 	viewAnswers := strings.Join(answers, "/")
-	// color.Printf("%s (%s) ", question, viewAnswers)
-	color.Printf("%s %s: ", question, SecondaryText(color.Sprintf("(%s)", viewAnswers)))
+	color.Printf("%s %s: ", question, SecondaryText("(", viewAnswers, ")"))
 
 	// 从标准输入中读取用户的回答
 	reader := bufio.NewReader(os.Stdin)
@@ -95,7 +94,7 @@ func AskUser(question string, answers []string) (string, error) {
 //   - 用户输入（去掉了最后的换行符）
 //   - 错误信息
 func GetInput(tips string, defaultValue string) (string, error) {
-	color.Printf("%s %s: ", tips, SecondaryText(color.Sprintf("(%s)", defaultValue)))
+	color.Printf("%s %s: ", tips, SecondaryText("(", defaultValue, ")"))
 
 	// 从标准输入中读取用户的回答
 	reader := bufio.NewReader(os.Stdin)
