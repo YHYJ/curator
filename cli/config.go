@@ -10,6 +10,8 @@ Description: 子命令 'config' 的实现
 package cli
 
 import (
+	"strings"
+
 	"github.com/gookit/color"
 	"github.com/yhyj/curator/general"
 )
@@ -25,14 +27,16 @@ func CreateConfigFile(configFile string) {
 	// 检测并创建配置文件
 	if fileExist {
 		// 询问是否覆写已存在的配置文件
-		overWrite, err := general.AskUser(general.QuestionText(color.Sprintf(general.OverWriteTips, "Configuration")), []string{"y", "N"})
+		question := color.Sprintf(general.OverWriteTips, "Configuration")
+		overWrite, err := general.AskUser(general.QuestionText(question), []string{"y", "N"})
 		if err != nil {
 			fileName, lineNo := general.GetCallerInfo()
 			color.Danger.Printf("Ask user error (%s:%d): %s\n", fileName, lineNo+1, err)
 			return
 		}
 
-		if overWrite == "y" {
+		switch overWrite {
+		case "y":
 			if err := general.DeleteFile(configFile); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
 				color.Danger.Printf("Delete file error (%s:%d): %s\n", fileName, lineNo+1, err)
@@ -50,6 +54,12 @@ func CreateConfigFile(configFile string) {
 				return
 			}
 			color.Printf("Create %s: %s\n", general.PrimaryText(configFile), general.SuccessText("file overwritten"))
+		case "n":
+			return
+		default:
+			color.Printf("%s\n", strings.Repeat(general.Separator3st, len(question)))
+			color.Warn.Tips("%s: %s", "Unexpected answer", overWrite)
+			return
 		}
 	} else {
 		if err := general.CreateFile(configFile); err != nil {
