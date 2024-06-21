@@ -10,10 +10,10 @@ Description: 定义输出信息及其格式
 package general
 
 var (
-	MultiSelectTips  = "Please select from the %s below (multi-select)\n"  // 提示词 - 多选
-	SingleSelectTips = "Please select from the %s below (single-select)\n" // 提示词 - 单选
-	QuietTips        = "Press '%s' to quit\n"                              // 提示词 - 退出
-	SelectAllTips    = "Select All"                                        // 提示词 - 全选
+	MultiSelectTips  = "Please select from the following %s (multi-select)\n"  // 提示词 - 多选
+	SingleSelectTips = "Please select from the following %s (single-select)\n" // 提示词 - 单选
+	KeyTips          = "Press '%s' to select, '%s' to run, '%s' to quit\n"     // 提示词 - 按键
+	SelectAllTips    = "Select All"                                            // 提示词 - 全选
 )
 
 var (

@@ -41,7 +41,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		return
 	}
 
-	// 检测本地存储库是否存在为已 Clone 存储库计数
+	// 为已 Clone 存储库计数
 	totalNum := len(config.Git.Repos) // 总存储库数
 	clonedNum := 0                    // 已 Clone 存储库数
 	for _, repoName := range config.Git.Repos {
@@ -54,12 +54,13 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		}
 	}
 
-	// 信息横幅
-	color.Info.Tips("Fetch from and merge with %s: %d/%d", general.FgGreenText(source), clonedNum, totalNum)
-	color.Info.Tips("Repository root: %s", general.PrimaryText(config.Storage.Path))
+	// 开始 Pull 提示
+	negatives := strings.Builder{}
+	negatives.WriteString(color.Sprintf("%s Pull repository from %s: %d/%d cloned\n", general.InfoText("INFO:"), general.FgGreenText(source), clonedNum, totalNum))
+	negatives.WriteString(color.Sprintf("%s Repository root: %s\n", general.InfoText("INFO:"), general.PrimaryText(config.Storage.Path)))
 
 	// 让用户选择需要 Pull 的存储库
-	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos)
+	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos, negatives.String())
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
 		color.Danger.Printf("Filter error (%s:%d): %s\n", fileName, lineNo+1, err)

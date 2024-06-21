@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode"
 	"unicode/utf8"
 
 	"github.com/gookit/color"
@@ -111,4 +112,23 @@ func GetInput(tips string, defaultValue string) (string, error) {
 	}()
 
 	return value, nil
+}
+
+// Capitalize 将字符串的首字母转换为大写
+//
+// 参数：
+//   - s: 字符串
+//
+// 返回：
+//   - 首字母大写后的字符串
+func Capitalize(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	// 将首字母转换为大写
+	firstRune := []rune(s)[0]
+	capitalizedFirstRune := unicode.ToUpper(firstRune)
+
+	// 拼接首字母和剩余部分
+	return string(capitalizedFirstRune) + s[1:]
 }
