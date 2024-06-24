@@ -29,7 +29,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Danger.Printf("Load config error (%s:%d): %s\n", fileName, lineNo+1, err)
+		color.Printf("%s %s -> Unable to load config: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -37,7 +37,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	publicKeys, err := general.GetPublicKeysByGit(config.SSH.RsaFile)
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Danger.Printf("Get public key error (%s:%d): %s\n", fileName, lineNo+1, err)
+		color.Printf("%s %s -> Unable to get public key: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -63,7 +63,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos, negatives.String())
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Danger.Printf("Filter error (%s:%d): %s\n", fileName, lineNo+1, err)
+		color.Printf("%s %s -> Unable to start selector: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -93,7 +93,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 							general.WaitSpinner.Stop()
 							color.Printf("%s", actionPrint)
 							fileName, lineNo := general.GetCallerInfo()
-							color.Danger.Printf("Get submodule info error (%s:%d): %s\n", fileName, lineNo+1, err)
+							color.Printf("%s %s -> Unable to get local submodule info: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 							continue
 						}
 						if len(submodules) != 0 {
@@ -115,7 +115,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 									general.WaitSpinner.Stop()
 									color.Printf("%s", subActionPrint)
 									fileName, lineNo := general.GetCallerInfo()
-									color.Danger.Printf("Get repository error (%s:%d): %s\n", fileName, lineNo+1, err)
+									color.Printf("%s %s -> Unable to get local submodule: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 								} else {
 									// 开始拉取
 									submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
@@ -129,7 +129,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 											general.WaitSpinner.Stop()
 											color.Printf("%s", subActionPrint)
 											fileName, lineNo := general.GetCallerInfo()
-											color.Danger.Printf("Pull repository error (%s:%d): %s\n", fileName, lineNo+1, err)
+											color.Printf("%s %s -> Unable to pull submodule: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 										}
 									} else {
 										general.WaitSpinner.Stop()
@@ -143,7 +143,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
 						fileName, lineNo := general.GetCallerInfo()
-						color.Danger.Printf("Pull repository error (%s:%d): %s\n", fileName, lineNo+1, err)
+						color.Printf("%s %s -> Unable to pull repository: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 					}
 				} else {
 					// 成功拉取
@@ -156,7 +156,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
 						fileName, lineNo := general.GetCallerInfo()
-						color.Danger.Printf("Get submodule info error (%s:%d): %s\n", fileName, lineNo+1, err)
+						color.Printf("%s %s -> Unable to get local submodule info: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 						continue
 					}
 					if len(submodules) != 0 {
@@ -178,7 +178,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 								general.WaitSpinner.Stop()
 								color.Printf("%s", subActionPrint)
 								fileName, lineNo := general.GetCallerInfo()
-								color.Danger.Printf("Get repository error (%s:%d): %s\n", fileName, lineNo+1, err)
+								color.Printf("%s %s -> Unable to get local repository: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 							} else {
 								// 开始拉取
 								submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
@@ -192,7 +192,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 										general.WaitSpinner.Stop()
 										color.Printf("%s", subActionPrint)
 										fileName, lineNo := general.GetCallerInfo()
-										color.Danger.Printf("Pull repository error (%s:%d): %s\n", fileName, lineNo+1, err)
+										color.Printf("%s %s -> Unable to pull submodule: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 									}
 								} else {
 									general.WaitSpinner.Stop()

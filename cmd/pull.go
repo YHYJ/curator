@@ -31,7 +31,7 @@ var pullCmd = &cobra.Command{
 		configTree, err := general.GetTomlConfig(configFile)
 		if err != nil {
 			fileName, lineNo := general.GetCallerInfo()
-			color.Danger.Printf("Get config error (%s:%d): %s\n", fileName, lineNo+1, err)
+			color.Printf("%s %s -> Unable to get config: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			return
 		}
 

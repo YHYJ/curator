@@ -31,7 +31,7 @@ func CreateConfigFile(configFile string) {
 		overWrite, err := general.AskUser(general.QuestionText(question), []string{"y", "N"})
 		if err != nil {
 			fileName, lineNo := general.GetCallerInfo()
-			color.Danger.Printf("Ask user error (%s:%d): %s\n", fileName, lineNo+1, err)
+			color.Printf("%s %s -> Unable to get answers: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			return
 		}
 
@@ -39,18 +39,17 @@ func CreateConfigFile(configFile string) {
 		case "y":
 			if err := general.DeleteFile(configFile); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
-				color.Danger.Printf("Delete file error (%s:%d): %s\n", fileName, lineNo+1, err)
+				color.Printf("%s %s -> Unable to delete file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 				return
 			}
 			if err := general.CreateFile(configFile); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
-				color.Danger.Printf("Create file error (%s:%d): %s\n", fileName, lineNo+1, err)
+				color.Printf("%s %s -> Unable to create file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 				return
 			}
-			_, err := general.WriteTomlConfig(configFile)
-			if err != nil {
+			if _, err := general.WriteTomlConfig(configFile); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
-				color.Danger.Printf("Write config error (%s:%d): %s\n", fileName, lineNo+1, err)
+				color.Printf("%s %s -> Unable to write file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 				return
 			}
 			color.Printf("Create %s: %s\n", general.PrimaryText(configFile), general.SuccessText("file overwritten"))
@@ -64,13 +63,12 @@ func CreateConfigFile(configFile string) {
 	} else {
 		if err := general.CreateFile(configFile); err != nil {
 			fileName, lineNo := general.GetCallerInfo()
-			color.Danger.Printf("Create file error (%s:%d): %s\n", fileName, lineNo+1, err)
+			color.Printf("%s %s -> Unable to create file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			return
 		}
-		_, err := general.WriteTomlConfig(configFile)
-		if err != nil {
+		if _, err := general.WriteTomlConfig(configFile); err != nil {
 			fileName, lineNo := general.GetCallerInfo()
-			color.Danger.Printf("Write config error (%s:%d): %s\n", fileName, lineNo+1, err)
+			color.Printf("%s %s -> Unable to write file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			return
 		}
 		color.Printf("Create %s: %s\n", general.PrimaryText(configFile), general.SuccessText("file created"))
@@ -89,20 +87,17 @@ func OpenConfigFile(configFile string) {
 		editor := general.GetVariable("EDITOR")
 		if editor == "" {
 			editor = "vim"
-			err := general.RunCommand(editor, []string{configFile})
-			if err != nil {
+			if err := general.RunCommand(editor, []string{configFile}); err != nil {
 				editor = "vi"
-				err = general.RunCommand(editor, []string{configFile})
-				if err != nil {
+				if err := general.RunCommand(editor, []string{configFile}); err != nil {
 					fileName, lineNo := general.GetCallerInfo()
-					color.Danger.Printf("Open config file error (%s:%d): %s\n", fileName, lineNo+1, err)
+					color.Printf("%s %s -> Unable to open file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 				}
 			}
 		} else {
-			err := general.RunCommand(editor, []string{configFile})
-			if err != nil {
+			if err := general.RunCommand(editor, []string{configFile}); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
-				color.Danger.Printf("Open config file error (%s:%d): %s\n", fileName, lineNo+1, err)
+				color.Printf("%s %s -> Unable to open file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			}
 		}
 	}
@@ -124,11 +119,12 @@ func PrintConfigFile(configFile string) {
 		configTree, err := general.GetTomlConfig(configFile)
 		if err != nil {
 			fileName, lineNo := general.GetCallerInfo()
-			color.Danger.Printf("Get config error (%s:%d): %s\n", fileName, lineNo+1, err)
+			color.Printf("%s %s -> Unable to get config: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		} else {
 			color.Println(general.PrimaryText(configTree))
 		}
 	} else {
-		color.Danger.Println(configFileNotFoundMessage)
+		fileName, lineNo := general.GetCallerInfo()
+		color.Printf("%s %s -> %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), configFileNotFoundMessage)
 	}
 }

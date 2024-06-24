@@ -32,8 +32,7 @@ import (
 //   - ssh 公钥
 //   - 错误信息
 func GetPublicKeysByGit(pemFile string) (*ssh.PublicKeys, error) {
-	_, err := os.Stat(pemFile)
-	if err != nil {
+	if _, err := os.Stat(pemFile); err != nil {
 		return nil, err
 	}
 

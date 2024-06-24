@@ -26,8 +26,7 @@ import (
 //   - 命令的输出
 //   - 错误信息
 func RunCommandGetResult(command string, args []string) (string, error) {
-	_, err := exec.LookPath(command)
-	if err != nil {
+	if _, err := exec.LookPath(command); err != nil {
 		return "", err
 	}
 
@@ -52,8 +51,7 @@ func RunCommandGetResult(command string, args []string) (string, error) {
 // 返回：
 //   - 错误信息
 func RunCommand(command string, args []string) error {
-	_, err := exec.LookPath(command)
-	if err != nil {
+	if _, err := exec.LookPath(command); err != nil {
 		return err
 	}
 
