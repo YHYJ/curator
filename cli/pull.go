@@ -67,6 +67,10 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		return
 	}
 
+	// 留屏信息
+	negatives.WriteString(color.Sprintf("%s Selected: %s\n", general.InfoText("INFO:"), general.FgCyanText(strings.Join(selectedRepos, ", "))))
+	color.Println(negatives.String())
+
 	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {
 		repoPath := filepath.Join(config.Storage.Path, repoName)
