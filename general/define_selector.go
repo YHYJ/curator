@@ -36,9 +36,9 @@ var keyMap = map[string]string{
 		if key == "" {
 			key = "space"
 		}
-		return Capitalize(key)
+		return UpperFirstChar(key)
 	}(),
-	enterKey: Capitalize(enterKey),
+	enterKey: UpperFirstChar(enterKey),
 	quietKey: quietKey,
 }
 
