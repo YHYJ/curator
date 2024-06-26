@@ -104,11 +104,14 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 
 	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {
-		repoPath := filepath.Join(config.Storage.Path, repoName)
 		// 开始克隆提示
 		actionPrint := color.Sprintf("%s Cloning %s: ", general.RunFlag, general.FgCyanText(repoName))
 		general.WaitSpinner.Prefix = actionPrint
 		general.WaitSpinner.Start()
+
+		// 本地存储库路径
+		repoPath := filepath.Join(config.Storage.Path, repoName)
+
 		// 克隆前检测是否存在同名本地仓库或非空文件夹
 		if general.FileExist(repoPath) {
 			isRepo, _, _ := general.IsLocalRepo(repoPath)
