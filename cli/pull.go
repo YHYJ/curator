@@ -75,7 +75,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 		pull(config, repoPath, repoName)
 
 		// 添加一个延时，使输出更加顺畅
-		general.Delay(0.1)
+		general.Delay(general.DelayTime)
 	}
 }
 

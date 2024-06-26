@@ -103,7 +103,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		clone(config, repoSource, repoPath, repoName, config.Script.RunQueue)
 
 		// 添加一个延时，使输出更加顺畅
-		general.Delay(0.1)
+		general.Delay(general.DelayTime)
 	}
 }
 
@@ -136,7 +136,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 			general.WaitSpinner.Stop()
 			color.Printf("%s%s %s\n", actionPrint, general.FgBlueText(general.LatestFlag), general.SecondaryText("Local repository already exists"))
 			// 添加一个延时，使输出更加顺畅
-			general.Delay(0.1)
+			general.Delay(general.DelayTime)
 			return
 		} else { // 不是本地存储库
 			if general.FolderEmpty(path) { // 是空文件夹，删除后继续 Clone
@@ -151,7 +151,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 				general.WaitSpinner.Stop()
 				color.Printf("%s%s %s\n", actionPrint, general.WarningFlag, general.WarnText("Folder is not a local repository and not empty"))
 				// 添加一个延时，使输出更加顺畅
-				general.Delay(0.1)
+				general.Delay(general.DelayTime)
 				return
 			}
 		}

@@ -20,6 +20,9 @@ import (
 
 // ---------- 环境变量
 
+// 默认延时
+var DelayTime float32 = 0.01
+
 // 用来处理不同系统之间的变量名差异
 var platformChart = map[string]map[string]string{
 	"windows": {
