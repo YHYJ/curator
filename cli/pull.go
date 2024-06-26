@@ -43,24 +43,24 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 
 	// 为已 Clone 存储库计数
 	totalNum := len(config.Git.Repos) // 总存储库数
-	clonedNum := 0                    // 已 Clone 存储库数
+	clonedRepo := make([]string, 0)   // 已 Clone 存储库
 	for _, repoName := range config.Git.Repos {
 		repoPath := filepath.Join(config.Storage.Path, repoName) // 本地存储库路径
 		if general.FileExist(repoPath) {
 			isRepo, _, _ := general.IsLocalRepo(repoPath)
 			if isRepo {
-				clonedNum++
+				clonedRepo = append(clonedRepo, repoName)
 			}
 		}
 	}
 
 	// 开始 Pull 提示
 	negatives := strings.Builder{}
-	negatives.WriteString(color.Sprintf("%s Pull repository from %s: %d/%d cloned\n", general.InfoText("INFO:"), general.FgGreenText(source), clonedNum, totalNum))
+	negatives.WriteString(color.Sprintf("%s Pull repository from %s: %d/%d cloned\n", general.InfoText("INFO:"), general.FgGreenText(source), len(clonedRepo), totalNum))
 	negatives.WriteString(color.Sprintf("%s Repository root: %s\n", general.InfoText("INFO:"), general.PrimaryText(config.Storage.Path)))
 
 	// 让用户选择需要 Pull 的存储库
-	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos, negatives.String())
+	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos, clonedRepo, negatives.String())
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
 		color.Printf("%s %s -> Unable to start selector: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
@@ -68,8 +68,11 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	}
 
 	// 留屏信息
-	negatives.WriteString(color.Sprintf("%s Selected: %s\n", general.InfoText("INFO:"), general.FgCyanText(strings.Join(selectedRepos, ", "))))
-	color.Println(negatives.String())
+	if len(selectedRepos) > 0 {
+		negatives.WriteString(color.Sprintf("%s Selected: %s\n", general.InfoText("INFO:"), general.FgCyanText(strings.Join(selectedRepos, ", "))))
+		negatives.WriteString(color.Sprintf("%s", strings.Repeat(general.Separator1st, general.SeparatorBaseLength)))
+		color.Println(negatives.String())
+	}
 
 	// 遍历所选存储库名
 	for _, repoName := range selectedRepos {

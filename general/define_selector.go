@@ -45,6 +45,7 @@ var keyMap = map[string]string{
 // model 结构体，选择器的数据模型
 type model struct {
 	choices   []string         // 所有选项
+	hlChoices []string         // 高亮选项
 	cursor    int              // 光标当前所在选项的索引
 	selected  map[int]struct{} // 已选中选项，key 为选项 choices 的索引。使用 map 便于判断指定选项是否已被选中
 	negatives string           // 希望选择器在运行后输出的信息
@@ -57,16 +58,22 @@ type model struct {
 //
 // 参数：
 //   - choices: 可选项
+//   - highlights: 高亮项
 //   - negatives: 希望选择器在运行后输出的信息
 //
 // 返回：
 //   - 初始化后的选择器数据模型
-func initialModel(choices []string, negatives string) *model {
-	allChoices := []string{color.Sprintf("%s%s", SelectAllFlag, FgLightYellowText(SelectAllTips))}
+func initialModel(choices, highlights []string, negatives string) *model {
+	allChoices := make([]string, 0)
+	allChoices = append(allChoices, color.Sprintf("%s%s", SelectAllFlag, FgLightYellowText(SelectAllTips)))
 	allChoices = append(allChoices, choices...)
+
+	hlChoices := make([]string, 0)
+	hlChoices = append(hlChoices, highlights...)
 
 	return &model{
 		choices:   allChoices,
+		hlChoices: hlChoices,
 		cursor:    0,
 		selected:  make(map[int]struct{}),
 		negatives: negatives,
@@ -201,6 +208,17 @@ func (m *model) content() string {
 	SelectedFlag = SuccessText(SelectedFlag) // 选中状态标识
 	selectedCount := 1                       // 已选中选项计数
 	for i, choice := range m.choices {
+		// 检查当前选项是否在高亮项中
+		if i != 0 { // 排除索引为 0 的 "Select All"
+			hiFlag := MeanMark // 不在高亮项中
+			for _, hlChoice := range m.hlChoices {
+				if choice == hlChoice {
+					hiFlag = NiceMark // 在高亮项中
+					break
+				}
+			}
+			choice = color.Sprintf("%s %s", hiFlag, choice)
+		}
 		// 检查光标是否指向当前选项，默认未指向
 		cursorFlag := CursorOffFlag // 未指向当前选项
 		if m.cursor == i {
@@ -208,8 +226,8 @@ func (m *model) content() string {
 			choice = color.Sprintf("\x1b[7m%s\x1b[0m", choice) // 光标所在选项着色
 		}
 		// 检查当前选项是否被选中
-		checked := UnselectedFlag // 未选中
-		if i == 0 {               // 如果当前选项索引为 0 即是 "Select All"
+		checked := UnselectedFlag
+		if i == 0 { // 如果当前选项索引为 0 即是 "Select All"
 			if len(m.selected) == len(m.choices)-1 { // 所有选项都已选中（不包括 "Select All" 这个特殊选项）
 				checked = SelectedFlag // 已选中
 			}
@@ -292,14 +310,15 @@ func (m *model) getOptimalViewportHeight(msg tea.WindowSizeMsg) int {
 //
 // 参数：
 //   - choices: 可选项
+//   - highlights: 高亮项
 //   - negatives: 希望选择器在运行后输出的信息
 //
 // 返回：
 //   - 已选项
 //   - 错误信息
-func MultipleSelectionFilter(choices []string, negatives string) ([]string, error) {
+func MultipleSelectionFilter(choices, highlights []string, negatives string) ([]string, error) {
 	program := tea.NewProgram(
-		initialModel(choices, negatives),
+		initialModel(choices, highlights, negatives),
 		tea.WithAltScreen(), // 启动程序时启用备用屏幕缓冲区，即程序以全窗口模式启动
 	)
 
