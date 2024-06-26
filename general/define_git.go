@@ -28,17 +28,17 @@ import (
 
 var remoteName = "origin" // 远程名称
 
-// CloneRepoViaSSH 使用 SSH 协议将远端仓库克隆到本地
+// CloneRepoViaSSH 使用 SSH 协议将远端存储库克隆到本地
 //
 // 参数：
-//   - repoPath: 本地仓库路径
-//   - URL: 远端仓库地址（仅包括主地址，例如：github.com）
-//   - username: 远端仓库用户名
-//   - repoName: 远端仓库名称
+//   - repoPath: 本地存储库路径
+//   - URL: 远端存储库地址（仅包括主地址，例如：github.com）
+//   - username: 远端存储库用户名
+//   - repoName: 远端存储库名称
 //   - publicKeys: ssh 公钥
 //
 // 返回：
-//   - 本地仓库对象
+//   - 本地存储库对象
 //   - 错误信息
 func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.PublicKeys) (*git.Repository, error) {
 	repoUrl := "git" + "@" + URL + ":" + username + "/" + repoName + ".git"
@@ -52,18 +52,18 @@ func CloneRepoViaSSH(repoPath, URL, username, repoName string, publicKeys *ssh.P
 	return repo, err
 }
 
-// PullRepo 拉取远端仓库的更改到本地
+// PullRepo 拉取远端存储库的更改到本地
 //
 // 参数：
-//   - repo: 本地仓库对象
+//   - repo: 本地存储库对象
 //
 // 返回：
-//   - 仓库的 git 工作树对象
+//   - 存储库的 git 工作树对象
 //   - 拉取前本地最新 Commit 的 Hash 值
 //   - 拉取后本地最新 Commit 的 Hash 值
 //   - 错误信息
 func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.Worktree, leftCommit, rightCommit *object.Commit, err error) {
-	// 获取本地仓库的 worktree
+	// 获取本地存储库的 worktree
 	worktree, err = repo.Worktree()
 	if err != nil {
 		return nil, nil, nil, err
@@ -79,7 +79,7 @@ func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.W
 		return worktree, nil, nil, err
 	}
 
-	// 拉取远端仓库的更改
+	// 拉取远端存储库的更改
 	err = worktree.Pull(&git.PullOptions{
 		Auth:          publicKeys,
 		RemoteName:    remoteName,
@@ -102,17 +102,17 @@ func PullRepo(repo *git.Repository, publicKeys *ssh.PublicKeys) (worktree *git.W
 	return worktree, leftCommit, rightCommit, nil
 }
 
-// IsLocalRepo 检测是不是本地仓库，是的话返回本地仓库对象及其 HEAD 指向的引用
+// IsLocalRepo 检测是不是本地存储库，是的话返回本地存储库对象及其 HEAD 指向的引用
 //
 // 参数：
-//   - path: 本地仓库路径
+//   - path: 本地存储库路径
 //
 // 返回：
-//   - 是否本地仓库
-//   - 本地仓库对象
+//   - 是否本地存储库
+//   - 本地存储库对象
 //   - HEAD 引用
 func IsLocalRepo(path string) (bool, *git.Repository, *plumbing.Reference) {
-	// 能打开就是本地仓库
+	// 能打开就是本地存储库
 	repo, err := git.PlainOpen(path)
 	if err != nil {
 		return false, nil, nil
@@ -124,10 +124,10 @@ func IsLocalRepo(path string) (bool, *git.Repository, *plumbing.Reference) {
 	return true, repo, headRef
 }
 
-// GetRepoHeadRef 获取本地仓库对象 HEAD 指向的引用
+// GetRepoHeadRef 获取本地存储库对象 HEAD 指向的引用
 //
 // 参数：
-//   - repo: 本地仓库对象
+//   - repo: 本地存储库对象
 //
 // 返回：
 //   - HEAD 引用
@@ -141,12 +141,12 @@ func GetRepoHeadRef(repo *git.Repository) *plumbing.Reference {
 	return headRef
 }
 
-// GetRepoBranchInfo 获取本地仓库的[本地|远程]分支信息
+// GetRepoBranchInfo 获取本地存储库的[本地|远程]分支信息
 //
 // 参数：
-//   - worktree: 仓库的 git 工作树对象
-//   - isSubmodule: 该仓库是否作为子模块
-//   - submoduleName: 当该仓库作为子模块时需要仓库名
+//   - worktree: 存储库的 git 工作树对象
+//   - isSubmodule: 该存储库是否作为子模块
+//   - submoduleName: 当该存储库作为子模块时需要存储库名
 //   - which: 'local' or 'remote'，指定要获取的是本地分支还是远程分支
 //
 // 返回：
@@ -180,13 +180,13 @@ func GetRepoBranchInfo(worktree *git.Worktree, isSubmodule bool, submoduleName s
 	return branchs, nil
 }
 
-// CreateLocalBranch 本地仓库根据远程分支创建本地分支
+// CreateLocalBranch 本地存储库根据远程分支创建本地分支
 //
 //   - 远程分支 refs/remotes/${remote}/<remoteBranchName>
 //   - 本地分支 refs/heads/<localBranchName>
 //
 // 参数：
-//   - repo: 本地仓库对象
+//   - repo: 本地存储库对象
 //   - branchs: 远程分支信息
 //
 // 返回：
@@ -221,10 +221,10 @@ func CreateLocalBranch(repo *git.Repository, branchs []fs.FileInfo) []string {
 	return errList
 }
 
-// GetLocalRepoSubmoduleInfo 获取本地仓库子模块信息
+// GetLocalRepoSubmoduleInfo 获取本地存储库子模块信息
 //
 // 参数：
-//   - worktree: 仓库的 git 工作树对象
+//   - worktree: 存储库的 git 工作树对象
 //
 // 返回：
 //   - 子模块信息
@@ -259,7 +259,7 @@ func ModifyGitConfig(configFile, originalLink, newLink string) error {
 	scanner := bufio.NewScanner(file) // 创建一个扫描器来读取文件内容
 	var lines []string                // 存储读取到的行
 
-	// 正则匹配（主仓库和子模块的匹配规则一样）
+	// 正则匹配（主存储库和子模块的匹配规则一样）
 	regexPattern := `.*url\s*=\s*.*[:\/].*\.git` // 定义正则匹配规则
 	regex := regexp.MustCompile(regexPattern)    // 创建正则表达式
 	matched := false                             // 是否匹配到，用于限制只匹配一次
@@ -308,7 +308,7 @@ func ModifyGitConfig(configFile, originalLink, newLink string) error {
 // GetDefaultBranchName 获取默认分支名
 //
 // 参数：
-//   - repo: 本地仓库对象
+//   - repo: 本地存储库对象
 //   - publicKeys: ssh 公钥
 //
 // 返回：
@@ -320,7 +320,7 @@ func GetDefaultBranchName(repo *git.Repository, publicKeys *ssh.PublicKeys) (str
 	var errList []string
 
 	// 获取默认分支名
-	remotes, _ := repo.Remotes() // 远程仓库信息
+	remotes, _ := repo.Remotes() // 远程存储库信息
 	for _, remote := range remotes {
 		references, err := remote.List(&git.ListOptions{Auth: publicKeys}) // 远程引用信息
 		if err != nil {
@@ -342,7 +342,7 @@ func GetDefaultBranchName(repo *git.Repository, publicKeys *ssh.PublicKeys) (str
 // CheckoutBranch 切换到指定分支
 //
 // 参数：
-//   - worktree: 仓库的 git 工作树对象
+//   - worktree: 存储库的 git 工作树对象
 //   - branchName: 分支名
 //
 // 返回：
