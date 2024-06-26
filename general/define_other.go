@@ -12,34 +12,11 @@ package general
 import (
 	"bufio"
 	"os"
-	"regexp"
 	"strings"
 	"time"
-	"unicode/utf8"
 
 	"github.com/gookit/color"
 )
-
-// RealLength 去除控制字符和图标的附加字符，获取文本实际长度
-//
-// 参数：
-//   - text: 文本
-//
-// 返回：
-//   - 实际长度
-func RealLength(text string) int {
-	combinedRegex := regexp.MustCompile(`\x1b\[[0-9;]*m|\x{FE0E}|\x{FE0F}`)
-	return utf8.RuneCountInString(combinedRegex.ReplaceAllString(text, ""))
-}
-
-// PrintDelimiter 打印分隔符
-//
-// 参数：
-//   - length: 分隔符长度
-func PrintDelimiter(length int) {
-	dashes := strings.Repeat("-", length)     // 组装分隔符
-	color.Printf("%s\n", FgBlackText(dashes)) // 美化输出
-}
 
 // Delay 延时
 //
@@ -86,33 +63,4 @@ func AskUser(question string, standardAnswers []string) (string, error) {
 	}
 
 	return answer, nil
-}
-
-// GetInput 获取用户输入
-//
-// 参数：
-//   - tips: 提示信息
-//   - default: 用户未输入时的默认值
-//
-// 返回：
-//   - 用户输入（去掉了最后的换行符）
-//   - 错误信息
-func GetInput(tips string, defaultValue string) (string, error) {
-	color.Printf("%s %s: ", tips, SecondaryText("(", defaultValue, ")"))
-
-	// 从标准输入中读取用户的回答
-	reader := bufio.NewReader(os.Stdin)
-	originalValue, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
-	}
-
-	value := func() string {
-		if len(originalValue) <= 1 {
-			return defaultValue
-		}
-		return strings.TrimSuffix(originalValue, "\n")
-	}()
-
-	return value, nil
 }

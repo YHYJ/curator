@@ -210,10 +210,10 @@ func (m *model) content() string {
 	for i, choice := range m.choices {
 		// 检查当前选项是否在高亮项中
 		if i != 0 { // 排除索引为 0 的 "Select All"
-			hiFlag := MeanMark // 不在高亮项中
+			hiFlag := MeanFlag // 不在高亮项中
 			for _, hlChoice := range m.hlChoices {
 				if choice == hlChoice {
-					hiFlag = NiceMark // 在高亮项中
+					hiFlag = NiceFlag // 在高亮项中
 					break
 				}
 			}

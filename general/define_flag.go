@@ -18,8 +18,8 @@ var (
 )
 
 var (
-	NiceMark = "\u25CF" // 标识符号 - 代表已实现
-	MeanMark = "\u25CB" // 标识符号 - 代表未实现
+	NiceFlag = "\u25CF" // 标识符号 - 代表已实现
+	MeanFlag = "\u25CB" // 标识符号 - 代表未实现
 )
 
 var (
