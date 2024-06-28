@@ -10,85 +10,69 @@ Description: 执行系统命令
 package general
 
 import (
+	"bytes"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 )
 
-// RunCommandGetResult 运行命令并返回命令的输出
+// RunCommandToOS 运行命令，将命令的 Stdin, Stdout 和 Stderr 定向到系统标准输入、标准输出和标准错误
 //
 // 参数：
 //   - command: 命令
-//   - args: 命令参数
-//
-// 返回：
-//   - 命令的输出
-//   - 错误信息
-func RunCommandGetResult(command string, args []string) (string, error) {
-	if _, err := exec.LookPath(command); err != nil {
-		return "", err
-	}
-
-	// 定义命令
-	cmd := exec.Command(command, args...)
-	// 执行命令并获取命令输出
-	output, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-	// 类型转换消除乱码和格式问题
-	result := strings.TrimRight(string(output), "\n")
-	return result, nil
-}
-
-// RunCommand 运行命令不返回命令的输出
-//
-// 参数：
-//   - command: 命令
-//   - args: 命令参数
+//   - args: 命令参数（每个以空格分隔的参数作为切片的一个元素）
 //
 // 返回：
 //   - 错误信息
-func RunCommand(command string, args []string) error {
+func RunCommandToOS(command string, args []string) error {
 	if _, err := exec.LookPath(command); err != nil {
 		return err
 	}
 
 	// 定义命令
 	cmd := exec.Command(command, args...)
-	// 定义标准输入/输出/错误
+
+	// 将命令的 Stdin, Stdout 和 Stderr 定向到系统标准输出和标准错误
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	// 执行命令
-	if err := cmd.Run(); err != nil {
-		return err
-	}
 
-	return nil
+	// 执行命令
+	err := cmd.Run()
+
+	return err
 }
 
-// RunScript 运行 shell 脚本
+// RunCommandToBuffer 运行命令，将命令的 Stdout 和 Stderr 定向到字节缓冲区
+//
+//   - 命令的 Stdout 和 Stderr 末尾自带的换行符已去除
 //
 // 参数：
-//   - filePath: 脚本所在目录
-//   - scriptName: 脚本名
+//   - command: 命令
+//   - args: 命令参数（每个以空格分隔的参数作为切片的一个元素）
 //
 // 返回：
+//   - Stdout 缓冲区内容
+//   - Stderr 缓冲区内容
 //   - 错误信息
-func RunScript(filePath, scriptName string) error {
-	// 判断是否存在脚本文件，存在则运行脚本，不存在则忽略
-	if FileExist(filepath.Join(filePath, scriptName)) {
-		// 进到指定目录
-		if err := os.Chdir(filePath); err != nil {
-			return err
-		}
-		// 运行脚本
-		bashArgs := []string{scriptName}
-		if err := RunCommand("bash", bashArgs); err != nil {
-			return err
-		}
+func RunCommandToBuffer(command string, args []string) (string, string, error) {
+	if _, err := exec.LookPath(command); err != nil {
+		return "", "", err
 	}
-	return nil
+
+	// 定义命令
+	cmd := exec.Command(command, args...)
+
+	// 创建字节缓冲区
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	// 将命令的 Stdout 和 Stderr 定向到字节缓冲区
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	// 执行命令
+	err := cmd.Run()
+
+	return strings.TrimSpace(stdout.String()), strings.TrimSpace(stderr.String()), err
 }

@@ -10,6 +10,7 @@ Description: 子命令 'clone' 的实现
 package cli
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -177,8 +178,16 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 
 		// Clone 成功后执行存储库中的 Shell 脚本来优化存储库
 		for _, script := range scripts {
-			if err := general.RunScript(path, script); err != nil {
-				errList = append(errList, "Run script "+script+": "+err.Error())
+			if general.FileExist(filepath.Join(path, script)) {
+				// 进到指定目录
+				if err := os.Chdir(path); err != nil {
+					errList = append(errList, "Run script "+script+": "+err.Error())
+				}
+				// 运行脚本
+				bashArgs := []string{script}
+				if err := general.RunCommandToOS("bash", bashArgs); err != nil {
+					errList = append(errList, "Run script "+script+": "+err.Error())
+				}
 			}
 		}
 
