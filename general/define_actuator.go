@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"unicode"
 )
 
 // RunCommandToOS 运行命令，将命令的 Stdin, Stdout 和 Stderr 定向到系统标准输入、标准输出和标准错误
@@ -74,5 +75,10 @@ func RunCommandToBuffer(command string, args []string) (string, string, error) {
 	// 执行命令
 	err := cmd.Run()
 
-	return strings.TrimSpace(stdout.String()), strings.TrimSpace(stderr.String()), err
+	// 去除缓冲区字符串末尾的换行符
+	modifiedStdout := strings.TrimRightFunc(stdout.String(), unicode.IsSpace)
+	modifiedStderr := strings.TrimRightFunc(stderr.String(), unicode.IsSpace)
+	// stdXXX.Truncate(stdXXX.Len() - 1) 在 stdXXX 长度为0时需要多一步处理，否则 Out of range
+
+	return modifiedStdout, modifiedStderr, err
 }
