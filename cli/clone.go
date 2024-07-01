@@ -171,7 +171,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 		// 成功信息
 		length := len(general.RunFlag) + len("Cloning") // 存储库信息缩进长度
 		general.WaitSpinner.Stop()
-		color.Printf("%s%s %s ", actionPrint, general.SuccessFlag, general.FgGreenText("Receive object completed"))
+		color.Printf("%s%s ", actionPrint, general.SuccessFlag)
 
 		// 使用一个切片存储后续所有错误信息以美化输出
 		var errList []string
@@ -273,10 +273,10 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 					submoduleLocalBranchStr = append(submoduleLocalBranchStr, submoduleLocalBranch.Name())
 				}
 				general.WaitSpinner.Stop()
-				color.Printf("%s%s\n", actionPrint, general.SecondaryText("[", strings.Join(submoduleLocalBranchStr, " "), "]"))
+				color.Printf("%s%s %s\n", actionPrint, general.SuccessFlag, general.SecondaryText("[", strings.Join(submoduleLocalBranchStr, " "), "]"))
 			} else { // 子模块非本地存储库
 				general.WaitSpinner.Stop()
-				color.Printf("%s%s %s\n", actionPrint, general.ErrorFlag, general.DangerText("Folder is not a local repository"))
+				color.Printf("%s%s %s\n", actionPrint, general.WarningFlag, general.WarnText("Folder is not a local repository"))
 			}
 		}
 
