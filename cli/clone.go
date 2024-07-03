@@ -12,6 +12,7 @@ package cli
 import (
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/gookit/color"
@@ -62,7 +63,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		}
 	}()
 
-	// 查找已存在的本地存储库
+	// 为已存在的本地存储库计数
 	totalNum := len(config.Git.Repos) // 总存储库数
 	clonedRepo := make([]string, 0)   // 已 Clone 存储库
 	for _, repoName := range config.Git.Repos {
@@ -74,6 +75,9 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 			}
 		}
 	}
+
+	// 显示项排序
+	sort.Strings(config.Git.Repos)
 
 	// 输出基础信息
 	negatives := strings.Builder{}
@@ -87,6 +91,9 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
+
+	// 选择项排序
+	sort.Strings(selectedRepos)
 
 	// 留屏信息
 	if len(selectedRepos) > 0 {
