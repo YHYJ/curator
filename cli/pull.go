@@ -29,7 +29,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to load config: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -55,7 +55,7 @@ func RollingPullRepos(configTree *toml.Tree, source string) {
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos, clonedRepo, negatives.String())
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to start selector: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -90,7 +90,7 @@ func pull(config *general.Config, path, name string) {
 	publicKeys, err := general.GetPublicKeysByGit(config.SSH.RsaFile)
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to get public key: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -118,7 +118,7 @@ func pull(config *general.Config, path, name string) {
 						general.WaitSpinner.Stop()
 						color.Printf("%s", actionPrint)
 						fileName, lineNo := general.GetCallerInfo()
-						color.Printf("%s %s -> Unable to get local submodule info: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+						color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 						return
 					}
 					if len(submodules) != 0 {
@@ -139,7 +139,7 @@ func pull(config *general.Config, path, name string) {
 								general.WaitSpinner.Stop()
 								color.Printf("%s", subActionPrint)
 								fileName, lineNo := general.GetCallerInfo()
-								color.Printf("%s %s -> Unable to get local submodule: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+								color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 							} else {
 								// 开始 Pull
 								submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
@@ -153,7 +153,7 @@ func pull(config *general.Config, path, name string) {
 										general.WaitSpinner.Stop()
 										color.Printf("%s", subActionPrint)
 										fileName, lineNo := general.GetCallerInfo()
-										color.Printf("%s %s -> Unable to pull submodule: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+										color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 									}
 								} else {
 									general.WaitSpinner.Stop()
@@ -167,7 +167,7 @@ func pull(config *general.Config, path, name string) {
 					general.WaitSpinner.Stop()
 					color.Printf("%s", actionPrint)
 					fileName, lineNo := general.GetCallerInfo()
-					color.Printf("%s %s -> Unable to pull repository: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+					color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 				}
 			} else {
 				// 成功 Pull
@@ -180,7 +180,7 @@ func pull(config *general.Config, path, name string) {
 					general.WaitSpinner.Stop()
 					color.Printf("%s", actionPrint)
 					fileName, lineNo := general.GetCallerInfo()
-					color.Printf("%s %s -> Unable to get local submodule info: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+					color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 					return
 				}
 				if len(submodules) != 0 {
@@ -201,7 +201,7 @@ func pull(config *general.Config, path, name string) {
 							general.WaitSpinner.Stop()
 							color.Printf("%s", subActionPrint)
 							fileName, lineNo := general.GetCallerInfo()
-							color.Printf("%s %s -> Unable to get local repository: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+							color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 						} else {
 							// 开始 Pull
 							submoduleRepoHeadRef := general.GetRepoHeadRef(submoduleRepo)
@@ -215,7 +215,7 @@ func pull(config *general.Config, path, name string) {
 									general.WaitSpinner.Stop()
 									color.Printf("%s", subActionPrint)
 									fileName, lineNo := general.GetCallerInfo()
-									color.Printf("%s %s -> Unable to pull submodule: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+									color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 								}
 							} else {
 								general.WaitSpinner.Stop()

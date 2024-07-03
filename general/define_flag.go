@@ -18,6 +18,10 @@ var (
 )
 
 var (
+	ErrorInfoFlag = "•" // 身份符号 - 报错信息
+)
+
+var (
 	NiceFlag = "\u25CF" // 标识符号 - 代表已实现
 	MeanFlag = "\u25CB" // 标识符号 - 代表未实现
 )

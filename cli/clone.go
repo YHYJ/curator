@@ -29,7 +29,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	config, err := general.LoadConfigToStruct(configTree)
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to load config: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func RollingCloneRepos(configTree *toml.Tree, source string) {
 	selectedRepos, err := general.MultipleSelectionFilter(config.Git.Repos, clonedRepo, negatives.String())
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to start selector: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 	publicKeys, err := general.GetPublicKeysByGit(config.SSH.RsaFile)
 	if err != nil {
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to get public key: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		return
 	}
 
@@ -145,7 +145,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 					general.WaitSpinner.Stop()
 					color.Printf("%s", actionPrint)
 					fileName, lineNo := general.GetCallerInfo()
-					color.Printf("%s %s -> Unable to delete file: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+					color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 					return
 				}
 			} else { // 文件夹非空，处理下一个
@@ -166,7 +166,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 		general.WaitSpinner.Stop()
 		color.Printf("%s", actionPrint)
 		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s -> Unable to clone repository: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 	} else { // Clone 成功
 		// 成功信息
 		length := len(general.RunFlag) + len("Cloning") // 存储库信息缩进长度
@@ -283,7 +283,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 		// 输出 Clone 完成后其他操作产生的错误信息
 		fileName, lineNo := general.GetCallerInfo()
 		for _, err := range errList {
-			color.Printf("%s %s -> Other error info: %s\n", general.DangerText("Error:"), general.SecondaryText("[", fileName, ":", lineNo+2, "]"), err)
+			color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 		}
 	}
 }
