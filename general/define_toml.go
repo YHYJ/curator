@@ -144,6 +144,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 				"System",
 				"Test",
 				"trash",
+				"wocker",
 				"www",
 				"YHYJ",
 			},
