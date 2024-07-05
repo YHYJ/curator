@@ -29,7 +29,7 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-	versionCmd.Flags().BoolP("only", "", false, "Only print the version number, like 'v0.0.1'")
+	versionCmd.Flags().Bool("only", false, "Only print the version number, like 'v0.0.1'")
 
 	versionCmd.Flags().BoolP("help", "h", false, "help for version command")
 	rootCmd.AddCommand(versionCmd)

@@ -40,8 +40,7 @@ var pullCmd = &cobra.Command{
 }
 
 func init() {
-	var source string
-	pullCmd.Flags().StringVarP(&source, "source", "s", "github", "Specify the data source (github or gitea)")
+	pullCmd.Flags().String("source", "github", "Specify the data source (github or gitea)")
 
 	pullCmd.Flags().BoolP("help", "h", false, "help for pull command")
 	rootCmd.AddCommand(pullCmd)

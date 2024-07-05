@@ -55,9 +55,9 @@ var configCmd = &cobra.Command{
 }
 
 func init() {
-	configCmd.Flags().BoolP("create", "", false, "Create a default configuration file")
-	configCmd.Flags().BoolP("open", "", false, "Open the configuration file with the default editor")
-	configCmd.Flags().BoolP("print", "", false, "Print configuration file content")
+	configCmd.Flags().Bool("create", false, "Create a default configuration file")
+	configCmd.Flags().Bool("open", false, "Open the configuration file with the default editor")
+	configCmd.Flags().Bool("print", false, "Print configuration file content")
 
 	configCmd.Flags().BoolP("help", "h", false, "help for config command")
 	rootCmd.AddCommand(configCmd)

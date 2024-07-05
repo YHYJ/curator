@@ -41,8 +41,7 @@ var cloneCmd = &cobra.Command{
 }
 
 func init() {
-	var source string
-	cloneCmd.Flags().StringVarP(&source, "source", "s", "github", "Specify the data source (github or gitea)")
+	cloneCmd.Flags().String("source", "github", "Specify the data source (github or gitea)")
 
 	cloneCmd.Flags().BoolP("help", "h", false, "help for clone command")
 	rootCmd.AddCommand(cloneCmd)

@@ -34,7 +34,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolP("help", "h", false, "help for curator")
+	rootCmd.PersistentFlags().String("config", general.ConfigFile, "Specify configuration file")
 
-	rootCmd.PersistentFlags().StringVarP(&general.ConfigFile, "config", "c", general.ConfigFile, "Specify configuration file")
+	rootCmd.Flags().BoolP("help", "h", false, "help for curator")
 }
