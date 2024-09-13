@@ -265,7 +265,7 @@ func (m *model) fixCursor(minIndex, maxIndex int) {
 	if m.cursor > maxIndex {
 		m.cursor = 0
 	} else if m.cursor < minIndex {
-		m.cursor = len(m.choices) - 1
+		m.cursor = maxIndex
 	}
 }
 
