@@ -26,8 +26,12 @@ import (
 // 返回：
 //   - 错误信息
 func RunCommandToOS(command string, args []string) error {
-	if _, err := exec.LookPath(command); err != nil {
-		return err
+	// 检查命令是否存在，添加了对 `sudo` 命令的规避，`sudo`命令应独立检测
+	if command == "sudo" {
+		command = args[0]
+		if _, err := exec.LookPath(command); err != nil {
+			return err
+		}
 	}
 
 	// 定义命令
@@ -57,8 +61,12 @@ func RunCommandToOS(command string, args []string) error {
 //   - Stderr 缓冲区内容
 //   - 错误信息
 func RunCommandToBuffer(command string, args []string) (string, string, error) {
-	if _, err := exec.LookPath(command); err != nil {
-		return "", "", err
+	// 检查命令是否存在，添加了对 `sudo` 命令的规避，`sudo`命令应独立检测
+	if command == "sudo" {
+		command = args[0]
+		if _, err := exec.LookPath(command); err != nil {
+			return "", "", err
+		}
 	}
 
 	// 定义命令
