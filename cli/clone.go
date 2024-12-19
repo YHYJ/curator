@@ -16,24 +16,15 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
-	"github.com/pelletier/go-toml"
 	"github.com/yhyj/curator/general"
 )
 
 // RollingCloneRepos 遍历 Clone 远端存储库到本地
 //
 // 参数：
-//   - configTree: 解析 toml 配置文件得到的配置树
+//   - config: 解析 toml 配置文件得到的配置项
 //   - source: 远端存储库源，支持 'github' 和 'gitea'，默认为 'github'
-func RollingCloneRepos(configTree *toml.Tree, source string) {
-	// 获取配置项
-	config, err := general.LoadConfigToStruct(configTree)
-	if err != nil {
-		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
-		return
-	}
-
+func RollingCloneRepos(config *general.Config, source string) {
 	// 确定存储库源
 	githubLink := config.Git.GithubUrl + ":" + config.Git.GithubUsername
 	giteaLink := config.Git.GiteaUrl + ":" + config.Git.GiteaUsername

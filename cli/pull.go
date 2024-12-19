@@ -16,24 +16,15 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/gookit/color"
-	"github.com/pelletier/go-toml"
 	"github.com/yhyj/curator/general"
 )
 
 // RollingPullRepos 遍历 Pull 远端存储库的更改到本地
 //
 // 参数：
-//   - configTree: 解析 toml 配置文件得到的配置树
+//   - config: 解析 toml 配置文件得到的配置项
 //   - source: 远端存储库源，支持 'github' 和 'gitea'，默认为 'github'
-func RollingPullRepos(configTree *toml.Tree, source string) {
-	// 获取配置项
-	config, err := general.LoadConfigToStruct(configTree)
-	if err != nil {
-		fileName, lineNo := general.GetCallerInfo()
-		color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
-		return
-	}
-
+func RollingPullRepos(config *general.Config, source string) {
 	// 为已存在的本地存储库计数
 	totalNum := len(config.Git.Repos) // 总存储库数
 	clonedRepo := make([]string, 0)   // 已 Clone 存储库

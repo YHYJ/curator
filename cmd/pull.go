@@ -34,8 +34,15 @@ var pullCmd = &cobra.Command{
 			color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			return
 		}
+		// 获取配置项
+		config, err := general.LoadConfigToStruct(configTree)
+		if err != nil {
+			fileName, lineNo := general.GetCallerInfo()
+			color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+			return
+		}
 
-		cli.RollingPullRepos(configTree, sourceFlag)
+		cli.RollingPullRepos(config, sourceFlag)
 	},
 }
 

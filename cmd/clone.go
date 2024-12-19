@@ -34,9 +34,16 @@ var cloneCmd = &cobra.Command{
 			color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
 			return
 		}
+		// 获取配置项
+		config, err := general.LoadConfigToStruct(configTree)
+		if err != nil {
+			fileName, lineNo := general.GetCallerInfo()
+			color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
+			return
+		}
 
 		// 使用指定的数据源进行克隆
-		cli.RollingCloneRepos(configTree, sourceFlag)
+		cli.RollingCloneRepos(config, sourceFlag)
 	},
 }
 
