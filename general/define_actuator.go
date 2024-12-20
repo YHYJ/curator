@@ -29,13 +29,14 @@ func RunCommandToOS(command string, args []string) error {
 	// 检查命令是否存在，添加了对 `sudo` 命令的规避，`sudo`命令应独立检测
 	if command == "sudo" {
 		command = args[0]
+		args = args[1:]
 		if _, err := exec.LookPath(command); err != nil {
 			return err
 		}
 	}
 
 	// 定义命令
-	cmd := exec.Command(command, args[1:]...)
+	cmd := exec.Command(command, args...)
 
 	// 将命令的 Stdin, Stdout 和 Stderr 定向到系统标准输出和标准错误
 	cmd.Stdin = os.Stdin
@@ -64,13 +65,14 @@ func RunCommandToBuffer(command string, args []string) (string, string, error) {
 	// 检查命令是否存在，添加了对 `sudo` 命令的规避，`sudo`命令应独立检测
 	if command == "sudo" {
 		command = args[0]
+		args = args[1:]
 		if _, err := exec.LookPath(command); err != nil {
 			return "", "", err
 		}
 	}
 
 	// 定义命令
-	cmd := exec.Command(command, args[1:]...)
+	cmd := exec.Command(command, args...)
 
 	// 创建字节缓冲区
 	var stdout bytes.Buffer
