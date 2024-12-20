@@ -35,7 +35,7 @@ func RunCommandToOS(command string, args []string) error {
 	}
 
 	// 定义命令
-	cmd := exec.Command(command, args...)
+	cmd := exec.Command(command, args[1:]...)
 
 	// 将命令的 Stdin, Stdout 和 Stderr 定向到系统标准输出和标准错误
 	cmd.Stdin = os.Stdin
@@ -70,7 +70,7 @@ func RunCommandToBuffer(command string, args []string) (string, string, error) {
 	}
 
 	// 定义命令
-	cmd := exec.Command(command, args...)
+	cmd := exec.Command(command, args[1:]...)
 
 	// 创建字节缓冲区
 	var stdout bytes.Buffer
