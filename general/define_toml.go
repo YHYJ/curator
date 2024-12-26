@@ -130,6 +130,7 @@ func WriteTomlConfig(filePath string) (int64, error) {
 				"LearningCenter",
 				"LogWrapper",
 				"manager",
+				"msgcenter",
 				"Modules",
 				"MyBlogs",
 				"MyDocker",
