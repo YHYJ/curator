@@ -192,7 +192,7 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 		// 更新主存储库的配置文件 .git/config
 		configFile := filepath.Join(path, ".git", "config")
 		if err = general.ModifyGitConfig(configFile, source["originalLink"], source["newLink"]); err != nil {
-			errList = append(errList, "Update repository git config (main): "+err.Error())
+			errList = append(errList, "Update local repository git config: "+err.Error())
 		}
 
 		// 获取主存储库的 worktree
@@ -239,6 +239,12 @@ func clone(config *general.Config, source map[string]string, path, name string, 
 
 			isRepo, submoduleRepo, _ := general.IsLocalRepo(submodule.Config().Path)
 			if isRepo {
+				// 更新子存储库的配置文件 .git/modules/<submoduleName>/config
+				configFile := filepath.Join(path, ".git", "modules", submodule.Config().Name, "config")
+				if err = general.ModifyGitConfig(configFile, source["originalLink"], source["newLink"]); err != nil {
+					errList = append(errList, "Update local submodule repository git config: "+err.Error())
+				}
+
 				// 获取子模块的远程分支信息
 				submoduleRemoteBranchs, err := general.GetRepoBranchInfo(worktree, true, submodule.Config().Name, "remote")
 				if err != nil {
