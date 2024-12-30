@@ -28,7 +28,7 @@ func CreateConfigFile(configFile string) {
 	if fileExist {
 		// 询问是否覆写已存在的配置文件
 		question := color.Sprintf(general.OverWriteTips, "Configuration")
-		overWrite, err := general.AskUser(general.QuestionText(question), []string{"y", "N"})
+		overWrite, err := general.AreYouSure(general.QuestionText(question), false)
 		if err != nil {
 			fileName, lineNo := general.GetCallerInfo()
 			color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
@@ -36,7 +36,7 @@ func CreateConfigFile(configFile string) {
 		}
 
 		switch overWrite {
-		case "y":
+		case true:
 			if err := general.DeleteFile(configFile); err != nil {
 				fileName, lineNo := general.GetCallerInfo()
 				color.Printf("%s %s %s\n", general.DangerText(general.ErrorInfoFlag), general.SecondaryText("[", fileName, ":", lineNo+1, "]"), err)
@@ -53,7 +53,7 @@ func CreateConfigFile(configFile string) {
 				return
 			}
 			color.Printf("Create %s: %s\n", general.PrimaryText(configFile), general.SuccessText("file overwritten"))
-		case "n":
+		case false:
 			return
 		default:
 			color.Printf("%s\n", strings.Repeat(general.Separator3st, len(question)))
