@@ -106,18 +106,18 @@ func WriteTomlConfig(filePath string) (int64, error) {
 	// 存储库初次克隆到本地后自动执行的脚本队列
 	var scriptRunQueue = []string{"create-git-hook.sh"}
 
-	// 定义一个 map[string]interface{} 类型的变量并赋值
-	exampleConf := map[string]interface{}{
-		"ssh": map[string]interface{}{
+	// 定义一个 map[string]any 类型的变量并赋值
+	exampleConf := map[string]any{
+		"ssh": map[string]any{
 			"rsa_file": filepath.Join(UserInfo.HomeDir, ".ssh", "id_rsa"),
 		},
-		"storage": map[string]interface{}{
+		"storage": map[string]any{
 			"path": filepath.Join(UserInfo.HomeDir, "Documents", "Repos"),
 		},
-		"script": map[string]interface{}{
+		"script": map[string]any{
 			"run_queue": scriptRunQueue,
 		},
-		"git": map[string]interface{}{
+		"git": map[string]any{
 			"github_url":      "github.com",
 			"github_username": "YHYJ",
 			"gitea_url":       "git.yj1516.top",

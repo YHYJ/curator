@@ -13,6 +13,7 @@ package general
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/viewport"
@@ -211,11 +212,8 @@ func (m *model) content() string {
 		// 检查当前选项是否在高亮项中
 		if i != 0 { // 排除索引为 0 的 "Select All"
 			hiFlag := MeanFlag // 不在高亮项中
-			for _, hlChoice := range m.hlChoices {
-				if choice == hlChoice {
-					hiFlag = NiceFlag // 在高亮项中
-					break
-				}
+			if slices.Contains(m.hlChoices, choice) {
+				hiFlag = NiceFlag // 在高亮项中
 			}
 			choice = color.Sprintf("%s %s", hiFlag, choice)
 		}
