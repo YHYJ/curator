@@ -31,7 +31,7 @@ tidy:
 
 build:
 	@go build -gcflags="-trimpath" -ldflags="-s -w -X $(PROJECT)/general.GitCommitHash=$(COMMIT) -X $(PROJECT)/general.BuildTime=`date +%s` -X $(PROJECT)/general.BuildBy=Makefile" -o $(GENERATE_PATH)/$(TARGET)
-	@echo -en "\x1b[32;1m[✔]\x1b[0m Successfully generated \x1b[32m$(TARGET)\x1b[0m"
+	@echo -e "\x1b[32;1m[✔]\x1b[0m Successfully generated \x1b[32m$(TARGET)\x1b[0m"
 
 install:
 	@install --mode=755 --owner=$(ATTRIBUTION) --group=$(ATTRIBUTION) $(GENERATE_PATH)/$(TARGET) $(INSTALL_PATH)/$(TARGET)
