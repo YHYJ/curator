@@ -14,7 +14,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
+	"github.com/gookit/color"
 	"github.com/pelletier/go-toml"
 )
 
@@ -40,6 +42,67 @@ type SSHConfig struct {
 }
 type StorageConfig struct {
 	Path string `toml:"path"`
+}
+
+// 配置项
+var (
+	// 允许用户修改的配置项
+	// 使用默认值的配置项
+	rsaFile        = filepath.Join(UserInfo.HomeDir, ".ssh", "id_rsa")
+	storagePath    = filepath.Join(UserInfo.HomeDir, "Documents", "Repos")
+	scriptRunQueue = []string{"create-git-hook.sh"}
+	githubUrl      = "github.com"
+	githubUsername = "YHYJ"
+	giteaUrl       = "git.yj1516.top"
+	giteaUsername  = "YJ"
+	repos          = []string{
+		"checker",
+		"curator",
+		"eniac",
+		"kbdstage",
+		"manager",
+		"msgcenter",
+		"mqttc",
+		"rolling",
+		"scleaner",
+		"skynet",
+		"trash",
+		"wocker",
+		"www",
+		"LearningCenter",
+		"LogWrapper",
+		"Modules",
+		"MyBlogs",
+		"MyDocker",
+		"MyDockerfile",
+		"MyRaspberry",
+		"MyShell",
+		"MyWiki",
+		"Sniffer",
+		"System",
+		"Test",
+		"YHYJ",
+	}
+)
+
+// 配置
+var appConfig = Config{
+	Git: GitConfig{
+		GithubUrl:      githubUrl,
+		GithubUsername: githubUsername,
+		GiteaUrl:       giteaUrl,
+		GiteaUsername:  giteaUsername,
+		Repos:          repos,
+	},
+	Script: ScriptConfig{
+		RunQueue: scriptRunQueue,
+	},
+	SSH: SSHConfig{
+		RsaFile: rsaFile,
+	},
+	Storage: StorageConfig{
+		Path: storagePath,
+	},
 }
 
 // isTomlFile 检测文件是不是 toml 文件
@@ -103,71 +166,28 @@ func LoadConfigToStruct(configTree *toml.Tree) (*Config, error) {
 //   - 写入的字节数
 //   - 错误信息
 func WriteTomlConfig(filePath string) (int64, error) {
-	// 存储库初次克隆到本地后自动执行的脚本队列
-	var scriptRunQueue = []string{"create-git-hook.sh"}
-
-	// 定义一个 map[string]any 类型的变量并赋值
-	exampleConf := map[string]any{
-		"ssh": map[string]any{
-			"rsa_file": filepath.Join(UserInfo.HomeDir, ".ssh", "id_rsa"),
-		},
-		"storage": map[string]any{
-			"path": filepath.Join(UserInfo.HomeDir, "Documents", "Repos"),
-		},
-		"script": map[string]any{
-			"run_queue": scriptRunQueue,
-		},
-		"git": map[string]any{
-			"github_url":      "github.com",
-			"github_username": "YHYJ",
-			"gitea_url":       "git.yj1516.top",
-			"gitea_username":  "YJ",
-			"repos": []string{
-				"checker",
-				"curator",
-				"eniac",
-				"kbdstage",
-				"LearningCenter",
-				"LogWrapper",
-				"manager",
-				"msgcenter",
-				"Modules",
-				"MyBlogs",
-				"MyDocker",
-				"MyDockerfile",
-				"MyRaspberry",
-				"MyShell",
-				"MyWiki",
-				"rolling",
-				"scleaner",
-				"skynet",
-				"Sniffer",
-				"System",
-				"Test",
-				"trash",
-				"wocker",
-				"www",
-				"YHYJ",
-			},
-		},
-	}
-	// 检测配置文件是否存在
-	if !FileExist(filePath) {
-		return 0, fmt.Errorf("Open %s: no such file or directory", filePath)
-	}
-	// 检测配置文件是否是 toml 文件
-	if !isTomlFile(filePath) {
-		return 0, fmt.Errorf("Open %s: is not a toml file", filePath)
-	}
-	// 把 exampleConf 转换为 *toml.Tree 类型
-	tree, err := toml.TreeFromMap(exampleConf)
-	if err != nil {
-		return 0, err
-	}
-	// 打开一个文件并获取 io.Writer 接口
+	// 打开配置文件
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		return 0, err
 	}
-	return tree.WriteTo(file)
+	defer file.Close()
+
+	// 写入注释
+	manual := color.Sprintf("##\n## %s - %s\n## Generaled on %s\n##\n\n", Name, Version, time.Now().Format("2006-01-02 15:04:05"))
+	n, err := file.WriteString(manual)
+	if err != nil {
+		return int64(n), err
+	}
+
+	// 创建编码器并设置顺序保留
+	encoder := toml.NewEncoder(file)
+	encoder.Order(toml.OrderPreserve)
+
+	if err := encoder.Encode(appConfig); err != nil {
+		return int64(n), err
+	}
+
+	stat, _ := file.Stat()
+	return stat.Size(), nil
 }
