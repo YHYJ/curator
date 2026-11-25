@@ -83,7 +83,6 @@ var (
 		"MyWiki",
 		"Sniffer",
 		"System",
-		"Test",
 		"YHYJ",
 	}
 )
